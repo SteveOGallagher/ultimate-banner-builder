@@ -1,5 +1,1 @@
-class Dynamic {
-  constructor() {
-    window.BannerInit();
-  }
-}
+var dynamicBannerScript250;
