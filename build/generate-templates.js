@@ -111,10 +111,10 @@ class GenerateTemplates {
 		let processedData = this.format(fileData, data);
 
 		switch(file) {
-	    case 'static.js':
+	    case 'GDN.js':
 	        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
 	        break;
-	    case 'dynamic.js':
+	    case 'DoubleClick.js':
 	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
 	        break;
 	    default:

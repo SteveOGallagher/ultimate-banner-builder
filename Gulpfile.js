@@ -11,14 +11,19 @@ var gulp     = require('gulp'),
 
 
 gulp.task('sass', function () {
-  return gulp.src(['src/**/*.scss', '!src/*.scss'])
-    .pipe(sass().on('error', sass.logError))
-    .pipe(cleanCSS())
-    .pipe(gulp.dest('prod'));
+  var runSass = function (ad_type) {
+    return gulp.src(['src/**/*.scss', '!src/*.scss'])
+      .pipe(sass().on('error', sass.logError))
+      .pipe(cleanCSS())
+      .pipe(gulp.dest('prod/' + ad_type));
+  }
+  runSass('GDN');
+  runSass('DoubleClick'); 
 });
 
 gulp.task('watch', function () {
   gulp.watch('src/**/*.scss', ['sass']);
+  gulp.watch('src/**/*.js', ['scripts']);
 });
 
 

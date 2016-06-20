@@ -5,7 +5,6 @@ A banner build template that also works to generate static versions
 - `npm i`
 - `npm run generate`
 - sudo npm install gulp -g
-- npm install gulp --save-dev
 
 
 ##Requirements of the banner template builder
