@@ -12,23 +12,32 @@ var gulp     = require('gulp'),
 
 
 gulp.task('sass', function () {
-  return gulp.src(['src/**/*.scss', '!src/*.scss'])
-    .pipe(sass().on('error', sass.logError))
-    .pipe(cleanCSS())
-    .pipe(gulp.dest('prod'));
+  var runSass = function (ad_type) {
+    return gulp.src(['src/**/*.scss', '!src/*.scss'])
+      .pipe(sass().on('error', sass.logError))
+      .pipe(cleanCSS())
+      .pipe(gulp.dest('prod/' + ad_type));
+  }
+  runSass('GDN');
+  runSass('DoubleClick');
 });
 
 
 gulp.task('html', function() {
-  return gulp.src('src/**/*.html')
-    .pipe(htmlmin({collapseWhitespace: true}))
-    .pipe(gulp.dest('prod'));
+  var runHtml = function (ad_type) {
+    return gulp.src('src/**/*.html')
+      .pipe(htmlmin({collapseWhitespace: true}))
+      .pipe(gulp.dest('prod/' + ad_type));
+  }
+  runHtml('GDN');
+  runHtml('DoubleClick');
 });
 
 
 gulp.task('watch', function () {
   gulp.watch('src/**/*.scss', ['sass']);
   gulp.watch('src/**/*.html', ['html']);
+  gulp.watch('src/**/*.js', ['scripts']);
 });
 
 
@@ -52,11 +61,11 @@ gulp.task('scripts', function() {
           // concat into foldername.js
           .pipe(concat(folder + '.js'))
           // minify
-          .pipe(uglify())    
+          .pipe(uglify())
           // rename to folder.min.js
-          .pipe(rename(folder + '-' + ad_type + '.min.js')) 
+          .pipe(rename(folder + '-' + ad_type + '.min.js'))
           // write to output again
-          .pipe(gulp.dest('prod/' + ad_type + '/' + folder));    
+          .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
       });
    };
 
