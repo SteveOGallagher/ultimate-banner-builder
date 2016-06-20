@@ -7,8 +7,9 @@ var gulp     = require('gulp'),
     merge    = require('merge-stream'),
     uglify   = require('gulp-uglify'),
     concat   = require('gulp-concat'),
-    rename   = require('gulp-rename');
-    htmlmin = require('gulp-htmlmin');
+    rename   = require('gulp-rename'),
+    htmlmin = require('gulp-htmlmin'),
+    scriptsPath = 'src';
 
 
 gulp.task('sass', function () {
@@ -33,16 +34,6 @@ gulp.task('html', function() {
   runHtml('DoubleClick');
 });
 
-
-gulp.task('watch', function () {
-  gulp.watch('src/**/*.scss', ['sass']);
-  gulp.watch('src/**/*.html', ['html']);
-  gulp.watch('src/**/*.js', ['scripts']);
-});
-
-
-var scriptsPath = 'src';
-
 function getFolders(dir) {
   return fs.readdirSync(dir)
     .filter(function(file) {
@@ -58,19 +49,22 @@ gulp.task('scripts', function() {
      var tasks = folders.map(function(folder) {
 
         return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
-          // concat into foldername.js
           .pipe(concat(folder + '.js'))
-          // minify
           .pipe(uglify())
-          // rename to folder.min.js
           .pipe(rename(folder + '-' + ad_type + '.min.js'))
-          // write to output again
           .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
       });
    };
 
    runTasks('GDN');
    runTasks('DoubleClick');
+});
+
+
+gulp.task('watch', function () {
+  gulp.watch('src/**/*.scss', ['sass']);
+  gulp.watch('src/**/*.html', ['html']);
+  gulp.watch('src/**/*.js', ['scripts']);
 });
 
 gulp.task('default', ['watch', 'html', 'sass', 'scripts']);
