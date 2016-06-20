@@ -31,31 +31,27 @@ function getFolders(dir) {
   });
 }
 
-
 gulp.task('scripts', function() {
-  var folder;
-  var folders = getFolders(scriptsPath);
+   var folder;
+   var folders = getFolders(scriptsPath);
 
-  var tasks = folders.map(function(folder) {
-    return gulp.src(path.join(scriptsPath, folder, '/**/*.js'))
-      // concat into foldername.js
-      .pipe(concat(folder + '.js'))
-      // minify
-      .pipe(uglify())
-      // rename to folder.min.js
-      .pipe(rename(folder + '.min.js'))
-      // write to output again
-      .pipe(gulp.dest('prod/' + folder));
-    });
+   var runTasks = function (ad_type) {
+     var tasks = folders.map(function(folder) {
 
-    // process all remaining files in scriptsPath root into main.js and main.min.js files
-  var root = gulp.src(path.join(scriptsPath, '/*.js'))
-    .pipe(concat('main.js'))
-    .pipe(uglify())
-    .pipe(rename('main.min.js'))
-    .pipe(gulp.dest('prod/' + folder));
+        return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+          // concat into foldername.js
+          .pipe(concat(folder + '.js'))
+          // minify
+          .pipe(uglify())    
+          // rename to folder.min.js
+          .pipe(rename(folder + '-' + ad_type + '.min.js')) 
+          // write to output again
+          .pipe(gulp.dest('prod/' + ad_type + '/' + folder));    
+      });
+   };
 
-  return merge(tasks, root);
+   runTasks('GDN');
+   runTasks('DoubleClick');
 });
 
 gulp.task('default', ['watch', 'sass', 'scripts']);

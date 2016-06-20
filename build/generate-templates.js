@@ -5,6 +5,8 @@ import path from 'path';
 import chalk from 'chalk';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
+const DoubleClick = "DoubleClick";
+const GDN = "GDN";
 
 class GenerateTemplates {
 	constructor() {
@@ -71,6 +73,7 @@ class GenerateTemplates {
 		});
 	}
 
+	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
 	generateTemplate(dir, data) {
 		let that = this;
 		fs.mkdir(dir, (err, folder) => {
@@ -79,6 +82,8 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
+				fs.mkdir(`${dir}/${DoubleClick}`);
+				fs.mkdir(`${dir}/${GDN}`);
 				that.populateTemplate(dir, data);
 			}
 		});
@@ -100,11 +105,22 @@ class GenerateTemplates {
 		});
 	}
 
+	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
-    console.log(data);
 		let processedData = this.format(fileData, data);
-		fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+
+		switch(file) {
+	    case 'static.js':
+	        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
+	        break;
+	    case 'dynamic.js':
+	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+	        break;
+	    default:
+	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+		}
+		
 	}
 
 }
