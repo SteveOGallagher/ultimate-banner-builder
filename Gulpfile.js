@@ -41,35 +41,27 @@ function getFolders(dir) {
   });
 }
 
+gulp.task('scripts', function() {
+   var folder;
+   var folders = getFolders(scriptsPath);
 
-function runTask(type) {
-  var folder;
-  var folders = getFolders(scriptsPath);
+   var runTasks = function (ad_type) {
+     var tasks = folders.map(function(folder) {
 
-  var tasks = folders.map(function(folder) {
-    return gulp.src([path.join(scriptsPath, folder, '/**/' + type + '/' + type + '.js'), path.join(scriptsPath, folder, '/**/main.js') ] )
-      // concat into foldername.js
-      .pipe(concat(folder + '.js'))
-      // minify
-      .pipe(uglify())
-      // rename to folder.min.js
-      .pipe(rename(folder + '.min.js'))
-      // write to output again
-      .pipe(gulp.dest('prod/' + folder));
-    });
+        return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+          // concat into foldername.js
+          .pipe(concat(folder + '.js'))
+          // minify
+          .pipe(uglify())    
+          // rename to folder.min.js
+          .pipe(rename(folder + '-' + ad_type + '.min.js')) 
+          // write to output again
+          .pipe(gulp.dest('prod/' + ad_type + '/' + folder));    
+      });
+   };
 
-  return tasks;
-}
-
-gulp.task('static-scripts', function() {
-  runTask('static')
-
+   runTasks('GDN');
+   runTasks('DoubleClick');
 });
-
-gulp.task('dynamic-scripts', function() {
-  runTask('dynamic')
-});
-
-
 
 gulp.task('default', ['watch', 'html', 'sass', 'scripts']);

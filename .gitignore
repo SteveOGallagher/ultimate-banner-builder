@@ -34,3 +34,7 @@ node_modules
 
 # Mac specific
 .DS_Store
+
+# SRC and Prod folders and contents
+src
+prod
