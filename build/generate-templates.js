@@ -13,7 +13,7 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['dynamic.js', 'main.js', 'static.js', 'overwrite.scss'];
+		this.formatFiles = ['DoubleClick.js', 'main.js', 'GDN.js', 'overwrite.scss'];
 	}
 
 	loadSizes() {
