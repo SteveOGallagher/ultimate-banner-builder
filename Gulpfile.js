@@ -17,9 +17,13 @@ function getFolders(dir) {
 
 
 gulp.task('scripts', function() {
+   var folder;
    var folders = getFolders(scriptsPath);
 
    var tasks = folders.map(function(folder) {
+
+      
+
       return gulp.src(path.join(scriptsPath, folder, '/**/*.js'))
         // concat into foldername.js
         .pipe(concat(folder + '.js'))
@@ -31,7 +35,7 @@ gulp.task('scripts', function() {
         .pipe(gulp.dest('prod/' + folder));    
     });
 
-      // process all remaining files in scriptsPath root into main.js and main.min.js files
+    // process all remaining files in scriptsPath root into main.js and main.min.js files
     var root = gulp.src(path.join(scriptsPath, '/*.js'))
         .pipe(concat('main.js'))
         .pipe(uglify())

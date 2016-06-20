@@ -2,10 +2,10 @@
     "dimensions": [{
         "width": 250,
         "height": 300,
-        "prefix": "prospective-"
+        "prefix": ""
     }, {
         "width": 200,
         "height": 300,
-        "prefix": "prospective-"
+        "prefix": ""
     }]
 }
