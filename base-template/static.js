@@ -1,1 +1,1 @@
-window.bannerInit();
+var staticBannerScript;
