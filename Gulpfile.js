@@ -8,6 +8,7 @@ var gulp     = require('gulp'),
     uglify   = require('gulp-uglify'),
     concat   = require('gulp-concat'),
     rename   = require('gulp-rename');
+    htmlmin = require('gulp-htmlmin');
 
 
 gulp.task('sass', function () {
@@ -17,8 +18,17 @@ gulp.task('sass', function () {
     .pipe(gulp.dest('prod'));
 });
 
+
+gulp.task('html', function() {
+  return gulp.src('src/**/*.html')
+    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(gulp.dest('prod'));
+});
+
+
 gulp.task('watch', function () {
   gulp.watch('src/**/*.scss', ['sass']);
+  gulp.watch('src/**/*.html', ['html']);
 });
 
 
@@ -32,12 +42,12 @@ function getFolders(dir) {
 }
 
 
-gulp.task('scripts', function() {
+function runTask(type) {
   var folder;
   var folders = getFolders(scriptsPath);
 
   var tasks = folders.map(function(folder) {
-    return gulp.src(path.join(scriptsPath, folder, '/**/*.js'))
+    return gulp.src([path.join(scriptsPath, folder, '/**/' + type + '/' + type + '.js'), path.join(scriptsPath, folder, '/**/main.js') ] )
       // concat into foldername.js
       .pipe(concat(folder + '.js'))
       // minify
@@ -48,14 +58,18 @@ gulp.task('scripts', function() {
       .pipe(gulp.dest('prod/' + folder));
     });
 
-    // process all remaining files in scriptsPath root into main.js and main.min.js files
-  var root = gulp.src(path.join(scriptsPath, '/*.js'))
-    .pipe(concat('main.js'))
-    .pipe(uglify())
-    .pipe(rename('main.min.js'))
-    .pipe(gulp.dest('prod/' + folder));
+  return tasks;
+}
 
-  return merge(tasks, root);
+gulp.task('static-scripts', function() {
+  runTask('static')
+
 });
 
-gulp.task('default', ['watch', 'sass', 'scripts']);
+gulp.task('dynamic-scripts', function() {
+  runTask('dynamic')
+});
+
+
+
+gulp.task('default', ['watch', 'html', 'sass', 'scripts']);
