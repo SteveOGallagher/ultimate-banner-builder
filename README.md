@@ -13,3 +13,4 @@ A banner build template that also works to generate static versions
 ##To Do
 - Create Gulp watch task to copy changes in files into minified version in relative production folder
 - Create ability to make DoubleClick js versions with Enabler and GDN js versions with pure JS
+- Build most ideal template files for html, scss, and js (for DoubleClick & GDN)
