@@ -19,3 +19,6 @@ A banner build template that also works to generate static versions
 - Build most ideal template files for html, scss, and js (for DoubleClick & GDN)
 - Create an img folder in each size's src directory and build these out into GDN sizes
 - for npm run generate, if src is empty, build out again. 
+
+### General Tips
+- The prefix field in sizes.json is optional.

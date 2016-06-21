@@ -1,1 +1,1 @@
-var staticBannerScript;
+function getDynamicContent() {};
