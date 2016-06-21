@@ -12,6 +12,7 @@ var gulp     = require('gulp'),
     path     = require('path'),
     del      = require('del'),
     connect = require('gulp-connect-multi')(),
+    removeCode = require('gulp-remove-code'),
     sourcemaps = require('gulp-sourcemaps'),
     jshint = require('gulp-jshint'),   
     sassLint = require('gulp-sass-lint'),
@@ -23,23 +24,30 @@ var gulp     = require('gulp'),
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
     return gulp.src(['src/**/*.scss', '!src/*.scss'])
-      //.pipe(sass().on('error', sass.logError))
       .pipe(sassLint())
       .pipe(sassLint.format())
       .pipe(sassLint.failOnError())
+      .pipe(sourcemaps.init())
       .pipe(cleanCSS())
+      .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
   }
   runSass('GDN');
   runSass('DoubleClick');
 });
 
-
 gulp.task('html', function() {
   var runHtml = function (ad_type) {
-    return gulp.src('src/**/*.html')
-      .pipe(htmlmin({collapseWhitespace: true}))
-      .pipe(gulp.dest('prod/' + ad_type));
+    if (ad_type == 'GDN') {
+      return gulp.src('src/**/*.html')
+        .pipe(removeCode({ gdn: true }))
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest('prod/' + ad_type));
+      } else {
+        return gulp.src('src/**/*.html')
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest('prod/' + ad_type));
+      }
   }
   runHtml('GDN');
   runHtml('DoubleClick');
@@ -68,10 +76,10 @@ gulp.task('scripts', function() {
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
     });
- };
+  };
 
-   runTasks('GDN');
-   runTasks('DoubleClick');
+  runTasks('GDN');
+  runTasks('DoubleClick');
 });
 
 
@@ -92,7 +100,7 @@ gulp.task('del', function () {
 
 
 gulp.task('connect', connect.server({
-  root: ['./src/'],
+  root: ['./prod/'],
   port: 8000,
   livereload: true,
   open: {

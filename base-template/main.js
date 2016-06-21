@@ -2,14 +2,8 @@ window.onload = initialize();
 
 // Set the content needed to create the banner
 var adContent = getDynamicContent();
-var imageAssignments = {
-  'banner' : adContent.main_image.Url,
-  'frame1' : adContent.image_url_1.Url,
-  'frame2' : adContent.image_url_2.Url,
-  'frame3' : adContent.image_url_3.Url
-};
 
-// Set default values to check later when animation can begin
+// These variables will later be checked to see if animation can begin.
 var isVisible = false;
 var isImagesLoaded = false;
 var isAnimated = false;
@@ -69,13 +63,25 @@ function onImagesLoaded() {
   }
 }
 
+///
+///* ONLY THE BELOW CODE SHOULD NEED EDITING *///
+///
+
+// Assign images to all elements which require them
+var imageAssignments = {
+  'banner' : adContent.main_image.Url,
+  'frame1' : adContent.image_url_1.Url,
+  'frame2' : adContent.image_url_2.Url,
+  'frame3' : adContent.image_url_3.Url
+};
+
 /* Place all code to create ad animations in here */
 function animate() {
-  // Show Frame 1
+  // For 5 seconds, show frame 1
   TweenLite.to(document.getElementById('frame1'), 0.4, { delay: 5, ease: 'easeInOut', opacity: 0 });
-  // Show Frame 2
+  // After 5 seconds, show frame 2
   TweenLite.to(document.getElementById('frame2'), 0.4, { delay: 5, ease: 'easeInOut', opacity: 1 });
-  // Show Frame 3
+  // After 5 seconds, hide frame 2 and show frame 3
   TweenLite.to(document.getElementById('frame2'), 0.4, { delay: 10, ease: 'easeInOut', opacity: 0 });
   TweenLite.to(document.getElementById('frame3'), 0.4, { delay: 10, ease: 'easeInOut', opacity: 1 });
 }
