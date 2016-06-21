@@ -1,7 +1,71 @@
 @import '../global.scss';
 @import '../normalize.scss';
 
-.banner {
-  width: {{width}};
-  height: {{height}};
+#banner {
+  width: {{width}} + px;
+  height: {{height}} + px;
+  position: relative;
+  background-size: 100% 100% !important;
+}
+
+.full-dimension {
+  width: {{width}} + px;
+  height: {{height}} + px;
+}
+
+#first-white-block {
+  width: 160px;
+  height: 600px;
+  position: absolute;
+  top: 7px;
+  left: 0px;
+  // background: #fff;
+}
+
+small {
+  font-family: 'GothamCondensed', Helvetica;
+  color: #78AE40;
+  font-size: 11px;
+  margin-left: 14px;
+  width: 82%;
+  font-weight: 100;
+}
+
+small:nth-of-type(1) {
+  margin-top: 164px;
+}
+
+.slide__item {
+  width: 100%;
+  padding: 0px;
+  top: 1px;
+}
+
+.win, #svg-holder {
+  width: 93px;
+  height: 45px;
+  left: 33px;
+  top: 97px;
+}
+
+.win-big {
+  position: relative;
+  margin: auto;
+  margin-top: 97px;
+  width: 93px;
+  height: auto;
+  left: 33px;
+  -webkit-transition: width 0.4s;
+  display: block;
+}
+
+.win-small {
+  position: relative;
+  margin: auto;
+  margin-top:97px;
+  width: 74px;
+  height: auto;
+  left: 33px;
+  -webkit-transition: width 0.4s;
+  display: block;
 }

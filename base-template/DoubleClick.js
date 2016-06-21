@@ -1,4 +1,5 @@
 "use strict";
+var Enabler;
 
 function getDynamicContent() {
 
@@ -30,10 +31,8 @@ function getDynamicContent() {
   /* END OF GOOGLE DYNAMIC CODE */
 
   // Replace the below object variable with one matching the above.
-  return dynamicContent.SLOPS_160x600[0];
+  return devDynamicContent.SLOPS_160x600[0];
 }
-
-var Enabler;
 
 // Check DoubleClick initializer
 function initialize() {
@@ -57,13 +56,14 @@ function checkPageLoaded() {
 function exitHandler() {
   var dynamicContent = getDynamicContent();
   document.getElementById('bg-exit').addEventListener('click', function() {
-    Enabler.exit("clickTag", dynamicContent['exit']);
+    Enabler.exit("clickTag", dynamicContent['exit']['Url']);
   });
 }
 
 // politeInit will run after the page has loaded. Start animations inside this function.
 function politeInit() {
   isVisible = false;
+  setupLibrary();
   template();
   setImages();
   exitHandler();
