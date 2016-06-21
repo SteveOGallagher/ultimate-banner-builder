@@ -12,6 +12,7 @@ var gulp     = require('gulp'),
     path     = require('path'),
     del      = require('del'),
     connect = require('gulp-connect-multi')(),
+    removeCode = require('gulp-remove-code'),
     sourcemaps = require('gulp-sourcemaps'),
     
     scriptsPath = 'src',
@@ -31,12 +32,18 @@ gulp.task('sass', function () {
   runSass('DoubleClick');
 });
 
-
 gulp.task('html', function() {
   var runHtml = function (ad_type) {
-    return gulp.src('src/**/*.html')
-      .pipe(htmlmin({collapseWhitespace: true}))
-      .pipe(gulp.dest('prod/' + ad_type));
+    if (ad_type == 'GDN') {
+      return gulp.src('src/**/*.html')
+        .pipe(removeCode({ gdn: true }))
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest('prod/' + ad_type));
+      } else {
+        return gulp.src('src/**/*.html')
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest('prod/' + ad_type));
+      }
   }
   runHtml('GDN');
   runHtml('DoubleClick');
@@ -63,10 +70,10 @@ gulp.task('scripts', function() {
         .pipe(sourcemaps.write())
         .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
     });
- };
+  };
 
-   runTasks('GDN');
-   runTasks('DoubleClick');
+  runTasks('GDN');
+  runTasks('DoubleClick');
 });
 
 gulp.task('img', function() {
