@@ -6,7 +6,7 @@ A banner build template that also works to generate static versions
 - Edit the 'sizes.json' file with the correct sizes for the banners you wish to build. 
 - run `npm run generate`
 - sudo npm install gulp -g
-- run 'gulp'
+- run `gulp`
 
 
 #Requirements of the banner template builder
