@@ -10,7 +10,9 @@ var gulp     = require('gulp'),
     merge    = require('merge-stream'),
     fs       = require('fs'),
     path     = require('path'),
-
+    del      = require('del'),
+    connect = require('gulp-connect-multi')(),
+    
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
 
@@ -70,6 +72,24 @@ gulp.task('img', function() {
 });
 
 
+gulp.task('del', function () {
+  return del([
+    'src',
+    'prod'
+  ]);
+});
+
+
+gulp.task('connect', connect.server({
+  root: ['./src/'],
+  port: 8000,
+  livereload: true,
+  open: {
+    browser: 'Google Chrome'
+  }
+}));
+
+
 gulp.task('watch', function () {
   gulp.watch('src/**/*.scss', ['sass']);
   gulp.watch('src/**/*.html', ['html']);
@@ -77,4 +97,5 @@ gulp.task('watch', function () {
   gulp.watch('src/**/img/*', ['img']);
 });
 
-gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img']);
+gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img', 'connect']);
+

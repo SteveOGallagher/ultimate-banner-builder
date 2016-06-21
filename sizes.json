@@ -1,11 +1,12 @@
 {
     "dimensions": [{
-        "width": 250,
-        "height": 300,
+        "width": 160,
+        "height": 600,
         "prefix": ""
-    }, {
-        "width": 200,
-        "height": 300,
+    },
+    {
+        "width": 300,
+        "height": 600,
         "prefix": ""
     }]
 }
