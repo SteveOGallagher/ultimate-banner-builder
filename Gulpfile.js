@@ -51,7 +51,7 @@ gulp.task('scripts', function() {
         return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
           .pipe(concat(folder + '.js'))
           .pipe(uglify())
-          .pipe(rename(folder + '-' + ad_type + '.min.js'))
+          .pipe(rename('ad.js'))
           .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
       });
    };
