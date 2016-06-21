@@ -14,10 +14,10 @@
 }
 
 .slide__container {
-  width: 160px;
-  height: 600px;
+  width: {{width}} + px;
+  height: {{height}} + px;
   position: absolute;
-  top: 7px;
+  top: 1px;
   left: 0px;
 }
 

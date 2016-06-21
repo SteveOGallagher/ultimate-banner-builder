@@ -21,8 +21,10 @@ var gulp     = require('gulp'),
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
     return gulp.src(['src/**/*.scss', '!src/*.scss'])
+      .pipe(sourcemaps.init())
       .pipe(sass().on('error', sass.logError))
       .pipe(cleanCSS())
+      .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
   }
   runSass('GDN');
