@@ -9,6 +9,7 @@ var gulp     = require('gulp'),
     concat   = require('gulp-concat'),
     rename   = require('gulp-rename'),
     htmlmin  = require('gulp-htmlmin'),
+    del      = require('del'),
     scriptsPath = 'src';
 
 
@@ -58,6 +59,13 @@ gulp.task('scripts', function() {
 
    runTasks('GDN');
    runTasks('DoubleClick');
+});
+
+gulp.task('delete', function () {
+  return del([
+    'src',
+    'prod'
+  ]);
 });
 
 
