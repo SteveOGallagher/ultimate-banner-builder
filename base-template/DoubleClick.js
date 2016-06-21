@@ -61,8 +61,7 @@ function exitHandler() {
 // politeInit will run after the page has loaded. Start animations inside this function.
 function politeInit() {
   isVisible = false;
-  setupLibrary();
-  template();
+  // setupLibrary();
   setImages();
   exitHandler();
 
