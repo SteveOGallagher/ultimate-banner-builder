@@ -85,7 +85,7 @@ gulp.task('del', function () {
 
 
 gulp.task('connect', connect.server({
-  root: ['./src/'],
+  root: ['./prod/'],
   port: 8000,
   livereload: true,
   open: {
