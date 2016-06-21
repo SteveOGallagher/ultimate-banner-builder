@@ -10,6 +10,7 @@ var gulp     = require('gulp'),
     rename   = require('gulp-rename'),
     htmlmin  = require('gulp-htmlmin'),
     del      = require('del'),
+    sourcemaps = require('gulp-sourcemaps'),
     scriptsPath = 'src';
 
 
@@ -50,9 +51,11 @@ gulp.task('scripts', function() {
      var tasks = folders.map(function(folder) {
 
         return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+          .pipe(sourcemaps.init())
           .pipe(concat(folder + '.js'))
           .pipe(uglify())
           .pipe(rename('ad.js'))
+          .pipe(sourcemaps.write())
           .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
       });
    };

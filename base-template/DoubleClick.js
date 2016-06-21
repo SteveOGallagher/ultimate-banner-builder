@@ -60,3 +60,17 @@ function exitHandler() {
     Enabler.exit("clickTag", dynamicContent['exit']);
   });
 }
+
+// politeInit will run after the page has loaded. Start animations inside this function.
+function politeInit() {
+  isVisible = false;
+  template();
+  setImages();
+  exitHandler();
+
+  if(Enabler.isVisible()){
+    onVisible();
+  } else {
+    Enabler.addEventListener(studio.events.StudioEvent.VISIBLE, onVisible);
+  }
+}
