@@ -8,7 +8,7 @@ var gulp     = require('gulp'),
     uglify   = require('gulp-uglify'),
     concat   = require('gulp-concat'),
     rename   = require('gulp-rename'),
-    htmlmin = require('gulp-htmlmin'),
+    htmlmin  = require('gulp-htmlmin'),
     scriptsPath = 'src';
 
 
