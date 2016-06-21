@@ -84,6 +84,7 @@ class GenerateTemplates {
 				console.info(chalk.blue(`${dir} has been created`));
 				fs.mkdir(`${dir}/${DoubleClick}`);
 				fs.mkdir(`${dir}/${GDN}`);
+        fs.mkdir(`${dir}/img`);
 				that.populateTemplate(dir, data);
 			}
 		});
