@@ -12,9 +12,11 @@ var gulp     = require('gulp'),
     path     = require('path'),
     del      = require('del'),
     connect = require('gulp-connect-multi')(),
+    sourcemaps = require('gulp-sourcemaps'),
     
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
+
 
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
@@ -38,6 +40,7 @@ gulp.task('html', function() {
   runHtml('DoubleClick');
 });
 
+
 function getFolders(dir) {
   return fs.readdirSync(dir)
     .filter(function(file) {
@@ -47,17 +50,18 @@ function getFolders(dir) {
 
 
 gulp.task('scripts', function() {
-var folder;
-
+  var folder;
   var runTasks = function (ad_type) {
-  var tasks = folders.map(function(folder) {
-    return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
-      .pipe(concat(folder + '.js'))
-      .pipe(uglify())
-      .pipe(rename(folder + '-' + ad_type + '.min.js'))
-      .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
+    var tasks = folders.map(function(folder) {
+      return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+        .pipe(sourcemaps.init())
+        .pipe(concat(folder + '.js'))
+        .pipe(uglify())
+        .pipe(rename('ad.js'))
+        .pipe(sourcemaps.write())
+        .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
     });
-  };
+ };
 
    runTasks('GDN');
    runTasks('DoubleClick');

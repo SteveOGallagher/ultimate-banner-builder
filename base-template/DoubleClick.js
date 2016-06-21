@@ -1,4 +1,5 @@
 "use strict";
+var Enabler;
 
 function getDynamicContent() {
 
@@ -22,18 +23,14 @@ function getDynamicContent() {
   devDynamicContent.SLOPS_160x600[0].image_alt_1 = "Win a trip to New York!";
   devDynamicContent.SLOPS_160x600[0].image_alt_2 = "plus other fantastic prizes!";
   devDynamicContent.SLOPS_160x600[0].image_alt_3 = "Find out more";
-  devDynamicContent.SLOPS_160x600[0].terms_copy_1 = "Entry closes 31.7.16. T&C apply";
-  devDynamicContent.SLOPS_160x600[0].terms_copy_2 = "The Secret Life of Pets&copy; 2016 Universal Studios. All Rights Reserved.";
   devDynamicContent.SLOPS_160x600[0].exit = {};
   devDynamicContent.SLOPS_160x600[0].exit.Url = "http://www.petsathome.com/";
   Enabler.setDevDynamicContent(devDynamicContent);
   /* END OF GOOGLE DYNAMIC CODE */
 
   // Replace the below object variable with one matching the above.
-  return dynamicContent.SLOPS_160x600[0];
+  return devDynamicContent.SLOPS_160x600[0];
 }
-
-var Enabler;
 
 // Check DoubleClick initializer
 function initialize() {
@@ -57,6 +54,20 @@ function checkPageLoaded() {
 function exitHandler() {
   var dynamicContent = getDynamicContent();
   document.getElementById('bg-exit').addEventListener('click', function() {
-    Enabler.exit("clickTag", dynamicContent['exit']);
+    Enabler.exit("clickTag", dynamicContent['exit']['Url']);
   });
+}
+
+// politeInit will run after the page has loaded. Start animations inside this function.
+function politeInit() {
+  isVisible = false;
+  // setupLibrary();
+  setImages();
+  exitHandler();
+
+  if(Enabler.isVisible()){
+    onVisible();
+  } else {
+    Enabler.addEventListener(studio.events.StudioEvent.VISIBLE, onVisible);
+  }
 }

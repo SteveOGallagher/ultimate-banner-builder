@@ -1,7 +1,30 @@
 @import '../global.scss';
 @import '../normalize.scss';
 
-.banner {
-  width: {{width}};
-  height: {{height}};
+#banner {
+  width: {{width}} + px;
+  height: {{height}} + px;
+  position: relative;
+  background-size: 100% 100% !important;
+}
+
+.full-dimension {
+  width: {{width}} + px;
+  height: {{height}} + px;
+}
+
+.slide__container {
+  width: 160px;
+  height: 600px;
+  position: absolute;
+  top: 7px;
+  left: 0px;
+}
+
+#frame2 {
+  opacity: 0;
+}
+
+#frame3 {
+  opacity: 0;
 }
