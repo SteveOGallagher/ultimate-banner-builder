@@ -25,6 +25,7 @@ gulp.task('sass', function () {
   var runSass = function (ad_type) {
     return gulp.src(['src/**/*.scss', '!src/*.scss'])
       .pipe(sassLint())
+      .pipe(sass().on('error', sass.logError))
       .pipe(sassLint.format())
       .pipe(sassLint.failOnError())
       .pipe(sourcemaps.init())
@@ -116,5 +117,5 @@ gulp.task('watch', function () {
   gulp.watch('src/**/img/*', ['img']);
 });
 
-gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img']);
+gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img', 'connect']);
 
