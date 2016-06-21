@@ -245,9 +245,7 @@ function setupLibrary() {
 // Update adContent to bandle the image Url subfields
 function template() {
   for (var item in adContent) {
-
     var obj = adContent;
-
     if (obj[item].Url) {
       adContent[item] = obj[item].Url;
     }
@@ -273,12 +271,14 @@ function imgpreload(imgs, callback) {
   var loaded = 0;
   var images = [];
   imgs = Object.prototype.toString.apply( imgs ) === '[object Array]' ? imgs : [imgs];
+
   var inc = function() {
     loaded += 1;
     if ( loaded === imgs.length && callback ) {
       callback( images );
     }
   };
+  
   for ( var i = 0; i < imgs.length; i++ ) {
     images[i] = new Image();
     images[i].onabort = inc;
