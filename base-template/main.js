@@ -1,41 +1,83 @@
+window.onload = initialize();
 
-var my Object = getDynamicContent();
+// Set adContent's properties to equal the content needed to create the banner
+var adContent = getDynamicContent();
 
-function onPageLoaded() {    
-    var content = getDynamicContent();    
-    var name = content.gmc.display_ads_title;
-    var description = content.gmc.offer_description;
-    
-    if (content.theme.is_preprocess) {
-      var title = name;
-    
-      title = title.trim(); // remove white space at start and end
-      title = title.replace(/\s{2,}/g, ' '); // remove double white space
+// Set default values to check later when animation can begin
+var isVisible = false;
+var isImagesLoaded = false;
+var isAnimated = false;
 
-      var seperated = title.split(' - '); // create array of title and description strings
+// Update adContent to bandle the image Url subfields
+function template() {
+  for (var item in adContent) {
 
-      name = seperated[0];
-      description = seperated[1];         
+    var obj = adContent;
+
+    if (obj[item].Url) {
+      adContent[item] = obj[item].Url;
     }
-
-    var image = content.gmc.image_link.Url;
-    var price = Math.ceil(content.gmc.price.split(' ')[0]).toString();
-    
-    document.getElementById('background').style.backgroundImage = 'url(\'' + content.theme.background_img.Url + '\')';
-    document.getElementById('image').style.cssText = content.theme.image_style;
-    document.getElementById('image').style.backgroundImage = 'url(\'' + image + '\')';
-    document.getElementById('product').style.cssText = content.theme.product_style1;
-    document.getElementById('product-inner').style.cssText = content.theme.product_style2;
-    document.getElementById('name').style.cssText = content.theme.name_style;
-    document.getElementById('name').innerHTML = name;
-    document.getElementById('description').style.cssText = content.theme.description_style;
-    document.getElementById('description').innerHTML = description;    
-    document.getElementById('price').style.cssText = content.theme.price_style;
-    document.getElementById('price').innerHTML = '&pound;' + price;
-    document.getElementById('action').style.cssText = content.theme.action_style;
-    document.getElementById('action').innerHTML = content.theme.action_text;
-    
-    document.getElementById('exit').addEventListener('click', function() {
-      Enabler.exitOverride('Shop Now', content.gmc.adwords_redirect.Url);  
-    });
+  };
+  document.body.innerHTML = hDOM.format(document.body.innerHTML, adContent);
 }
+
+// Set the background images in index.html to those in adContent
+function setImages() {
+  var images = [];
+
+  hDOM('[data-img]').each(function() {
+    var img = this.attributes['data-img'].value;
+    this.setAttribute('style', 'background: url("' + img + '")');
+    images.push(img);
+  });
+
+  imgpreload(images, onImagesLoaded); 
+}
+
+// Ensure that all images have been downloaded before the animation begins
+function imgpreload(imgs, callback) {
+  var loaded = 0;
+  var images = [];
+  imgs = Object.prototype.toString.apply( imgs ) === '[object Array]' ? imgs : [imgs];
+  var inc = function() {
+    loaded += 1;
+    if ( loaded === imgs.length && callback ) {
+      callback( images );
+    }
+  };
+  for ( var i = 0; i < imgs.length; i++ ) {
+    images[i] = new Image();
+    images[i].onabort = inc;
+    images[i].onerror = inc;
+    images[i].onload = inc;
+    images[i].src = imgs[i];
+  }
+}
+
+// Remobe covering div to reveal ad (called when ready to animate)
+function removeCover() {
+  hDOM('#covering-div').addClass('hide');
+}
+
+// Called when the ad is visibile in the browser
+function onVisible() {
+  isVisible = true;
+  if (isImagesLoaded && !isAnimated) {
+    removeCover();
+    animate();
+  }
+}
+
+// Called when all images have been downloaded
+function onImagesLoaded() {
+  isImagesLoaded = true;
+  if (isVisible && !isAnimated) {
+    removeCover();
+    animate();
+  }
+}
+
+/* Place all code to create ad animations in here */
+function animate() {
+
+};

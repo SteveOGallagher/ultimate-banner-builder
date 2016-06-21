@@ -1,3 +1,5 @@
+"use strict";
+
 function getDynamicContent() {
 
   /* Paste the Google DoubleClick Generated Code for dynamic content below */
@@ -31,16 +33,30 @@ function getDynamicContent() {
   return dynamicContent.SLOPS_160x600[0];
 }
 
-if (Enabler.isInitialized()) {
-  onInitialized();
-} else {
-  Enabler.addEventListener(studio.events.StudioEvent.INIT, onInitialized);
+var Enabler;
+
+// Check DoubleClick initializer
+function initialize() {
+  if (Enabler.isInitialized()) {
+    enablerInitHandler();
+  } else {
+    Enabler.addEventListener(studio.events.StudioEvent.INIT, checkPageLoaded);
+  }
 }
 
-function onInitialized() {
-  if (Enabler.isPageLoaded()) {
-    onPageLoaded();
-  } else {
-    Enabler.addEventListener(studio.events.StudioEvent.PAGE_LOADED, onPageLoaded);
-  }
+// When Enabler is initialized, check that the page has loaded
+function checkPageLoaded() {
+  Enabler.isPageLoaded() ? politeInit() :
+    Enabler.addEventListener(
+      studio.events.StudioEvent.PAGE_LOADED,
+      politeInit
+    )
+}
+
+// Attach exit url to bg-exit element
+function exitHandler() {
+  var dynamicContent = getDynamicContent();
+  document.getElementById('bg-exit').addEventListener('click', function() {
+    Enabler.exit("clickTag", dynamicContent['exit']);
+  });
 }
