@@ -14,7 +14,9 @@ var gulp     = require('gulp'),
     connect = require('gulp-connect-multi')(),
     removeCode = require('gulp-remove-code'),
     sourcemaps = require('gulp-sourcemaps'),
-    
+    jshint = require('gulp-jshint'),   
+    sassLint = require('gulp-sass-lint'),
+
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
 
@@ -22,8 +24,10 @@ var gulp     = require('gulp'),
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
     return gulp.src(['src/**/*.scss', '!src/*.scss'])
+      .pipe(sassLint())
+      .pipe(sassLint.format())
+      .pipe(sassLint.failOnError())
       .pipe(sourcemaps.init())
-      .pipe(sass().on('error', sass.logError))
       .pipe(cleanCSS())
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
@@ -63,6 +67,8 @@ gulp.task('scripts', function() {
   var runTasks = function (ad_type) {
     var tasks = folders.map(function(folder) {
       return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
         .pipe(concat(folder + '.js'))
         .pipe(uglify())
@@ -76,6 +82,7 @@ gulp.task('scripts', function() {
   runTasks('DoubleClick');
 });
 
+
 gulp.task('img', function() {
    return folders.map(function() {
      return gulp.src('src/**/img/*')
@@ -83,7 +90,6 @@ gulp.task('img', function() {
        .pipe(gulp.dest('prod/GDN/'));
    });
 });
-
 
 gulp.task('del', function () {
   return del([
@@ -110,5 +116,5 @@ gulp.task('watch', function () {
   gulp.watch('src/**/img/*', ['img']);
 });
 
-gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img', 'connect']);
+gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img']);
 
