@@ -71,9 +71,11 @@ function onImagesLoaded() {
 
 /* Place all code to create ad animations in here */
 function animate() {
-  console.log("animating");
+  // Show Frame 1
   TweenLite.to(document.getElementById('frame1'), 0.4, { delay: 5, ease: 'easeInOut', opacity: 0 });
+  // Show Frame 2
   TweenLite.to(document.getElementById('frame2'), 0.4, { delay: 5, ease: 'easeInOut', opacity: 1 });
+  // Show Frame 3
   TweenLite.to(document.getElementById('frame2'), 0.4, { delay: 10, ease: 'easeInOut', opacity: 0 });
   TweenLite.to(document.getElementById('frame3'), 0.4, { delay: 10, ease: 'easeInOut', opacity: 1 });
 }
