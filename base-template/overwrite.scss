@@ -1,29 +1,18 @@
 @import '../global.scss';
+@import '../normalize.scss';
 
-#banner {
-  width: {{width}} + px;
-  height: {{height}} + px;
-  position: relative;
+.banner {
   background-size: 100% 100% !important;
+  height: {{height}} + px;
+  width: {{width}} + px;
 }
 
 .full-dimension {
-  width: {{width}} + px;
   height: {{height}} + px;
-}
-
-.slide__container {
   width: {{width}} + px;
+}
+
+.slide-container {
   height: {{height}} + px;
-  position: absolute;
-  top: 1px;
-  left: 0px;
-}
-
-#frame2 {
-  opacity: 0;
-}
-
-#frame3 {
-  opacity: 0;
+  width: {{width}} + px;
 }

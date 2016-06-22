@@ -16,14 +16,14 @@ function checkPageLoaded() {
     Enabler.addEventListener(
       studio.events.StudioEvent.PAGE_LOADED,
       politeInit
-    )
+    );
 }
 
 // Attach exit url to bg-exit element
 function exitHandler() {
   var dynamicContent = getDynamicContent();
   document.getElementById('bg-exit').addEventListener('click', function() {
-    Enabler.exit("clickTag", dynamicContent['exit']['Url']);
+    Enabler.exit("clickTag", dynamicContent.exit.Url);
   });
 }
 
@@ -52,19 +52,16 @@ function getDynamicContent() {
   devDynamicContent.SLOPS_160x600[0]._id = 0;
   devDynamicContent.SLOPS_160x600[0].main_image = {};
   devDynamicContent.SLOPS_160x600[0].main_image.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].main_image.Url = "https://s0.2mdn.net/ads/richmedia/studio/pv2/43436498/dirty/bg-chloe-160x600.jpg";
+  devDynamicContent.SLOPS_160x600[0].main_image.Url = "http://www.nisbets.co.uk/asset/en/prodimage/medium/cg928-werzalit-square-table-top-dark-red-600mm.jpg";
   devDynamicContent.SLOPS_160x600[0].image_url_1 = {};
   devDynamicContent.SLOPS_160x600[0].image_url_1.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].image_url_1.Url = "https://s0.2mdn.net/ads/richmedia/studio/pv2/43412835/dirty/a-trip-160x600.png";
+  devDynamicContent.SLOPS_160x600[0].image_url_1.Url = "http://www.continentalsports.co.uk/documents/images/laminate/E17-52.jpg";
   devDynamicContent.SLOPS_160x600[0].image_url_2 = {};
   devDynamicContent.SLOPS_160x600[0].image_url_2.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].image_url_2.Url = "https://s0.2mdn.net/ads/richmedia/studio/pv2/43342233/dirty/prizes-160x600.png";
+  devDynamicContent.SLOPS_160x600[0].image_url_2.Url = "http://test.adv-furniture.co.uk/wordpress/wp-content/uploads/2013/02/Green.jpg";
   devDynamicContent.SLOPS_160x600[0].image_url_3 = {};
   devDynamicContent.SLOPS_160x600[0].image_url_3.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].image_url_3.Url = "https://s0.2mdn.net/ads/richmedia/studio/pv2/43326971/dirty/find-out-more-160x600.png";
-  devDynamicContent.SLOPS_160x600[0].image_alt_1 = "Win a trip to New York!";
-  devDynamicContent.SLOPS_160x600[0].image_alt_2 = "plus other fantastic prizes!";
-  devDynamicContent.SLOPS_160x600[0].image_alt_3 = "Find out more";
+  devDynamicContent.SLOPS_160x600[0].image_url_3.Url = "http://www.ralcolours.co.uk/acatalog/ral1007.jpg";
   devDynamicContent.SLOPS_160x600[0].exit = {};
   devDynamicContent.SLOPS_160x600[0].exit.Url = "http://www.petsathome.com/";
   Enabler.setDevDynamicContent(devDynamicContent);
