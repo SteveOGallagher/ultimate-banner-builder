@@ -3,7 +3,8 @@ A banner build template that also works to generate static versions
 
 ### How to run:
 - run `npm i`
-- Edit the 'sizes.json' file with the correct sizes for the banners you wish to build. 
+- Complete the 'sizes.json' file's `dimensions` array to contain all required ad sizes. 
+- If Google Display Network builds are required, complete the 'sizes.json' file's `versions` array to label each variation needed per ad size. 
 - run `npm run generate`
 - sudo npm install gulp -g
 - run `gulp`
@@ -22,7 +23,7 @@ A banner build template that also works to generate static versions
 ## To Do
 - Ensure that gulp connect doesn't open new tab if localhost running already.
 - npm or gulp auto zip GDN folders by banner size
-- For dynamic ads requiring GDN versions, allow for multiple of the same ad size with different content.
+- For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
 - Make final improvements on base level banner build template
 
 ## Nice To Have
