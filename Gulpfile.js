@@ -18,6 +18,7 @@ var gulp     = require('gulp'),
     uncss    = require('gulp-uncss'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
+    zip = require('gulp-zip'),
 
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
@@ -113,6 +114,13 @@ gulp.task('connect', connect.server({
 
 gulp.task('clear', function() {
   cache.clearAll();
+});
+
+ 
+gulp.task('zip', function() {
+	return gulp.src('prod/GDN/**')
+		.pipe(zip('GDN.zip'))
+		.pipe(gulp.dest('zipped-GDN'));
 });
 
 gulp.task('watch', function () {
