@@ -98,10 +98,10 @@ gulp.task('scripts', function() {
         var type = 'src/' + folder + '/' + ad_type;
         var typeFolder = getFolders(type); //GDN or DoubleClick
         return typeFolder.map(function(versionFolder) {
-          return gulp.src([path.join(adPath, 'ad.js'), path.join(versionFolder, 'image-path.js')])
+          return gulp.src([path.join(adPath, 'ad.js'), path.join(type + '/' + versionFolder, 'image-paths.js')])
             .pipe(concat(versionFolder + '.js'))
             .pipe(rename(versionFolder + '.js'))
-            .pipe(gulp.dest(adPath));
+            .pipe(gulp.dest(adPath + '/' + versionFolder));
 
             });
       }
