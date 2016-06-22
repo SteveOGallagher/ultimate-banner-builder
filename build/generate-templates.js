@@ -13,7 +13,7 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['DoubleClick.js', 'main.js', 'GDN.js', 'overwrite.scss'];
+		this.formatFiles = ['DoubleClick.js', 'main.js', 'GDN.js', 'image-paths.js', 'overwrite.scss'];
 	}
 
 	loadSizes() {
@@ -87,9 +87,8 @@ class GenerateTemplates {
 				fs.mkdir(`${dir}/${GDN}`);
         fs.mkdir(`${dir}/img`);
         for (var version in this.versions) {
-					fs.mkdir(`${dir}/${GDN}/${version}`);
+					fs.mkdir(`${dir}/${GDN}/${this.versions[version]}`);
         };
-
 				that.populateTemplate(dir, data);
 			}
 		});
@@ -97,7 +96,6 @@ class GenerateTemplates {
 
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
-		fs.createReadStream(`${appRoot}/base-template/data.json`).pipe(fs.createWriteStream(`${dir}/data.json`));
 
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
@@ -120,6 +118,11 @@ class GenerateTemplates {
 	    case 'GDN.js':
 	        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
 	        break;
+	    case 'image-paths.js':
+	    		for (var version in this.versions) {
+		        fs.writeFileSync(`${dir}/${GDN}/${this.versions[version]}/${file}`, processedData, 'utf8');
+	        };
+	        break;
 	    case 'DoubleClick.js':
 	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
 	        break;
@@ -128,7 +131,6 @@ class GenerateTemplates {
 		}
 		
 	}
-
 }
 
 new GenerateTemplates();
