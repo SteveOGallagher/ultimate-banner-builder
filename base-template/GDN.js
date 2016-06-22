@@ -49,16 +49,16 @@ function getDynamicContent() {
   var devDynamicContent = {};
   devDynamicContent.GDN = [{
     main_image : {
-      Url : "https://s0.2mdn.net/ads/richmedia/studio/pv2/43436498/dirty/bg-chloe-160x600.jpg"
+      Url : "http://www.nisbets.co.uk/asset/en/prodimage/medium/cg928-werzalit-square-table-top-dark-red-600mm.jpg"
     },
     image_url_1 : {
-      Url : "https://s0.2mdn.net/ads/richmedia/studio/pv2/43412835/dirty/a-trip-160x600.png"
+      Url : "http://www.continentalsports.co.uk/documents/images/laminate/E17-52.jpg"
     },
     image_url_2 : {
-      Url : "https://s0.2mdn.net/ads/richmedia/studio/pv2/43342233/dirty/prizes-160x600.png"
+      Url : "http://test.adv-furniture.co.uk/wordpress/wp-content/uploads/2013/02/Green.jpg"
     },
     image_url_3 : {
-      Url : "https://s0.2mdn.net/ads/richmedia/studio/pv2/43326971/dirty/find-out-more-160x600.png"
+      Url : "http://www.ralcolours.co.uk/acatalog/ral1007.jpg"
     },
     exit : {
       Url : "http://www.google.com/"
