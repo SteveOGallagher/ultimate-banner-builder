@@ -11,11 +11,13 @@ var gulp     = require('gulp'),
     fs       = require('fs'),
     path     = require('path'),
     del      = require('del'),
-    connect = require('gulp-connect-multi')(),
+    connect  = require('gulp-connect-multi')(),
     removeCode = require('gulp-remove-code'),
     sourcemaps = require('gulp-sourcemaps'),
-    jshint = require('gulp-jshint'),   
+    jshint   = require('gulp-jshint'),   
+    uncss    = require('gulp-uncss'),
     sassLint = require('gulp-sass-lint'),
+    cache = require('gulp-cache'),
 
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
@@ -25,10 +27,11 @@ gulp.task('sass', function () {
   var runSass = function (ad_type) {
     return gulp.src(['src/**/*.scss', '!src/*.scss'])
       .pipe(sassLint())
-      .pipe(sass().on('error', sass.logError))
       .pipe(sassLint.format())
       .pipe(sassLint.failOnError())
+      //.pipe(uncss({ html: 'index.html' }))
       .pipe(sourcemaps.init())
+      .pipe(sass().on('error', sass.logError))
       .pipe(cleanCSS())
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
@@ -85,11 +88,10 @@ gulp.task('scripts', function() {
 
 
 gulp.task('img', function() {
-   return folders.map(function() {
-     return gulp.src('src/**/img/*')
-       .pipe(image())
-       .pipe(gulp.dest('prod/GDN/'));
-   });
+   return gulp.src('src/**/img/*')
+     .pipe(image())
+     .pipe(gulp.dest('prod/GDN')) 
+     .pipe(connect.reload());
 });
 
 gulp.task('del', function () {
@@ -109,12 +111,16 @@ gulp.task('connect', connect.server({
   }
 }));
 
+gulp.task('clear', function() {
+  cache.clearAll();
+});
 
 gulp.task('watch', function () {
-  gulp.watch('src/**/*.scss', ['sass']);
   gulp.watch('src/**/*.html', ['html']);
+  gulp.watch('src/**/*.scss', ['sass']);
   gulp.watch('src/**/*.js', ['scripts']);
-  gulp.watch('src/**/img/*', ['img']);
+  gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
+  //gulp.watch('src/**/img/*', ['img']);
 });
 
 gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img', 'connect']);
