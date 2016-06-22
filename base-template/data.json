@@ -1,0 +1,10 @@
+{
+  "banners": [
+    {
+      "name" : "cat"
+    },
+    {
+      "name" : "dog"
+    }
+  ]
+}
