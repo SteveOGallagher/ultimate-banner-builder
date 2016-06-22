@@ -1,9 +1,15 @@
 {
-    "dimensions": [
+    "dimensions": 
+    [
         {
             "width": 160,
             "height": 600,
             "prefix": ""
         }
+    ],
+    "versions": 
+    [
+      "cat",
+      "dog"
     ]
 }

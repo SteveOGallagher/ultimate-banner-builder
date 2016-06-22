@@ -3,19 +3,19 @@ function getDynamicContent() {
   var devDynamicContent = {};
   devDynamicContent.GDN = [{
     main_image : {
-      Url : "img/red.jpg"
+      Url : null
     },
     image_url_1 : {
-      Url : "img/blue.jpg"
+      Url : null
     },
     image_url_2 : {
-      Url : "img/green.jpg"
+      Url : null
     },
     image_url_3 : {
-      Url : "img/orange.jpg"
+      Url : null
     },
     exit : {
-      Url : "http://www.google.com/"
+      Url : null
     }
   }];
   return devDynamicContent.GDN[0];

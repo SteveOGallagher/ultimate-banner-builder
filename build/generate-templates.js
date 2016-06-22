@@ -20,6 +20,7 @@ class GenerateTemplates {
 		const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
+		this.versions = sizes.versions;
 	}
 
 	processSizes() {
@@ -85,6 +86,10 @@ class GenerateTemplates {
 				fs.mkdir(`${dir}/${DoubleClick}`);
 				fs.mkdir(`${dir}/${GDN}`);
         fs.mkdir(`${dir}/img`);
+        for (var version in this.versions) {
+					fs.mkdir(`${dir}/${GDN}/${version}`);
+        };
+
 				that.populateTemplate(dir, data);
 			}
 		});
