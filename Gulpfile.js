@@ -20,8 +20,20 @@ var gulp     = require('gulp'),
     cache = require('gulp-cache'),
     zip = require('gulp-zip'),
 
+    data = require('./src/data.json');
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
+
+
+function createBrand() {
+
+  fs.mkdir('src/'+ data.name);
+}
+
+gulp.task('brand', function() {
+
+  return createBrand();
+});
 
 
 gulp.task('sass', function () {
