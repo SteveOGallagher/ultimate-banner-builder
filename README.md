@@ -22,6 +22,7 @@ A banner build template that also works to generate static versions
 ## To Do
 - Ensure that gulp connect doesn't open new tab if localhost running already.
 - Make final improvements on base level banner build template
+- npm or gulp auto zip GDN folders by banner size
 
 ## Nice To Have
 - For `npm run generate`, if src is empty, build out again. 

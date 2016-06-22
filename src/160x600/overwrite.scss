@@ -7,6 +7,13 @@
   width: 160 + px;
 }
 
+.banner-border {
+  position: absolute;
+  height: 600 - 2 + px;
+  width: 160 - 2 + px;
+  border: 1px solid #000;
+}
+
 .full-dimension {
   height: 600 + px;
   width: 160 + px;
