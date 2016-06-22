@@ -92,6 +92,7 @@ class GenerateTemplates {
 
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
+		fs.createReadStream(`${appRoot}/base-template/data.json`).pipe(fs.createWriteStream(`${dir}/data.json`));
 
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
