@@ -25,14 +25,6 @@ var gulp     = require('gulp'),
     folders  = getFolders(scriptsPath);
 
 
-//function createBrand() {
-  //fs.mkdir('src/'+ data.name);
-//}
-
-//gulp.task('brand', function() {
-  //return createBrand();
-//});
-
 
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
@@ -130,17 +122,17 @@ gulp.task('del', function () {
   ]);
 });
 
-gulp.task('master', function() {
-  var folder;
-  var copyScripts = function () {
-    var tasks = folders.map(function(folder) {
-      return gulp.src('/**/main.js')
-        .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
-    });
-  };
+//gulp.task('master', function() {
+  //var folder;
+  //var copyScripts = function () {
+    //var tasks = folders.map(function(folder) {
+      //return gulp.src('/**/main.js')
+        //.pipe(gulp.dest('prod/' + ad_type + '/' + folder));
+    //});
+  //};
 
-  copyScripts();
-});
+  //copyScripts();
+//});
 
 
 gulp.task('connect', connect.server({
@@ -168,7 +160,6 @@ gulp.task('watch', function () {
   gulp.watch('src/**/*.scss', ['sass']);
   gulp.watch('src/**/*.js', ['scripts']);
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
-  //gulp.watch('src/**/img/*', ['img']);
 });
 
 gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img', 'connect']);
