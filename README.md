@@ -1,13 +1,21 @@
 # ultimate-banner-builder
 A banner build template that also works to generate static versions
 
-### How to run:
-- run `npm i`
-- Complete the 'sizes.json' file's `dimensions` array to contain all required ad sizes. 
+### Setup:
+- run `npm i` to install all necessary packages locally
+- sudo npm install gulp -g
+
+### Workflow for building the banners
+- In the 'sizes.json' file's `dimensions` array, enter the dimensions of the 'Master' ad size. 
+- run `npm run generate` to create the 'src' folder structure where you will build the Master version.
+- run `gulp` to create the 'prod' output folder structure when the final ad files will be automatically created.
+- Once the client is satisfied that the Master banner matches the brief, run `gulp master` to create new template files consisting of the work you've done.
+
+- Complete the 'sizes.json' file's `dimensions` array to contain all required ad sizes including the Master size. 
 - If Google Display Network builds are required, complete the 'sizes.json' file's `versions` array to label each variation needed per ad size. 
 - run `npm run generate`
-- sudo npm install gulp -g
 - run `gulp`
+- Make adjustments in the code for each size as needed. (Typically, only image-paths.js and overwrite.scss will need adjusting)
 
 
 #Requirements of the banner template builder
@@ -21,13 +29,14 @@ A banner build template that also works to generate static versions
 - Create an img folder in each size's src directory and build these out into GDN sizes
 
 ## To Do
-- Ensure that gulp connect doesn't open new tab if localhost running already.
+- Allow for a master to be worked on before creating all versions using the same main.js animation
 - npm or gulp auto zip GDN folders by banner size
 - For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
 - Make final improvements on base level banner build template
 
 ## Nice To Have
 - For `npm run generate`, if src is empty, build out again. 
+- Ensure that gulp connect doesn't open new tab if localhost running already.
 
 ### Troubleshooting
 - If `gulp` throws an error, ensure that you have first run `npm run generate`.
