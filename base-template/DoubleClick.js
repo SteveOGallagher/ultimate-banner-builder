@@ -16,14 +16,14 @@ function checkPageLoaded() {
     Enabler.addEventListener(
       studio.events.StudioEvent.PAGE_LOADED,
       politeInit
-    )
+    );
 }
 
 // Attach exit url to bg-exit element
 function exitHandler() {
   var dynamicContent = getDynamicContent();
   document.getElementById('bg-exit').addEventListener('click', function() {
-    Enabler.exit("clickTag", dynamicContent['exit']['Url']);
+    Enabler.exit("clickTag", dynamicContent.exit.Url);
   });
 }
 

@@ -4,6 +4,7 @@ var clickTag = "";
 // Begin animation after a time delay to allow for loading
 function politeInit() {
   setTimeout(function() { 
+    exitHandler();
     setImages();
   }, 500);
   setTimeout(function() { 
@@ -16,12 +17,17 @@ function politeInit() {
 function exitHandler() {
   var dynamicContent = getDynamicContent();
   var bgExit = document.getElementById('bg-exit');
+  var parent = bgExit.parentNode;
+  var anchor = document.createElement('a');
+  parent.replaceChild(anchor, bgExit);
+  anchor.appendChild(bgExit);
 
   bgExit.addEventListener('click', function() {
-    if (clickTag == "") {
-      clickTag = dynamicContent['exit']['Url'];
+    if (clickTag === "") {
+      clickTag = dynamicContent.exit.Url;
     }
-    bgExit.setAttribute('href', clickTag);
+    anchor.setAttribute('target', '_blank');
+    anchor.setAttribute('href', clickTag);
   });
 }
 
