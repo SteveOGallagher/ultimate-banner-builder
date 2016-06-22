@@ -1,10 +1,4 @@
-{
-  "banners": [
-    {
-      "name" : "cat"
-    },
-    {
-      "name" : "dog"
-    }
-  ]
-}
+[
+  "cat",
+  "dog"
+]

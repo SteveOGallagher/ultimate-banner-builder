@@ -3,7 +3,7 @@ function getDynamicContent() {
   var devDynamicContent = {};
   devDynamicContent.GDN = [{
     main_image : {
-      Url : "img/red.jpg"
+      Url : "img/dog.jpg"
     },
     image_url_1 : {
       Url : "img/blue.jpg"

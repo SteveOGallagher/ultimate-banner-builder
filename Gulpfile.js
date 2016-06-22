@@ -25,15 +25,13 @@ var gulp     = require('gulp'),
     folders  = getFolders(scriptsPath);
 
 
-function createBrand() {
+//function createBrand() {
+  //fs.mkdir('src/'+ data.name);
+//}
 
-  fs.mkdir('src/'+ data.name);
-}
-
-gulp.task('brand', function() {
-
-  return createBrand();
-});
+//gulp.task('brand', function() {
+  //return createBrand();
+//});
 
 
 gulp.task('sass', function () {
@@ -81,17 +79,18 @@ function getFolders(dir) {
 
 gulp.task('scripts', function() {
   var folder;
+  //var version = data
   var runTasks = function (ad_type) {
     var tasks = folders.map(function(folder) {
-      return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+      return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '**/**/image-paths.js'), path.join(scriptsPath, folder, '/**/main.js')])
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
         .pipe(concat(folder + '.js'))
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(rename('ad.js'))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
+        .pipe(gulp.dest('prod/' + ad_type + '/' + folder + '/' + version));
     });
   };
 
