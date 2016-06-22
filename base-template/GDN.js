@@ -49,16 +49,16 @@ function getDynamicContent() {
   var devDynamicContent = {};
   devDynamicContent.GDN = [{
     main_image : {
-      Url : "http://www.nisbets.co.uk/asset/en/prodimage/medium/cg928-werzalit-square-table-top-dark-red-600mm.jpg"
+      Url : "img/red.jpg"
     },
     image_url_1 : {
-      Url : "http://www.continentalsports.co.uk/documents/images/laminate/E17-52.jpg"
+      Url : "img/blue.jpg"
     },
     image_url_2 : {
-      Url : "http://test.adv-furniture.co.uk/wordpress/wp-content/uploads/2013/02/Green.jpg"
+      Url : "img/greenjpg"
     },
     image_url_3 : {
-      Url : "http://www.ralcolours.co.uk/acatalog/ral1007.jpg"
+      Url : "img/orange.jpg"
     },
     exit : {
       Url : "http://www.google.com/"
