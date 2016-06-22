@@ -81,8 +81,8 @@ gulp.task('scripts', function() {
   var folder; //this is the folder with the size name
   var version = data.versions[0];
   var runTasks = function (ad_type) {
-    var adPath = 'prod/' + ad_type + '/' + folder;
     var tasks = folders.map(function(folder) {
+      var adPath = 'prod/' + ad_type + '/' + folder;
       var ad = gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
         //.pipe(jshint())
         //.pipe(jshint.reporter('jshint-stylish'))
@@ -93,13 +93,15 @@ gulp.task('scripts', function() {
         //.pipe(sourcemaps.write())
         .pipe(gulp.dest(adPath));
 
+    
       if (ad_type === 'GDN') {
         var type = 'src/' + folder + '/' + ad_type;
         var typeFolder = getFolders(type); //GDN or DoubleClick
-        typeFolder.map(function(versionFolder) {
+        return typeFolder.map(function(versionFolder) {
           return gulp.src([path.join(adPath, 'ad.js'), path.join(versionFolder, 'image-path.js')])
             .pipe(concat(versionFolder + '.js'))
-            .pipe(gulp.dest(adPath + '/' + versionFolder));
+            .pipe(rename(versionFolder + '.js'))
+            .pipe(gulp.dest(adPath));
 
             });
       }
