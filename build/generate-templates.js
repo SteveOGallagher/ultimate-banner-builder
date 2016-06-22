@@ -129,7 +129,6 @@ class GenerateTemplates {
 	    default:
 	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 		}
-		
 	}
 }
 

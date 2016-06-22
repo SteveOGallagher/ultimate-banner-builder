@@ -130,6 +130,18 @@ gulp.task('del', function () {
   ]);
 });
 
+gulp.task('master', function() {
+  var folder;
+  var copyScripts = function () {
+    var tasks = folders.map(function(folder) {
+      return gulp.src('/**/main.js')
+        .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
+    });
+  };
+
+  copyScripts();
+});
+
 
 gulp.task('connect', connect.server({
   root: ['./prod/'],
