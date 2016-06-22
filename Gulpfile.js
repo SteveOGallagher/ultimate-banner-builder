@@ -18,9 +18,20 @@ var gulp     = require('gulp'),
     uncss    = require('gulp-uncss'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
+    zip = require('gulp-zip'),
 
+    data = require('./sizes.json');
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
+
+
+//function createBrand() {
+  //fs.mkdir('src/'+ data.name);
+//}
+
+//gulp.task('brand', function() {
+  //return createBrand();
+//});
 
 
 gulp.task('sass', function () {
@@ -67,19 +78,36 @@ function getFolders(dir) {
 
 
 gulp.task('scripts', function() {
-  var folder;
+  var folder; //this is the folder with the size name
+  var version = data.versions[0];
   var runTasks = function (ad_type) {
     var tasks = folders.map(function(folder) {
-      return gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(sourcemaps.init())
+      var adPath = 'prod/' + ad_type + '/' + folder;
+      var ad = gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+        //.pipe(jshint())
+        //.pipe(jshint.reporter('jshint-stylish'))
+        //.pipe(sourcemaps.init())
         .pipe(concat(folder + '.js'))
-        .pipe(uglify())
+        //.pipe(uglify())
         .pipe(rename('ad.js'))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('prod/' + ad_type + '/' + folder));
+        //.pipe(sourcemaps.write())
+        .pipe(gulp.dest(adPath));
+
+    
+      if (ad_type === 'GDN') {
+        var type = 'src/' + folder + '/' + ad_type;
+        var typeFolder = getFolders(type); //GDN or DoubleClick
+        return typeFolder.map(function(versionFolder) {
+          return gulp.src([path.join(adPath, 'ad.js'), path.join(type + '/' + versionFolder, 'image-paths.js')])
+            .pipe(concat(versionFolder + '.js'))
+            .pipe(rename(versionFolder + '.js'))
+            .pipe(gulp.dest(adPath + '/' + versionFolder));
+
+            });
+      }
+
     });
+
   };
 
   runTasks('GDN');
@@ -125,6 +153,13 @@ gulp.task('connect', connect.server({
 
 gulp.task('clear', function() {
   cache.clearAll();
+});
+
+ 
+gulp.task('zip', function() {
+	return gulp.src('prod/GDN/**')
+		.pipe(zip('GDN.zip'))
+		.pipe(gulp.dest('zipped-GDN'));
 });
 
 gulp.task('watch', function () {
