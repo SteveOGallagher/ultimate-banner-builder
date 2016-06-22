@@ -3,23 +3,23 @@
 
 .banner {
   background-size: 100% 100% !important;
-  height: {{height}} + px;
-  width: {{width}} + px;
+  height: 600 + px;
+  width: 160 + px;
 }
 
 .banner-border {
   position: absolute;
-  height: {{height}} - 2 + px;
-  width: {{width}} - 2 + px;
+  height: 600 - 2 + px;
+  width: 160 - 2 + px;
   border: 1px solid #000;
 }
 
 .full-dimension {
-  height: {{height}} + px;
-  width: {{width}} + px;
+  height: 600 + px;
+  width: 160 + px;
 }
 
 .slide-container {
-  height: {{height}} + px;
-  width: {{width}} + px;
+  height: 600 + px;
+  width: 160 + px;
 }

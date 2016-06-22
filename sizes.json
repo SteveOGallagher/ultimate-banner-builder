@@ -3,12 +3,32 @@
         {
             "width": 160,
             "height": 600,
-            "prefix": ""
+            "prefix": "brand1-"
+        },
+        {
+            "width": 160,
+            "height": 600,
+            "prefix": "brand2-"
+        },
+        {
+            "width": 160,
+            "height": 600,
+            "prefix": "brand3-"
         },
         {
             "width": 300,
             "height": 600,
-            "prefix": ""
+            "prefix": "brand1-"
+        },
+        {
+            "width": 300,
+            "height": 600,
+            "prefix": "brand2-"
+        },
+        {
+            "width": 300,
+            "height": 600,
+            "prefix": "brand3-"
         }
     ]
 }
