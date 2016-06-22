@@ -15,13 +15,14 @@ A banner build template that also works to generate static versions
 - Create Gulp watch task to copy changes in html, js, and scss files into minified versions in relative production folder
 - Setup automated localhost serving
 - Create ability to make DoubleClick js versions with Enabler and GDN js versions with pure JS
+- Build most ideal template files for html, scss, and js (for DoubleClick & GDN)
 - Add lint for css and js
 
 ##To Do
-- Build most ideal template files for html, scss, and js (for DoubleClick & GDN)
 - Create an img folder in each size's src directory and build these out into GDN sizes
 - Ensure that gulp connect doesn't open new tab if localhost running already.
 - For `npm run generate`, if src is empty, build out again. 
+- Make final improvements on base level banner build template
 
 ### Troubleshooting
 - If `gulp` throws an error, ensure that you have first run `npm run generate`.
