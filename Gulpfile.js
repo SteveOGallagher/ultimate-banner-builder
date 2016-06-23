@@ -123,13 +123,17 @@ gulp.task('del', function () {
 });
 
 gulp.task('master', function() {
-  var folder;
-  var copyScripts = function () {
-      return gulp.src('src/**/main.js')
-        // .pipe(gulp.dest('base-template/main.js'));
-        .pipe(gulp.dest('base-template', { basename: 'base' }));
+  var sources = [
+    'src/**/main.js',
+    'src/global.scss',
+    'src/normalize.scss'
+  ];
+  function copyScripts (source) {
+    return gulp.src(source)
+      .pipe(rename(function (path) {path.dirname = "/";}))
+      .pipe(gulp.dest('./base-template'))
   };
-  copyScripts();
+  copyScripts(sources);
 });
 
 
