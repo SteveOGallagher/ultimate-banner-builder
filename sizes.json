@@ -12,9 +12,10 @@
         "prefix": ""
     }
   ],
-  "GDN" : "false",
+  "GDN" : "true",
   "versions": 
   [
-    ""
+    "cat",
+    "dog"
   ]
 }

@@ -5,7 +5,7 @@ A banner build template that also works to generate static versions
 - run `npm i` to install all necessary packages locally
 - sudo `npm install gulp -g` to ensure you have Gulp installed.
 
-## Workflow for building the banners
+# Workflow for building the banners
 ### 1. Create the Master
 - In the 'sizes.json' file's `dimensions` array, enter the dimensions of the 'Master' ad size. 
 - Run `npm run generate` (This creates the 'src' folder structure where you will build the Master version)
