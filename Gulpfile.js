@@ -44,7 +44,7 @@ gulp.task('sass', function () {
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
   }
-  
+
   runSass('DoubleClick');
   if (GDN === "true") {
     runSass('GDN');
@@ -172,9 +172,19 @@ gulp.task('clear', function() {
 
  
 gulp.task('zip', function() {
-	return gulp.src('prod/GDN/**')
-		.pipe(zip('GDN.zip'))
-		.pipe(gulp.dest('zipped-GDN'));
+  var folders = getFolders('prod/GDN');
+
+  function applyZip(source, name) {
+  	return gulp.src(source)
+  		.pipe(zip(name + '.zip'))
+  		.pipe(gulp.dest('zipped-GDN'));
+  };
+
+  applyZip('prod/GDN/**', 'GDN');
+  for (var folder in folders) {
+    console.log(folders[folder]);
+    applyZip('prod/GDN/' + folders[folder] + '/**',folders[folder].toString());
+  };
 });
 
 gulp.task('watch', function () {
