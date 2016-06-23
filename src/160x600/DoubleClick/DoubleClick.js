@@ -48,25 +48,25 @@ function getDynamicContent() {
   /* Paste the Google DoubleClick Generated Code for dynamic content below */
   Enabler.setProfileId(1079746);
   var devDynamicContent = {};
-  devDynamicContent.SLOPS_160x600= [{}];
-  devDynamicContent.SLOPS_160x600[0]._id = 0;
-  devDynamicContent.SLOPS_160x600[0].main_image = {};
-  devDynamicContent.SLOPS_160x600[0].main_image.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].main_image.Url = "http://www.nisbets.co.uk/asset/en/prodimage/medium/cg928-werzalit-square-table-top-dark-red-600mm.jpg";
-  devDynamicContent.SLOPS_160x600[0].image_url_1 = {};
-  devDynamicContent.SLOPS_160x600[0].image_url_1.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].image_url_1.Url = "http://www.continentalsports.co.uk/documents/images/laminate/E17-52.jpg";
-  devDynamicContent.SLOPS_160x600[0].image_url_2 = {};
-  devDynamicContent.SLOPS_160x600[0].image_url_2.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].image_url_2.Url = "http://test.adv-furniture.co.uk/wordpress/wp-content/uploads/2013/02/Green.jpg";
-  devDynamicContent.SLOPS_160x600[0].image_url_3 = {};
-  devDynamicContent.SLOPS_160x600[0].image_url_3.Type = "file";
-  devDynamicContent.SLOPS_160x600[0].image_url_3.Url = "http://www.ralcolours.co.uk/acatalog/ral1007.jpg";
-  devDynamicContent.SLOPS_160x600[0].exit = {};
-  devDynamicContent.SLOPS_160x600[0].exit.Url = "http://www.petsathome.com/";
+  devDynamicContent.DoubleClick= [{}];
+  devDynamicContent.DoubleClick[0]._id = 0;
+  devDynamicContent.DoubleClick[0].main_image = {};
+  devDynamicContent.DoubleClick[0].main_image.Type = "file";
+  devDynamicContent.DoubleClick[0].main_image.Url = "http://www.nisbets.co.uk/asset/en/prodimage/medium/cg928-werzalit-square-table-top-dark-red-600mm.jpg";
+  devDynamicContent.DoubleClick[0].image_url_1 = {};
+  devDynamicContent.DoubleClick[0].image_url_1.Type = "file";
+  devDynamicContent.DoubleClick[0].image_url_1.Url = "http://www.continentalsports.co.uk/documents/images/laminate/E17-52.jpg";
+  devDynamicContent.DoubleClick[0].image_url_2 = {};
+  devDynamicContent.DoubleClick[0].image_url_2.Type = "file";
+  devDynamicContent.DoubleClick[0].image_url_2.Url = "http://test.adv-furniture.co.uk/wordpress/wp-content/uploads/2013/02/Green.jpg";
+  devDynamicContent.DoubleClick[0].image_url_3 = {};
+  devDynamicContent.DoubleClick[0].image_url_3.Type = "file";
+  devDynamicContent.DoubleClick[0].image_url_3.Url = "http://www.ralcolours.co.uk/acatalog/ral1007.jpg";
+  devDynamicContent.DoubleClick[0].exit = {};
+  devDynamicContent.DoubleClick[0].exit.Url = "http://www.petsathome.com/";
   Enabler.setDevDynamicContent(devDynamicContent);
   /* END OF GOOGLE DYNAMIC CODE SNIPPET */
 
-  // Replace the below object variable with the one pasted above.
-  return devDynamicContent.SLOPS_160x600[0];
+  // Replace the below object variable with the one pasted above!!
+  return devDynamicContent.DoubleClick[0];
 }

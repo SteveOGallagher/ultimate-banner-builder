@@ -29,7 +29,6 @@ function exitHandler() {
     anchor.setAttribute('target', '_blank');
     anchor.setAttribute('href', clickTag);
   });
-
 }
 
 // Wait for the DOM to load before initialising banner load
@@ -40,4 +39,3 @@ function initialize() {
     politeInit();
   }
 }
-

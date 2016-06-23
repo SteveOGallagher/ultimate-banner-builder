@@ -1,14 +1,20 @@
 {
   "dimensions": 
-    [
-      {
-          "width": 160,
-          "height": 600,
-          "prefix": ""
-      }
-    ],
-  "versions": 
-    [
-      "version"
-    ]
+  [
+    {
+        "width": 160,
+        "height": 600,
+        "prefix": ""
+    },
+    {
+        "width": 300,
+        "height": 600,
+        "prefix": ""
+    }
+  ],
+  "GDN" : "true",
+  "versions":
+  [
+    "cat"
+  ]
 }

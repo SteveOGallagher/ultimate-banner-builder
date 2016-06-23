@@ -20,6 +20,7 @@ class GenerateTemplates {
 		const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
+		this.GDN = sizes.GDN;
 		this.versions = sizes.versions;
 	}
 
@@ -84,11 +85,15 @@ class GenerateTemplates {
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
 				fs.mkdir(`${dir}/${DoubleClick}`);
-				fs.mkdir(`${dir}/${GDN}`);
-        fs.mkdir(`${dir}/img`);
-        for (var version in this.versions) {
-					fs.mkdir(`${dir}/${GDN}/${this.versions[version]}`);
-        };
+
+				if (this.GDN === "true") {
+					fs.mkdir(`${dir}/${GDN}`);
+	        fs.mkdir(`${dir}/img`);
+	        for (var version in this.versions) {
+						fs.mkdir(`${dir}/${GDN}/${this.versions[version]}`);
+	        };
+	      }
+
 				that.populateTemplate(dir, data);
 			}
 		});
@@ -116,12 +121,16 @@ class GenerateTemplates {
 
 		switch(file) {
 	    case 'GDN.js':
-	        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
+	    		if (this.GDN === "true") {
+		        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
+	    		}
 	        break;
 	    case 'image-paths.js':
-	    		for (var version in this.versions) {
-		        fs.writeFileSync(`${dir}/${GDN}/${this.versions[version]}/${file}`, processedData, 'utf8');
-	        };
+	    		if (this.GDN === "true") {
+		    		for (var version in this.versions) {
+			        fs.writeFileSync(`${dir}/${GDN}/${this.versions[version]}/${file}`, processedData, 'utf8');
+		        };
+	    		}
 	        break;
 	    case 'DoubleClick.js':
 	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');

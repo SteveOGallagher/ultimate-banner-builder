@@ -25,6 +25,10 @@ var gulp     = require('gulp'),
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
 
+const appRoot = process.cwd();
+const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
+var sizes = JSON.parse(sizesFile);
+var GDN = sizes.GDN;
 
 
 gulp.task('sass', function () {
@@ -40,8 +44,11 @@ gulp.task('sass', function () {
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
   }
-  runSass('GDN');
+  
   runSass('DoubleClick');
+  if (GDN === "true") {
+    runSass('GDN');
+  };
 });
 
 gulp.task('html', function() {
@@ -57,8 +64,11 @@ gulp.task('html', function() {
         .pipe(gulp.dest('prod/' + ad_type));
       }
   }
-  runHtml('GDN');
+
   runHtml('DoubleClick');
+  if (GDN === "true") {
+    runHtml('GDN');
+  };
 });
 
 
@@ -89,10 +99,8 @@ gulp.task('scripts', function() {
       if (ad_type === 'GDN') {
         var type = 'src/' + sizeFolder + '/' + ad_type;
         var typeFolder = getFolders(type); //GDN or DoubleClick
-        var deleted;
         return typeFolder.map(function(versionFolder) {
           var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-          deleted = true;
 
           return es.merge(
             gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
@@ -112,9 +120,11 @@ gulp.task('scripts', function() {
 
     });
   };
-
-  runTasks('GDN');
+  
   runTasks('DoubleClick');
+  if (GDN === "true") {
+    runTasks('GDN');
+  };
 });
 
 gulp.task('js', ['scripts'], function() {
@@ -126,10 +136,12 @@ gulp.task('js', ['scripts'], function() {
 
 
 gulp.task('img', function() {
+  if (GDN === "true") {
    return gulp.src('src/**/img/*')
      .pipe(image())
      .pipe(gulp.dest('prod/GDN')) 
      .pipe(connect.reload());
+  }
 });
 
 gulp.task('del', function () {
@@ -139,6 +151,21 @@ gulp.task('del', function () {
   ]);
 });
 
+// Overwrite base-template files with approved Master adjustments
+gulp.task('master', function() {
+  var sources = [
+    'src/**/index.html',
+    'src/**/main.js',
+    'src/global.scss',
+    'src/normalize.scss'
+  ];
+  function copyScripts (source) {
+    return gulp.src(source)
+      .pipe(rename(function (path) {path.dirname = "/";}))
+      .pipe(gulp.dest('./base-template'));
+  }
+  copyScripts(sources);
+});
 
 
 gulp.task('connect', connect.server({
