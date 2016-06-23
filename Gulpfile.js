@@ -20,6 +20,7 @@ var gulp     = require('gulp'),
     cache = require('gulp-cache'),
     zip = require('gulp-zip'),
     es = require('event-stream'),
+    runSequence = require('run-sequence'),
 
     data = require('./sizes.json'),
     scriptsPath = 'src',
@@ -48,7 +49,7 @@ gulp.task('sass', function () {
   runSass('DoubleClick');
   if (GDN === "true") {
     runSass('GDN');
-  };
+  }
 });
 
 gulp.task('html', function() {
@@ -63,7 +64,7 @@ gulp.task('html', function() {
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest('prod/' + ad_type));
       }
-  }
+  };
 
   runHtml('DoubleClick');
   if (GDN === "true") {
@@ -127,7 +128,7 @@ gulp.task('scripts', function() {
   };
 });
 
-gulp.task('js', ['scripts'], function() {
+gulp.task('del-js', function() {
   return folders.map(function(sizeFolder) {
     var path = 'prod/GDN/' + sizeFolder;
     return del(path);
@@ -195,5 +196,10 @@ gulp.task('watch', function () {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('default', ['watch', 'html', 'sass', 'img', 'js', 'connect']);
+gulp.task('build', [ 'html', 'sass', 'img']);
+
+gulp.task('default', function(callback) {
+  runSequence('build', 'scripts', 'connect', 'watch', 'del-js', callback);
+});
+
 
