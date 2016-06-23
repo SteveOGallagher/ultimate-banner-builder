@@ -10,14 +10,9 @@
         "width": 300,
         "height": 600,
         "prefix": ""
-    },
-    {
-        "width": 728,
-        "height": 90,
-        "prefix": ""
     }
   ],
-  "GDN" : "true",
+  "GDN" : "false",
   "versions": 
   [
     ""
