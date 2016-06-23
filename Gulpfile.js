@@ -21,7 +21,7 @@ var gulp     = require('gulp'),
     zip = require('gulp-zip'),
     es = require('event-stream'),
 
-    data = require('./sizes.json');
+    data = require('./sizes.json'),
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
 
@@ -76,31 +76,38 @@ gulp.task('scripts', function() {
     var tasks = folders.map(function(sizeFolder) {
       var adPath = 'prod/' + ad_type + '/' + sizeFolder;
       var ad = gulp.src([path.join(scriptsPath, sizeFolder, '/**/' + ad_type + '.js'), path.join(scriptsPath, sizeFolder, '/**/main.js')])
-        //.pipe(jshint())
-        //.pipe(jshint.reporter('jshint-stylish'))
-        //.pipe(sourcemaps.init())
+        .pipe(jshint())
+        .pipe(jshint.reporter('jshint-stylish'))
+        .pipe(sourcemaps.init())
         .pipe(concat(sizeFolder + '.js'))
-        //.pipe(uglify())
+        .pipe(uglify())
         .pipe(rename('ad.js'))
-        //.pipe(sourcemaps.write())
+        .pipe(sourcemaps.write())
         .pipe(gulp.dest(adPath));
 
     
       if (ad_type === 'GDN') {
         var type = 'src/' + sizeFolder + '/' + ad_type;
         var typeFolder = getFolders(type); //GDN or DoubleClick
+        var deleted;
         return typeFolder.map(function(versionFolder) {
           var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
+          deleted = true;
 
           return es.merge(
             gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
+              .pipe(jshint())
+              .pipe(jshint.reporter('jshint-stylish'))
+              .pipe(sourcemaps.init())
               .pipe(concat(versionFolder + '.js'))
-              .pipe(rename(versionFolder + '.js')), 
+              .pipe(uglify())
+              .pipe(rename(versionFolder + '.js')) 
+              .pipe(sourcemaps.write()),
             gulp.src([adPath + '/*', '!'+ adPath + '/*.js'])
           )
             .pipe(gulp.dest(sizeAndVersion));
-            //return del(adPath);
         });
+        
       }
 
     });
@@ -110,10 +117,12 @@ gulp.task('scripts', function() {
   runTasks('DoubleClick');
 });
 
-gulp.task('delete-js', function() {
-
+gulp.task('js', ['scripts'], function() {
+  return folders.map(function(sizeFolder) {
+    var path = 'prod/GDN/' + sizeFolder;
+    return del(path);
+  });
 });
-
 
 
 gulp.task('img', function() {
@@ -159,5 +168,5 @@ gulp.task('watch', function () {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('default', ['watch', 'html', 'sass', 'img', 'scripts', 'connect']);
+gulp.task('default', ['watch', 'html', 'sass', 'img', 'js', 'connect']);
 

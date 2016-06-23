@@ -20,3 +20,4 @@ function getDynamicContent() {
   }];
   return devDynamicContent.GDN[0];
 }
+
