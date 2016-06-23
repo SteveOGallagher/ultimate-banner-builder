@@ -69,9 +69,10 @@ function getFolders(dir) {
 }
 
 
+
+
 gulp.task('scripts', function() {
   var folder; //this is the folder with the size name
-  var version = data.versions[0];
   var runTasks = function (ad_type) {
     var tasks = folders.map(function(folder) {
       var adPath = 'prod/' + ad_type + '/' + folder;
@@ -94,7 +95,10 @@ gulp.task('scripts', function() {
           return gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
             .pipe(concat(versionFolder + '.js'))
             .pipe(rename(versionFolder + '.js'))
-            .pipe(gulp.dest(adPath + '/' + versionFolder));
+            //.pipe(rename(function (path) {
+              //path.dirname += "-" + versionFolder;
+            //}))
+            .pipe(gulp.dest('prod/' + ad_type + '/' + folder ));
 
             });
       }
