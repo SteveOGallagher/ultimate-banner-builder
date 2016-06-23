@@ -30,7 +30,15 @@ const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 let sizes = JSON.parse(sizesFile);
 var GDN = sizes.GDN;
 
+// Get folder names inside a given directory (dir)
+function getFolders(dir) {
+  return fs.readdirSync(dir)
+    .filter(function(file) {
+      return fs.statSync(path.join(dir, file)).isDirectory();
+  });
+}
 
+// Convert scss to css, minimise and copy into appropriate production folders
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
     return gulp.src(['src/**/*.scss', '!src/*.scss'])
@@ -51,6 +59,8 @@ gulp.task('sass', function () {
   };
 });
 
+// Minimise html files and copy into appropriate folders. 
+// Also remove enabler script tag for GDN versions.
 gulp.task('html', function() {
   var runHtml = function (ad_type) {
     if (ad_type == 'GDN') {
@@ -71,15 +81,7 @@ gulp.task('html', function() {
   };
 });
 
-
-function getFolders(dir) {
-  return fs.readdirSync(dir)
-    .filter(function(file) {
-      return fs.statSync(path.join(dir, file)).isDirectory();
-  });
-}
-
-
+// Combine various javascript files and minimise them before copying into relevant production folders.
 gulp.task('scripts', function() {
   var sizeFolder; //this is the sizeFolder with the size name
   var runTasks = function (ad_type) {
@@ -122,8 +124,7 @@ gulp.task('scripts', function() {
   };
 });
 
-
-
+// Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
   if (GDN === "true") {
    return gulp.src('src/**/img/*')
@@ -133,6 +134,7 @@ gulp.task('img', function() {
   }
 });
 
+// Delete src and prod folders during Gulp development.
 gulp.task('del', function () {
   return del([
     'src',
@@ -156,7 +158,7 @@ gulp.task('master', function() {
   copyScripts(sources);
 });
 
-
+// Setup localhost server to view production files.
 gulp.task('connect', connect.server({
   root: ['./prod/'],
   port: 8000,
@@ -170,16 +172,14 @@ gulp.task('clear', function() {
   cache.clearAll();
 });
 
- 
+// Zip the GDN folder and zip all individual GDN banner 
 gulp.task('zip', function() {
   var folders = getFolders('prod/GDN');
-
   function applyZip(source, name) {
   	return gulp.src(source)
   		.pipe(zip(name + '.zip'))
   		.pipe(gulp.dest('zipped-GDN'));
   };
-
   applyZip('prod/GDN/**', 'GDN');
   for (var folder in folders) {
     console.log(folders[folder]);
@@ -187,6 +187,7 @@ gulp.task('zip', function() {
   };
 });
 
+// Setup watch tasks
 gulp.task('watch', function () {
   gulp.watch('src/**/*.html', ['html']);
   gulp.watch('src/**/*.scss', ['sass']);
