@@ -25,6 +25,10 @@ var gulp     = require('gulp'),
     scriptsPath = 'src',
     folders  = getFolders(scriptsPath);
 
+const appRoot = process.cwd();
+const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
+let sizes = JSON.parse(sizesFile);
+var GDN = sizes.GDN;
 
 
 gulp.task('sass', function () {
@@ -40,8 +44,11 @@ gulp.task('sass', function () {
       .pipe(sourcemaps.write())
       .pipe(gulp.dest('prod/' + ad_type));
   }
-  runSass('GDN');
+  
   runSass('DoubleClick');
+  if (GDN === "true") {
+    runSass('GDN');
+  };
 });
 
 gulp.task('html', function() {
@@ -57,8 +64,11 @@ gulp.task('html', function() {
         .pipe(gulp.dest('prod/' + ad_type));
       }
   }
-  runHtml('GDN');
+
   runHtml('DoubleClick');
+  if (GDN === "true") {
+    runHtml('GDN');
+  };
 });
 
 
@@ -105,18 +115,22 @@ gulp.task('scripts', function() {
 
     });
   };
-
-  runTasks('GDN');
+  
   runTasks('DoubleClick');
+  if (GDN === "true") {
+    runTasks('GDN');
+  };
 });
 
 
 
 gulp.task('img', function() {
+  if (GDN === "true") {
    return gulp.src('src/**/img/*')
      .pipe(image())
      .pipe(gulp.dest('prod/GDN')) 
      .pipe(connect.reload());
+  }
 });
 
 gulp.task('del', function () {
