@@ -5,6 +5,16 @@
           "width": 160,
           "height": 600,
           "prefix": ""
+      },
+      {
+          "width": 300,
+          "height": 600,
+          "prefix": ""
+      },
+      {
+          "width": 728,
+          "height": 90,
+          "prefix": ""
       }
     ],
   "versions": 

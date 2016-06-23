@@ -27,9 +27,10 @@ A banner build template that also works to generate static versions
 - Build most ideal template files for html, scss, and js (for DoubleClick & GDN)
 - Add lint for css and js
 - Create an img folder in each size's src directory and build these out into GDN sizes
+- Allow for a master to be worked on before creating all versions using the same general animation and style/structure adjustments.
 
 ## To Do
-- Allow for a master to be worked on before creating all versions using the same main.js animation
+- Ensure that GDN folders are only created if 'GDN' is set to 'true'.
 - npm or gulp auto zip GDN folders by banner size
 - For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
 - Make final improvements on base level banner build template

@@ -126,8 +126,10 @@ gulp.task('del', function () {
   ]);
 });
 
+// Overwrite base-template files with approved Master adjustments
 gulp.task('master', function() {
   var sources = [
+    'src/**/index.html',
     'src/**/main.js',
     'src/global.scss',
     'src/normalize.scss'
