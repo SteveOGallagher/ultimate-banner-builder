@@ -96,7 +96,7 @@ gulp.task('scripts', function() {
             gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
               .pipe(concat(versionFolder + '.js'))
               .pipe(rename(versionFolder + '.js')), 
-            gulp.src(adPath + '/*')
+            gulp.src([adPath + '/*', '!'+ adPath + '/*.js'])
           )
             .pipe(gulp.dest(sizeAndVersion));
             //return del(adPath);
@@ -108,6 +108,10 @@ gulp.task('scripts', function() {
 
   runTasks('GDN');
   runTasks('DoubleClick');
+});
+
+gulp.task('delete-js', function() {
+
 });
 
 
@@ -126,17 +130,6 @@ gulp.task('del', function () {
   ]);
 });
 
-//gulp.task('master', function() {
-  //var sizeFolder;
-  //var copyScripts = function () {
-    //var tasks = folders.map(function(sizeFolder) {
-      //return gulp.src('/**/main.js')
-        //.pipe(gulp.dest('prod/' + ad_type + '/' + sizeFolder));
-    //});
-  //};
-
-  //copyScripts();
-//});
 
 
 gulp.task('connect', connect.server({
@@ -166,5 +159,5 @@ gulp.task('watch', function () {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('default', ['watch', 'html', 'sass', 'scripts', 'img', 'connect']);
+gulp.task('default', ['watch', 'html', 'sass', 'img', 'scripts', 'connect']);
 
