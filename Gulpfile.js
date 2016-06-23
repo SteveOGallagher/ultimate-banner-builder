@@ -122,17 +122,15 @@ gulp.task('del', function () {
   ]);
 });
 
-//gulp.task('master', function() {
-  //var folder;
-  //var copyScripts = function () {
-    //var tasks = folders.map(function(folder) {
-      //return gulp.src('/**/main.js')
-        //.pipe(gulp.dest('prod/' + ad_type + '/' + folder));
-    //});
-  //};
-
-  //copyScripts();
-//});
+gulp.task('master', function() {
+  var folder;
+  var copyScripts = function () {
+      return gulp.src('src/**/main.js')
+        // .pipe(gulp.dest('base-template/main.js'));
+        .pipe(gulp.dest('base-template', { basename: 'base' }));
+  };
+  copyScripts();
+});
 
 
 gulp.task('connect', connect.server({
