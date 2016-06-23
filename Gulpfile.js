@@ -19,6 +19,7 @@ var gulp     = require('gulp'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
     zip = require('gulp-zip'),
+    es = require('event-stream'),
 
     data = require('./sizes.json');
     scriptsPath = 'src',
@@ -70,16 +71,15 @@ function getFolders(dir) {
 
 
 gulp.task('scripts', function() {
-  var folder; //this is the folder with the size name
-  var version = data.versions[0];
+  var sizeFolder; //this is the sizeFolder with the size name
   var runTasks = function (ad_type) {
-    var tasks = folders.map(function(folder) {
-      var adPath = 'prod/' + ad_type + '/' + folder;
-      var ad = gulp.src([path.join(scriptsPath, folder, '/**/' + ad_type + '.js'), path.join(scriptsPath, folder, '/**/main.js')])
+    var tasks = folders.map(function(sizeFolder) {
+      var adPath = 'prod/' + ad_type + '/' + sizeFolder;
+      var ad = gulp.src([path.join(scriptsPath, sizeFolder, '/**/' + ad_type + '.js'), path.join(scriptsPath, sizeFolder, '/**/main.js')])
         //.pipe(jshint())
         //.pipe(jshint.reporter('jshint-stylish'))
         //.pipe(sourcemaps.init())
-        .pipe(concat(folder + '.js'))
+        .pipe(concat(sizeFolder + '.js'))
         //.pipe(uglify())
         .pipe(rename('ad.js'))
         //.pipe(sourcemaps.write())
@@ -87,25 +87,29 @@ gulp.task('scripts', function() {
 
     
       if (ad_type === 'GDN') {
-        var type = 'src/' + folder + '/' + ad_type;
+        var type = 'src/' + sizeFolder + '/' + ad_type;
         var typeFolder = getFolders(type); //GDN or DoubleClick
         return typeFolder.map(function(versionFolder) {
-          console.log(adPath);
-          return gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
-            .pipe(concat(versionFolder + '.js'))
-            .pipe(rename(versionFolder + '.js'))
-            .pipe(gulp.dest(adPath + '/' + versionFolder));
+          var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
 
-            });
+          return es.merge(
+            gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
+              .pipe(concat(versionFolder + '.js'))
+              .pipe(rename(versionFolder + '.js')), 
+            gulp.src(adPath + '/*')
+          )
+            .pipe(gulp.dest(sizeAndVersion));
+            //return del(adPath);
+        });
       }
 
     });
-
   };
 
   runTasks('GDN');
   runTasks('DoubleClick');
 });
+
 
 
 gulp.task('img', function() {
