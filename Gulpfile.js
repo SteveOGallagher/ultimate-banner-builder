@@ -92,7 +92,6 @@ gulp.task('scripts', function() {
         return typeFolder.map(function(versionFolder) {
           var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
 
-          //return del(adPath);
           return es.merge(
             gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
               .pipe(concat(versionFolder + '.js'))
@@ -100,13 +99,7 @@ gulp.task('scripts', function() {
             gulp.src(adPath + '/*')
           )
             .pipe(gulp.dest(sizeAndVersion));
-          //gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
-            //.pipe(concat(versionFolder + '.js'))
-            //.pipe(rename(versionFolder + '.js'))
-            //.pipe(gulp.dest(sizeAndVersion));
-         
-          //gulp.src(adPath + '/*')
-            //.pipe(gulp.dest(sizeAndVersion));
+            //return del(adPath);
         });
       }
 
