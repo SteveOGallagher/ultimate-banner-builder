@@ -23,8 +23,8 @@ var gulp     = require('gulp'),
     runSequence = require('run-sequence'),
 
     data = require('./sizes.json'),
-    scriptsPath = 'src',
-    folders  = getFolders(scriptsPath);
+    src = 'src',
+    folders  = getFolders(src);
 
 const appRoot = process.cwd();
 const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
@@ -69,14 +69,28 @@ var GDN = sizes.GDN;
 
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
-  return folders.map(function(sizeFolder) {
-    var type = 'src/' + sizeFolder + '/' + ad_type;
-    var typeFolder = getFolders(type); //GDN or DoubleClick
-    return typeFolder.map(function(versionFolder) {
-      var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-      var fileType = 'scss';
-      var source = 'src/' + sizeFolder + '/*.' +  fileType; 
-      gulp.src([source, '!src/*.scss'])
+    if (ad_type === 'GDN') {
+      return folders.map(function(sizeFolder) {
+        var type = 'src/' + sizeFolder + '/' + ad_type;
+        var typeFolder = getFolders(type); //GDN or DoubleClick
+        return typeFolder.map(function(versionFolder) {
+          var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
+          var fileType = 'scss';
+          var source = 'src/' + sizeFolder + '/*.' +  fileType; 
+          gulp.src([source, '!src/*.scss'])
+            .pipe(sassLint())
+            .pipe(sassLint.format())
+            .pipe(sassLint.failOnError())
+            //.pipe(uncss({ html: 'index.html' }))
+            .pipe(sourcemaps.init())
+            .pipe(sass().on('error', sass.logError))
+            .pipe(cleanCSS())
+            .pipe(sourcemaps.write())
+            .pipe(gulp.dest(sizeAndVersion));
+          });
+        });
+    } else {
+      return gulp.src( ['src/**/*.scss', '!src/*.scss'])
         .pipe(sassLint())
         .pipe(sassLint.format())
         .pipe(sassLint.failOnError())
@@ -85,10 +99,9 @@ gulp.task('sass', function () {
         .pipe(sass().on('error', sass.logError))
         .pipe(cleanCSS())
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(sizeAndVersion));
-      });
-    });
-  }
+        .pipe(gulp.dest('prod/' + ad_type));
+    }
+  };
   
   runSass('DoubleClick');
   if (GDN === "true") {
@@ -137,9 +150,34 @@ function getFolders(dir) {
 gulp.task('scripts', function() {
   var sizeFolder; //this is the sizeFolder with the size name
   var runTasks = function (ad_type) {
-    return folders.map(function(sizeFolder) {
-      var adPath = 'prod/' + ad_type + '/' + sizeFolder;
-      var ad = gulp.src([path.join(scriptsPath, sizeFolder, '/**/' + ad_type + '.js'), path.join(scriptsPath, sizeFolder, '/**/main.js')])
+  return folders.map(function(sizeFolder) {
+    if (ad_type === 'GDN') {
+      var type = 'src/' + sizeFolder + '/' + ad_type;
+      var typeFolder = getFolders(type); //GDN or DoubleClick
+      return typeFolder.map(function(versionFolder) {
+        var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
+        var fileType = 'js';
+        var root = 'src/' + sizeFolder;
+        var source = [
+          root + '/*.' +  fileType,
+          root + '/' + ad_type + '/*.' + fileType,
+          root + '/' + ad_type + '/' + versionFolder + '/*.' + fileType 
+        ]; 
+        return gulp.src(source)
+          .pipe(jshint())
+          .pipe(jshint.reporter('jshint-stylish'))
+          .pipe(sourcemaps.init())
+          .pipe(concat(sizeFolder + '.js'))
+          .pipe(uglify())
+          .pipe(rename('ad.js'))
+          .pipe(sourcemaps.write())
+          .pipe(gulp.dest(sizeAndVersion));
+          });
+
+      } else {
+
+      var sizeNoVersion = 'prod/' + ad_type + '/' + sizeFolder;
+      return gulp.src([path.join(src, sizeFolder, '/**/' + ad_type + '.js'), path.join(src, sizeFolder, '/**/main.js')])
         .pipe(jshint())
         .pipe(jshint.reporter('jshint-stylish'))
         .pipe(sourcemaps.init())
@@ -147,55 +185,16 @@ gulp.task('scripts', function() {
         .pipe(uglify())
         .pipe(rename('ad.js'))
         .pipe(sourcemaps.write())
-        .pipe(gulp.dest(adPath));
-
-    
-      if (ad_type === 'GDN') {
-        var type = 'src/' + sizeFolder + '/' + ad_type;
-        var typeFolder = getFolders(type); //GDN or DoubleClick
-        return typeFolder.map(function(versionFolder) {
-          var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-
-          return es.merge(
-            gulp.src([path.join(adPath, 'ad.js'), path.join(type, versionFolder, 'image-paths.js')])
-              .pipe(jshint())
-              .pipe(jshint.reporter('jshint-stylish'))
-              .pipe(sourcemaps.init())
-              .pipe(concat(versionFolder + '.js'))
-              .pipe(uglify())
-              .pipe(rename(versionFolder + '.js')) 
-              .pipe(sourcemaps.write()),
-            gulp.src([adPath + '/*', '!'+ adPath + '/*.js'])
-          )
-            .pipe(gulp.dest(sizeAndVersion));
-        });
-        
+        .pipe(gulp.dest(sizeNoVersion));
       }
-
     });
   };
 
-  //function deleteFolder() {
-    //return folders.map(function(sizeFolder) {
-      //var path = './prod/GDN/' + sizeFolder;
-      //return del(path);
-    //});
-  //}
-  
-  
   runTasks('DoubleClick');
   if (GDN === "true") {
     runTasks('GDN');
-    //deleteFolder();
   }
 });
-
-//gulp.task('del-js', function() {
-  //return folders.map(function(sizeFolder) {
-    //var path = './prod/GDN/' + sizeFolder;
-    //return del(path);
-  //});
-//});
 
 
 gulp.task('img', function() {
@@ -258,11 +257,6 @@ gulp.task('watch', function () {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('build', ['html', 'sass', 'img']);
-
-//makes tasks run synchronously
-gulp.task('default', function(callback) {
-  runSequence('build', 'scripts', 'connect', 'watch', callback);
-});
+gulp.task('default', ['html', 'sass', 'img', 'scripts', 'connect', 'watch']);
 
 
