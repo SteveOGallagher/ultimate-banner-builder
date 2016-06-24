@@ -19,8 +19,6 @@ var gulp     = require('gulp'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
     zip = require('gulp-zip'),
-    es = require('event-stream'),
-    runSequence = require('run-sequence'),
 
     data = require('./sizes.json'),
     src = 'src',
@@ -44,28 +42,6 @@ var GDN = sizes.GDN;
   //});
 //}
 
-//gulp.task('sass', function () {
-  //var runSass = function (ad_type) {
-  //getSubFolders('scss', function() {
-  //console.log(source)
-      //gulp.src([source, '!src/*.scss'])
-      //.pipe(sassLint())
-      //.pipe(sassLint.format())
-      //.pipe(sassLint.failOnError())
-      ////.pipe(uncss({ html: 'index.html' }))
-      //.pipe(sourcemaps.init())
-      //.pipe(sass().on('error', sass.logError))
-      //.pipe(cleanCSS())
-      //.pipe(sourcemaps.write())
-      //.pipe(gulp.dest('prod/' + ad_type + '/' + sizeFolder +  '-' + versionFolder ));
-    //})
-  //}
-  
-  //runSass('DoubleClick');
-  //if (GDN === "true") {
-    //runSass('GDN');
-  //}
-//});
 
 gulp.task('sass', function () {
   var runSass = function (ad_type) {
