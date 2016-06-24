@@ -8,6 +8,7 @@ const sourceDirectory = `${appRoot}/src/`;
 const DoubleClick = "DoubleClick";
 const GDN = "GDN";
 const img = "img";
+var versions;
 
 class GenerateTemplates {
 	constructor() {
@@ -22,7 +23,7 @@ class GenerateTemplates {
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
 		this.GDN = sizes.GDN;
-		this.versions = sizes.versions;
+		versions = sizes.versions;
 	}
 
 	processSizes() {
@@ -72,10 +73,6 @@ class GenerateTemplates {
 			} else {
 				console.info(chalk.blue(`Creating ${dir}`));
 				that.generateTemplate(dir, data);
-				console.log("Building folder structures...");
-				if (GDN === "true") {
-					setTimeout(function(){ that.generateImgFolders(dir, data); }, 2000);
-				};
 			}
 		});
 	}
@@ -83,6 +80,7 @@ class GenerateTemplates {
 	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
 	generateTemplate(dir, data) {
 		let that = this;
+
 		fs.mkdir(dir, (err, folder) => {
 			if (err) {
 				console.log(err);
@@ -92,13 +90,44 @@ class GenerateTemplates {
 				fs.mkdir(`${dir}/${DoubleClick}`);
 
 				if (this.GDN === "true") {
-					fs.mkdir(`${dir}/${GDN}`);
-	        fs.mkdir(`${dir}/img`);
-	        for (var version in this.versions) {
-						fs.mkdir(`${dir}/${GDN}/${this.versions[version]}`); // Create js folders for each GDN version
-	        };
+
+					var version = 0;
+
+					fs.mkdir(`${dir}/${GDN}`, function (err) {
+				    if (err) {
+				        return console.log('failed to write directory', err);
+				    }
+				    makeVersionDirectory(version);
+					});
+
+					function makeVersionDirectory (version) {
+						fs.mkdir(`${dir}/${GDN}/${versions[version]}`, function (err) {
+					    if (err) {
+					        return console.log('failed to write directory', err);
+					    }
+					    makeImgDirectory(version)
+						});
+					};
+
+					function makeImgDirectory (version) {
+						fs.mkdir(`${dir}/${GDN}/${versions[version]}/${img}`, function (err) {
+					    if (err) {
+					        return console.log('failed to write directory', err);
+					    }
+					    version++;
+					    if (version == versions.length) {
+					    	that.populateTemplate(dir, data);
+					    } else {
+					    	makeVersionDirectory(version);
+					    };
+						});
+					};
+
+					
+	        
+	      } else {
+					that.populateTemplate(dir, data); // If GDN not true, build as normal
 	      }
-				that.populateTemplate(dir, data);
 			}
 		});
 	}
@@ -139,8 +168,8 @@ class GenerateTemplates {
 	        break;
 	    case 'image-paths.js':
 	    		if (this.GDN === "true") {
-		    		for (var version in this.versions) {
-			        fs.writeFileSync(`${dir}/${GDN}/${this.versions[version]}/${file}`, processedData, 'utf8');
+		    		for (var version in versions) {
+			        fs.writeFileSync(`${dir}/${GDN}/${versions[version]}/${file}`, processedData, 'utf8');
 		        };
 	    		}
 	        break;
