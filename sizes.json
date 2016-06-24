@@ -2,15 +2,20 @@
   "dimensions": 
   [
     {
+        "width": 160,
+        "height": 600,
+        "prefix": ""
+    },
+    {
         "width": 300,
-        "height": 250,
+        "height": 600,
         "prefix": ""
     }
   ],
-  "GDN" : "false",
+  "GDN" : "true",
   "versions": 
   [
-    "brand1",
-    "brand2"
+    "cat",
+    "dog"
   ]
 }
