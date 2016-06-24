@@ -151,10 +151,11 @@ gulp.task('scripts', function() {
 
       } else {
         var sizeNoVersion = 'prod/' + ad_type + '/' + sizeFolder;
-        return copyAndPipe([
-          path.join(src, sizeFolder, '/**/' + ad_type + '.js'),
-          path.join(src, sizeFolder, '/**/main.js')
-          ], sizeNoVersion);
+        var source = [ 
+            path.join(src, sizeFolder, '/**/' + ad_type + '.js'),
+            path.join(src, sizeFolder, '/**/main.js')
+        ];
+        return copyAndPipe(source, sizeNoVersion);
       }
     });
   };
