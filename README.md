@@ -7,7 +7,7 @@ A banner build template that also works to generate static versions
 
 # Workflow for building the banners
 ### 1. Create the Master
-- In the 'sizes.json' file's `dimensions` array, enter the dimensions of the 'Master' ad size. 
+- In the 'sizes.json' file's `dimensions` array, enter the dimensions of the 'Master' ad size and save the file (leave GDN set to false). 
 - Run `npm run generate` (This creates the 'src' folder structure where you will build the Master version)
 - Run `gulp` (This creates the 'prod' output folder structure where the final ad files will be automatically served)
 - Edit the code in the src folder to create the final working version of the Master ad size.
@@ -15,7 +15,7 @@ A banner build template that also works to generate static versions
 ### 2. Prepare to apply your Master code to all required sizes
 - Once the client is satisfied that the Master banner matches the brief, ensure that `gulp` is no longer running.
 - Run `gulp master` (This overwrites the base-template files to consist of the global work you've done to the Master)
-- Complete the 'sizes.json' file's `dimensions` array to contain all required ad sizes. 
+- Complete the 'sizes.json' file's `dimensions` array to contain all required ad sizes and save the file. 
 
 ##### If Google Display Network or static versions of the ads are required:
 - Set the `GDN` property in 'sizes.json' to equal `"true"`. 

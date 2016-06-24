@@ -189,6 +189,7 @@ gulp.task('master', function() {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
+    'src/**/DoubleClick.js',
     'src/global.scss',
     'src/normalize.scss'
   ];

@@ -147,14 +147,6 @@ class GenerateTemplates {
 		});
 	}
 
-	// Create img folders inside each GDN version
-	generateImgFolders(dir, data) {
-		let that = this;
-    for (var version in this.versions) {
-    	fs.mkdir(`${dir}/${GDN}/${this.versions[version]}/${img}`); // Create img folders for each GDN version
-    };
-	}
-
 	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
