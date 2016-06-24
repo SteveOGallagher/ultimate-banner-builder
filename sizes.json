@@ -13,8 +13,9 @@
     }
   ],
   "GDN" : "true",
-  "versions":
+  "versions": 
   [
-    "cat"
+    "cat",
+    "dog"
   ]
 }
