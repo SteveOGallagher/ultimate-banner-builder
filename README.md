@@ -27,7 +27,7 @@ A banner build template that also works to generate static versions
 - Make adjustments in the src code for each size as needed. (Typically only DoubleClick.js and overwrite.scss will need adjusting. If GDN versions are required then image-paths.js and the img folders will need editing.)
 
 
-#Requirements of the banner template builder
+# Banner template builder features
 ## Completed
 - Look at required sizes in sizes.json and build src folder structure according to base-template files
 - Create Gulp watch task to copy changes in html, js, and scss files into minified versions in relative production folder
