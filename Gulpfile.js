@@ -39,9 +39,11 @@ function getFolders(dir) {
 
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
-function getSubDirectories(fileType, copyFunc) {
-  var ad = 'GDN';
+function getSubDirectories(fileType, copyFunc, gdn) {
   return folders.map(function(sizeFolder) {
+    var ad;
+    if (gdn) {
+    ad = 'GDN';
     var type = 'src/' + sizeFolder + '/' + ad;
     var typeFolder = getFolders(type); //GDN or DoubleClick
     var root = 'src/' + sizeFolder;
@@ -51,9 +53,24 @@ function getSubDirectories(fileType, copyFunc) {
         fileType === 'html' ? root + '/*.' +  fileType :
         fileType === 'img' ? [root + '/' + ad + '/' + versionFolder + '/**/*',
           '!'+ root + '/' + ad + '/' + versionFolder + '/*.js'] :
+        fileType === 'js' ? [
+          root + '/*.' +  fileType,
+          root + '/' + ad + '/*.' + fileType,
+          root + '/' + ad + '/' + versionFolder + '/*.' + fileType 
+        ] : 
         false;
       return copyFunc(source, dest);
     });
+
+    } else {
+      ad = 'DoubleClick';
+      var dest = 'prod/' + ad + '/' + sizeFolder;
+      var source = [ 
+        path.join(src, sizeFolder, '/**/' + ad + '.js'),
+        path.join(src, sizeFolder, '/**/main.js')
+      ];
+      return copyFunc(source, dest);
+    }
   });
 }
 
@@ -75,7 +92,7 @@ gulp.task('sass', function () {
 
   var runSass = function (ad_type) {
     if (ad_type === 'GDN') {
-      return getSubDirectories('scss', copyAndPipe);
+      return getSubDirectories('scss', copyAndPipe, true);
     } else {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
@@ -104,7 +121,7 @@ gulp.task('html', function() {
 
   var runHtml = function (ad_type) {
     if (ad_type === 'GDN') {
-      return getSubDirectories('html', copyAndPipe); 
+      return getSubDirectories('html', copyAndPipe, true); 
       } else {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
@@ -119,7 +136,7 @@ gulp.task('html', function() {
 // Combine various javascript files and minimise them before copying into relevant production folders.
 gulp.task('scripts', function() {
   
-  function copyAndPipe(gulpSrc, gulpDest) {
+  var copyAndPipe = function(gulpSrc, gulpDest) {
     return gulp.src(gulpSrc)
       .pipe(jshint())
       .pipe(jshint.reporter('jshint-stylish'))
@@ -129,42 +146,20 @@ gulp.task('scripts', function() {
       .pipe(rename('ad.js'))
       .pipe(sourcemaps.write())
       .pipe(gulp.dest(gulpDest));
-  }
-
-  var sizeFolder; //this is the sizeFolder with the size name
-  
-  var runTasks = function (ad_type) {
-  return folders.map(function(sizeFolder) {
-    if (ad_type === 'GDN') {
-      var type = 'src/' + sizeFolder + '/' + ad_type;
-      var typeFolder = getFolders(type); //GDN or DoubleClick
-      return typeFolder.map(function(versionFolder) {
-        var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-        var fileType = 'js';
-        var root = 'src/' + sizeFolder;
-        var source = [
-          root + '/*.' +  fileType,
-          root + '/' + ad_type + '/*.' + fileType,
-          root + '/' + ad_type + '/' + versionFolder + '/*.' + fileType 
-        ]; 
-        return copyAndPipe(source, sizeAndVersion);
-      });
-
-      } else {
-        var sizeNoVersion = 'prod/' + ad_type + '/' + sizeFolder;
-        var source = [ 
-          path.join(src, sizeFolder, '/**/' + ad_type + '.js'),
-          path.join(src, sizeFolder, '/**/main.js')
-        ];
-        return copyAndPipe(source, sizeNoVersion);
-      }
-    });
   };
-  runTasks('DoubleClick');
+
+  var runTasks = function (ad_type) {
+    if (ad_type === 'GDN') {
+      return getSubDirectories('js', copyAndPipe, true);
+    } else {
+      return getSubDirectories('js', copyAndPipe, false);
+    }
+  };
 
   if (GDN === "true") {
     runTasks('GDN');
   }
+  runTasks('DoubleClick');
 });
 
 // Optimise and copy images across into production GDN folders
@@ -178,7 +173,7 @@ gulp.task('img', function() {
   };
 
   if (GDN === "true") {
-    return getSubDirectories('img', copyAndPipe);
+    return getSubDirectories('img', copyAndPipe, true);
   }
 });
 
