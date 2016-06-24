@@ -1,7 +1,8 @@
 # ultimate-banner-builder
-A banner build template that also works to generate static versions
+A banner build template for creating DoubleClick banners which also works to generate static Google Display Network versions. This build template assumes that you will be building a dynamic DoubleClick banner as standard.
 
 ## Setup:
+- clone the repo
 - run `npm i` to install all necessary packages locally
 - sudo `npm install gulp -g` to ensure you have Gulp installed.
 
