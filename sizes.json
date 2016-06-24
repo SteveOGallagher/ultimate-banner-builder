@@ -1,11 +1,15 @@
 {
-    "dimensions": [{
-        "width": 250,
-        "height": 300,
-        "prefix": "prospective-"
-    }, {
-        "width": 200,
-        "height": 300,
-        "prefix": "prospective-"
-    }]
+  "dimensions": 
+  [
+    {
+        "width": 300,
+        "height": 250,
+        "prefix": ""
+    }
+  ],
+  "GDN" : "false",
+  "versions": 
+  [
+    ""
+  ]
 }

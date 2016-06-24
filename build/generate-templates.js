@@ -5,19 +5,25 @@ import path from 'path';
 import chalk from 'chalk';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
+const DoubleClick = "DoubleClick";
+const GDN = "GDN";
+const img = "img";
+var versions;
 
 class GenerateTemplates {
 	constructor() {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['dynamic.js', 'main.js', 'static.js', 'overwrite.scss'];
+		this.formatFiles = ['DoubleClick.js', 'main.js', 'GDN.js', 'image-paths.js', 'overwrite.scss'];
 	}
 
 	loadSizes() {
 		const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
+		this.GDN = sizes.GDN;
+		versions = sizes.versions;
 	}
 
 	processSizes() {
@@ -71,27 +77,68 @@ class GenerateTemplates {
 		});
 	}
 
+	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
 	generateTemplate(dir, data) {
 		let that = this;
+
 		fs.mkdir(dir, (err, folder) => {
 			if (err) {
 				console.log(err);
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-				that.populateTemplate(dir, data);
+				fs.mkdir(`${dir}/${DoubleClick}`);
+
+				if (this.GDN === "true") {
+
+					var version = 0;
+
+					// Make GDN folder
+					fs.mkdir(`${dir}/${GDN}`, function (err) {
+				    if (err) {
+				        return console.log('failed to write directory', err);
+				    }
+				    makeVersionDirectory(version);
+					});
+
+					// Make a folder inside GDN for a particular version
+					function makeVersionDirectory (version) {
+						fs.mkdir(`${dir}/${GDN}/${versions[version]}`, function (err) {
+					    if (err) {
+					        return console.log('failed to write directory', err);
+					    }
+					    makeImgDirectory(version)
+						});
+					};
+
+					// Make an image folder inside GDN for a particular version
+					function makeImgDirectory (version) {
+						fs.mkdir(`${dir}/${GDN}/${versions[version]}/${img}`, function (err) {
+					    if (err) {
+					        return console.log('failed to write directory', err);
+					    }
+					    version++;
+
+					    if (version == versions.length) {
+					    	that.populateTemplate(dir, data); // Build files into folders when complete
+					    } else {
+					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
+					    };
+						});
+					};
+	      } else {
+					that.populateTemplate(dir, data); // If GDN not true, build as normal
+	      }
 			}
 		});
 	}
 
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
-		fs.createReadStream(`${appRoot}/base-template/data.json`).pipe(fs.createWriteStream(`${dir}/data.json`));
 
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
 		});
-
 	}
 
 	format(str, obj) {
@@ -100,13 +147,32 @@ class GenerateTemplates {
 		});
 	}
 
+	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
-    console.log(data);
 		let processedData = this.format(fileData, data);
-		fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-	}
 
+		// Create individual folders for specific js files.
+		switch(file) {
+	    case 'GDN.js':
+	    		if (this.GDN === "true") {
+		        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
+	    		}
+	        break;
+	    case 'image-paths.js':
+	    		if (this.GDN === "true") {
+		    		for (var version in versions) {
+			        fs.writeFileSync(`${dir}/${GDN}/${versions[version]}/${file}`, processedData, 'utf8');
+		        };
+	    		}
+	        break;
+	    case 'DoubleClick.js':
+	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+	        break;
+	    default:
+	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+		}
+	}
 }
 
 new GenerateTemplates();
