@@ -40,6 +40,20 @@ function getFolders(dir) {
 
 // Convert scss to css, minimise and copy into appropriate production folders
 gulp.task('sass', function () {
+
+  function copyAndPipe(gulpSrc, gulpDest) {
+    return gulp.src(gulpSrc)
+      .pipe(sassLint())
+      .pipe(sassLint.format())
+      .pipe(sassLint.failOnError())
+      //.pipe(uncss({ html: 'index.html' }))
+      .pipe(sourcemaps.init())
+      .pipe(sass().on('error', sass.logError))
+      .pipe(cleanCSS())
+      .pipe(sourcemaps.write())
+      .pipe(gulp.dest(gulpDest));
+  }
+
   var runSass = function (ad_type) {
     if (ad_type === 'GDN') {
       return folders.map(function(sizeFolder) {
@@ -49,29 +63,11 @@ gulp.task('sass', function () {
           var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
           var fileType = 'scss';
           var source = 'src/' + sizeFolder + '/*.' +  fileType; 
-          gulp.src([source, '!src/*.scss'])
-            .pipe(sassLint())
-            .pipe(sassLint.format())
-            .pipe(sassLint.failOnError())
-            //.pipe(uncss({ html: 'index.html' }))
-            .pipe(sourcemaps.init())
-            .pipe(sass().on('error', sass.logError))
-            .pipe(cleanCSS())
-            .pipe(sourcemaps.write())
-            .pipe(gulp.dest(sizeAndVersion));
-          });
+          return copyAndPipe([source, '!src/*.scss'], sizeAndVersion);
         });
+      });
     } else {
-      return gulp.src( ['src/**/*.scss', '!src/*.scss'])
-        .pipe(sassLint())
-        .pipe(sassLint.format())
-        .pipe(sassLint.failOnError())
-        //.pipe(uncss({ html: 'index.html' }))
-        .pipe(sourcemaps.init())
-        .pipe(sass().on('error', sass.logError))
-        .pipe(cleanCSS())
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest('prod/' + ad_type));
+      return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
   runSass('DoubleClick');
@@ -85,6 +81,18 @@ gulp.task('sass', function () {
 // Minimise html files and copy into appropriate folders. 
 // Also remove enabler script tag for GDN versions.
 gulp.task('html', function() {
+
+  function copyAndPipe(gulpSrc, gulpDest, gdn) {
+    return gdn ?
+      gulp.src(gulpSrc)
+        .pipe(removeCode({ gdn: true }))
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest(gulpDest)) :
+      gulp.src(gulpSrc)
+        .pipe(htmlmin({collapseWhitespace: true}))
+        .pipe(gulp.dest(gulpDest));
+  }
+
   var runHtml = function (ad_type) {
     if (ad_type === 'GDN') {
       return folders.map(function(sizeFolder) {
@@ -94,16 +102,11 @@ gulp.task('html', function() {
           var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
           var fileType = 'html';
           var source = 'src/' + sizeFolder + '/*.' +  fileType; 
-          return gulp.src(source)
-            .pipe(removeCode({ gdn: true }))
-            .pipe(htmlmin({collapseWhitespace: true}))
-            .pipe(gulp.dest(sizeAndVersion));
+          return copyAndPipe(source, sizeAndVersion, true);
           });
         });
       } else {
-        return gulp.src('src/**/*.html')
-        .pipe(htmlmin({collapseWhitespace: true}))
-        .pipe(gulp.dest('prod/' + ad_type));
+        return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
   };
 
@@ -115,6 +118,19 @@ gulp.task('html', function() {
 
 // Combine various javascript files and minimise them before copying into relevant production folders.
 gulp.task('scripts', function() {
+  
+  function copyAndPipe(gulpSrc, gulpDest) {
+    return gulp.src(gulpSrc)
+      .pipe(jshint())
+      .pipe(jshint.reporter('jshint-stylish'))
+      .pipe(sourcemaps.init())
+      .pipe(concat(sizeFolder + '.js'))
+      .pipe(uglify())
+      .pipe(rename('ad.js'))
+      .pipe(sourcemaps.write())
+      .pipe(gulp.dest(gulpDest));
+  }
+
   var sizeFolder; //this is the sizeFolder with the size name
   var runTasks = function (ad_type) {
   return folders.map(function(sizeFolder) {
@@ -130,29 +146,15 @@ gulp.task('scripts', function() {
           root + '/' + ad_type + '/*.' + fileType,
           root + '/' + ad_type + '/' + versionFolder + '/*.' + fileType 
         ]; 
-        return gulp.src(source)
-          .pipe(jshint())
-          .pipe(jshint.reporter('jshint-stylish'))
-          .pipe(sourcemaps.init())
-          .pipe(concat(sizeFolder + '.js'))
-          //.pipe(uglify())
-          .pipe(rename('ad.js'))
-          .pipe(sourcemaps.write())
-          .pipe(gulp.dest(sizeAndVersion));
-          });
+        return copyAndPipe(source, sizeAndVersion);
+      });
 
       } else {
-
-      var sizeNoVersion = 'prod/' + ad_type + '/' + sizeFolder;
-      return gulp.src([path.join(src, sizeFolder, '/**/' + ad_type + '.js'), path.join(src, sizeFolder, '/**/main.js')])
-        .pipe(jshint())
-        .pipe(jshint.reporter('jshint-stylish'))
-        .pipe(sourcemaps.init())
-        .pipe(concat(sizeFolder + '.js'))
-        .pipe(uglify())
-        .pipe(rename('ad.js'))
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(sizeNoVersion));
+        var sizeNoVersion = 'prod/' + ad_type + '/' + sizeFolder;
+        return copyAndPipe([
+          path.join(src, sizeFolder, '/**/' + ad_type + '.js'),
+          path.join(src, sizeFolder, '/**/main.js')
+          ], sizeNoVersion);
       }
     });
   };
