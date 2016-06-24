@@ -7,6 +7,7 @@ const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
 const DoubleClick = "DoubleClick";
 const GDN = "GDN";
+const img = "img";
 
 class GenerateTemplates {
 	constructor() {
@@ -71,6 +72,8 @@ class GenerateTemplates {
 			} else {
 				console.info(chalk.blue(`Creating ${dir}`));
 				that.generateTemplate(dir, data);
+				console.log("Building folder structures...");
+				setTimeout(function(){ that.generateImgFolders(dir, data); }, 2000);
 			}
 		});
 	}
@@ -90,10 +93,9 @@ class GenerateTemplates {
 					fs.mkdir(`${dir}/${GDN}`);
 	        fs.mkdir(`${dir}/img`);
 	        for (var version in this.versions) {
-						fs.mkdir(`${dir}/${GDN}/${this.versions[version]}`);
+						fs.mkdir(`${dir}/${GDN}/${this.versions[version]}`); // Create js folders for each GDN version
 	        };
 	      }
-
 				that.populateTemplate(dir, data);
 			}
 		});
@@ -105,7 +107,6 @@ class GenerateTemplates {
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
 		});
-
 	}
 
 	format(str, obj) {
@@ -114,11 +115,20 @@ class GenerateTemplates {
 		});
 	}
 
+	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
+	generateImgFolders(dir, data) {
+		let that = this;
+    for (var version in this.versions) {
+    	fs.mkdir(`${dir}/${GDN}/${this.versions[version]}/${img}`); // Create img folders for each GDN version
+    };
+	}
+
 	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
 
+		// Create individual folders for specific js files.
 		switch(file) {
 	    case 'GDN.js':
 	    		if (this.GDN === "true") {
