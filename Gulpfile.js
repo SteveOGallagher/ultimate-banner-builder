@@ -38,9 +38,8 @@ function getFolders(dir) {
 }
 
 
-//loop through the folders to get to the right sub-directories and apply the same 'copy tasks' to all of them
+//loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 function getSubDirectories(fileType, copyFunc) {
-  var source;
   var ad = 'GDN';
   return folders.map(function(sizeFolder) {
     var type = 'src/' + sizeFolder + '/' + ad;
@@ -50,7 +49,8 @@ function getSubDirectories(fileType, copyFunc) {
       var dest = 'prod/' + ad + '/' +  sizeFolder + '-' + versionFolder;
       var source = fileType === 'scss' ? [root + '/*.' +  fileType, '!src/*.scss'] :
         fileType === 'html' ? root + '/*.' +  fileType :
-        fileType === 'img' ? root + '/' + ad + '/' + versionFolder + '/*':
+        fileType === 'img' ? [root + '/' + ad + '/' + versionFolder + '/*',
+          '!'+ root + '/' + ad + '/' + versionFolder + '/*.js'] :
         false;
       return copyFunc(source, dest);
     });
@@ -172,8 +172,8 @@ gulp.task('img', function() {
   var copyAndPipe = function(gulpSrc, gulpDest) {
     return gulp.src(gulpSrc)
      .pipe(image())
-     .pipe(gulp.dest(gulpDest))
-     .pipe(connect.reload());
+     .pipe(gulp.dest(gulpDest));
+     //.pipe(connect.reload());
   };
 
   if (GDN === "true") {
