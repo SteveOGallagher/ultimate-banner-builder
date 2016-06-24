@@ -2,20 +2,14 @@
   "dimensions": 
   [
     {
-        "width": 160,
-        "height": 600,
-        "prefix": ""
-    },
-    {
         "width": 300,
-        "height": 600,
+        "height": 250,
         "prefix": ""
     }
   ],
-  "GDN" : "true",
+  "GDN" : "false",
   "versions": 
   [
-    "cat",
-    "dog"
+    ""
   ]
 }
