@@ -37,18 +37,6 @@ function getFolders(dir) {
   });
 }
 
-//function getSubFolders(fileType, tasks) {
-  //return folders.map(function(sizeFolder) {
-    //var type = 'src/' + sizeFolder + '/' + 'GDN';
-    //var typeFolder = getFolders(type); //GDN or DoubleClick
-    //var source = 'src/' + sizeFolder + '/*.' +  fileType; 
-    //return typeFolder.map(function(versionFolder) {
-      //var sizeAndVersion = 'prod/' + 'GDN' + '/' +  sizeFolder + '-' + versionFolder;
-      //return tasks;
-    //});
-  //});
-//}
-
 
 // Convert scss to css, minimise and copy into appropriate production folders
 gulp.task('sass', function () {

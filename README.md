@@ -39,9 +39,9 @@ A banner build template that also works to generate static versions
 - Allow for a master to be worked on before creating all versions using the same general animation and style/structure adjustments.
 - Ensure that GDN folders are only created if 'GDN' is set to 'true'.
 - Auto zip GDN folders by banner size and by containing GDN folder.
+- For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
 
 ## To Do
-- For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
 - Make final improvements on base level banner build template
 
 ## Nice To Have
