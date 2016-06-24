@@ -49,7 +49,7 @@ function getSubDirectories(fileType, copyFunc) {
       var dest = 'prod/' + ad + '/' +  sizeFolder + '-' + versionFolder;
       var source = fileType === 'scss' ? [root + '/*.' +  fileType, '!src/*.scss'] :
         fileType === 'html' ? root + '/*.' +  fileType :
-        fileType === 'img' ? [root + '/' + ad + '/' + versionFolder + '/*',
+        fileType === 'img' ? [root + '/' + ad + '/' + versionFolder + '/**/*',
           '!'+ root + '/' + ad + '/' + versionFolder + '/*.js'] :
         false;
       return copyFunc(source, dest);
