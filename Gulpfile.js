@@ -152,8 +152,8 @@ gulp.task('scripts', function() {
       } else {
         var sizeNoVersion = 'prod/' + ad_type + '/' + sizeFolder;
         var source = [ 
-            path.join(src, sizeFolder, '/**/' + ad_type + '.js'),
-            path.join(src, sizeFolder, '/**/main.js')
+          path.join(src, sizeFolder, '/**/' + ad_type + '.js'),
+          path.join(src, sizeFolder, '/**/main.js')
         ];
         return copyAndPipe(source, sizeNoVersion);
       }
@@ -169,10 +169,21 @@ gulp.task('scripts', function() {
 // Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
   if (GDN === "true") {
-   return gulp.src('src/**/img/*')
-     .pipe(image())
-     .pipe(gulp.dest('prod/GDN')) 
-     .pipe(connect.reload());
+    var ad_type = 'GDN';
+    return folders.map(function(sizeFolder) {
+      var type = 'src/' + sizeFolder + '/' + ad_type;
+      var typeFolder = getFolders(type); //GDN or DoubleClick
+      return typeFolder.map(function(versionFolder) {
+        var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
+        var fileType = '*';
+        var root = 'src/' + sizeFolder;
+        var source = root + '/' + ad_type + '/' + versionFolder + '/' + fileType; 
+        return gulp.src(source)
+         .pipe(image())
+         .pipe(gulp.dest(sizeAndVersion)) 
+         .pipe(connect.reload());
+       });
+    });
   }
 });
 
@@ -237,6 +248,6 @@ gulp.task('watch', function () {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('default', ['html', 'sass', 'img', 'scripts', 'connect', 'watch']);
+gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
 
 
