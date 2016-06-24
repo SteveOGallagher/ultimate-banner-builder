@@ -38,10 +38,29 @@ function getFolders(dir) {
 }
 
 
+//loop through the folders to get to the right sub-directories and apply the same 'copy tasks' to all of them
+function getSubDirectories(fileType, copyFunc) {
+  var source;
+  var ad = 'GDN';
+  return folders.map(function(sizeFolder) {
+    var type = 'src/' + sizeFolder + '/' + ad;
+    var typeFolder = getFolders(type); //GDN or DoubleClick
+    var root = 'src/' + sizeFolder;
+    return typeFolder.map(function(versionFolder) {
+      var dest = 'prod/' + ad + '/' +  sizeFolder + '-' + versionFolder;
+      var source = fileType === 'scss' ? [root + '/*.' +  fileType, '!src/*.scss'] :
+        fileType === 'html' ? root + '/*.' +  fileType :
+        fileType === 'img' ? root + '/' + ad + '/' + versionFolder + '/*':
+        false;
+      return copyFunc(source, dest);
+    });
+  });
+}
+
 // Convert scss to css, minimise and copy into appropriate production folders
 gulp.task('sass', function () {
 
-  function copyAndPipe(gulpSrc, gulpDest) {
+  var copyAndPipe = function(gulpSrc, gulpDest) {
     return gulp.src(gulpSrc)
       .pipe(sassLint())
       .pipe(sassLint.format())
@@ -52,20 +71,11 @@ gulp.task('sass', function () {
       .pipe(cleanCSS())
       .pipe(sourcemaps.write())
       .pipe(gulp.dest(gulpDest));
-  }
+  };
 
   var runSass = function (ad_type) {
     if (ad_type === 'GDN') {
-      return folders.map(function(sizeFolder) {
-        var type = 'src/' + sizeFolder + '/' + ad_type;
-        var typeFolder = getFolders(type); //GDN or DoubleClick
-        return typeFolder.map(function(versionFolder) {
-          var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-          var fileType = 'scss';
-          var source = 'src/' + sizeFolder + '/*.' +  fileType; 
-          return copyAndPipe([source, '!src/*.scss'], sizeAndVersion);
-        });
-      });
+      return getSubDirectories('scss', copyAndPipe);
     } else {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
@@ -75,14 +85,13 @@ gulp.task('sass', function () {
     runSass('GDN');
   }
 });
-
   
 
 // Minimise html files and copy into appropriate folders. 
 // Also remove enabler script tag for GDN versions.
 gulp.task('html', function() {
 
-  function copyAndPipe(gulpSrc, gulpDest, gdn) {
+ var copyAndPipe = function (gulpSrc, gulpDest, gdn) {
     return gdn ?
       gulp.src(gulpSrc)
         .pipe(removeCode({ gdn: true }))
@@ -91,20 +100,11 @@ gulp.task('html', function() {
       gulp.src(gulpSrc)
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(gulpDest));
-  }
+  };
 
   var runHtml = function (ad_type) {
     if (ad_type === 'GDN') {
-      return folders.map(function(sizeFolder) {
-        var type = 'src/' + sizeFolder + '/' + ad_type;
-        var typeFolder = getFolders(type); //GDN or DoubleClick
-        return typeFolder.map(function(versionFolder) {
-          var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-          var fileType = 'html';
-          var source = 'src/' + sizeFolder + '/*.' +  fileType; 
-          return copyAndPipe(source, sizeAndVersion, true);
-          });
-        });
+      return getSubDirectories('html', copyAndPipe); 
       } else {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
@@ -168,22 +168,16 @@ gulp.task('scripts', function() {
 
 // Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
+
+  var copyAndPipe = function(gulpSrc, gulpDest) {
+    return gulp.src(gulpSrc)
+     .pipe(image())
+     .pipe(gulp.dest(gulpDest))
+     .pipe(connect.reload());
+  };
+
   if (GDN === "true") {
-    var ad_type = 'GDN';
-    return folders.map(function(sizeFolder) {
-      var type = 'src/' + sizeFolder + '/' + ad_type;
-      var typeFolder = getFolders(type); //GDN or DoubleClick
-      return typeFolder.map(function(versionFolder) {
-        var sizeAndVersion = 'prod/' + ad_type + '/' +  sizeFolder + '-' + versionFolder;
-        var fileType = '*';
-        var root = 'src/' + sizeFolder;
-        var source = root + '/' + ad_type + '/' + versionFolder + '/' + fileType; 
-        return gulp.src(source)
-         .pipe(image())
-         .pipe(gulp.dest(sizeAndVersion)) 
-         .pipe(connect.reload());
-       });
-    });
+    return getSubDirectories('img', copyAndPipe);
   }
 });
 
