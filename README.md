@@ -44,10 +44,4 @@ A banner build template for creating DoubleClick banners which also works to gen
 
 ## To Do
 - Make final improvements on base level banner build template
-
-## Nice To Have
-- For `npm run generate`, if src is empty, build out again. 
-- Ensure that gulp connect doesn't open new tab if localhost running already.
-
-### General Tips
-- The prefix field in sizes.json is optional.
+- Refactor and add further clarity to code

@@ -132,6 +132,7 @@ gulp.task('scripts', function() {
   }
 
   var sizeFolder; //this is the sizeFolder with the size name
+  
   var runTasks = function (ad_type) {
   return folders.map(function(sizeFolder) {
     if (ad_type === 'GDN') {
@@ -159,8 +160,8 @@ gulp.task('scripts', function() {
       }
     });
   };
-
   runTasks('DoubleClick');
+
   if (GDN === "true") {
     runTasks('GDN');
   }
