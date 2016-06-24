@@ -63,7 +63,7 @@ function getDynamicContent() {
   devDynamicContent.DoubleClick[0].image_url_3.Type = "file";
   devDynamicContent.DoubleClick[0].image_url_3.Url = "http://www.ralcolours.co.uk/acatalog/ral1007.jpg";
   devDynamicContent.DoubleClick[0].exit = {};
-  devDynamicContent.DoubleClick[0].exit.Url = "http://www.petsathome.com/";
+  devDynamicContent.DoubleClick[0].exit.Url = "http://www.google.com/";
   Enabler.setDevDynamicContent(devDynamicContent);
   /* END OF GOOGLE DYNAMIC CODE SNIPPET */
 
