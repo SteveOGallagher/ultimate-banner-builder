@@ -93,6 +93,7 @@ class GenerateTemplates {
 
 					var version = 0;
 
+					// Make GDN folder
 					fs.mkdir(`${dir}/${GDN}`, function (err) {
 				    if (err) {
 				        return console.log('failed to write directory', err);
@@ -100,6 +101,7 @@ class GenerateTemplates {
 				    makeVersionDirectory(version);
 					});
 
+					// Make a folder inside GDN for a particular version
 					function makeVersionDirectory (version) {
 						fs.mkdir(`${dir}/${GDN}/${versions[version]}`, function (err) {
 					    if (err) {
@@ -109,22 +111,21 @@ class GenerateTemplates {
 						});
 					};
 
+					// Make an image folder inside GDN for a particular version
 					function makeImgDirectory (version) {
 						fs.mkdir(`${dir}/${GDN}/${versions[version]}/${img}`, function (err) {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
 					    version++;
+
 					    if (version == versions.length) {
-					    	that.populateTemplate(dir, data);
+					    	that.populateTemplate(dir, data); // Build files into folders when complete
 					    } else {
-					    	makeVersionDirectory(version);
+					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
 					    };
 						});
 					};
-
-					
-	        
 	      } else {
 					that.populateTemplate(dir, data); // If GDN not true, build as normal
 	      }
