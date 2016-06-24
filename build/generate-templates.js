@@ -73,7 +73,9 @@ class GenerateTemplates {
 				console.info(chalk.blue(`Creating ${dir}`));
 				that.generateTemplate(dir, data);
 				console.log("Building folder structures...");
-				setTimeout(function(){ that.generateImgFolders(dir, data); }, 2000);
+				if (GDN === "true") {
+					setTimeout(function(){ that.generateImgFolders(dir, data); }, 2000);
+				};
 			}
 		});
 	}
@@ -115,7 +117,7 @@ class GenerateTemplates {
 		});
 	}
 
-	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
+	// Create img folders inside each GDN version
 	generateImgFolders(dir, data) {
 		let that = this;
     for (var version in this.versions) {
