@@ -161,6 +161,12 @@ class GenerateTemplates {
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
 
+    if (!this.Dynamic) {
+      fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
+       if (err) return console.error("error:", err);
+       console.info(chalk.green("images folder copied successfully."));
+      });
+    }
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
 		});
@@ -177,12 +183,6 @@ class GenerateTemplates {
 
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
-    if (!this.Dynamic) {
-      fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
-       if (err) return console.error("error:", err);
-       console.info(chalk.green("images folder copied successfully."));
-      });
-    }
 
 		// Create individual folders for specific js files.
     switch(file) {
