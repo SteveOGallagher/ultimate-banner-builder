@@ -53,8 +53,8 @@ var sizeFolder;
 function getSubDirectories(fileType, copyFunc) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (Master && Static && !DoubleClick ||
-        !Master && Static) {
+    if (static && Master && Static && !DoubleClick ||
+        static && !Master && Static) {
     ad = 'static';
     var type = `src/${sizeFolder}/${ad}`;
     var typeFolder = getFolders(type); // Static or Dynamic
@@ -109,8 +109,8 @@ gulp.task('sass', function () {
   };
 
   var runSass = function (ad_type) {
-    if (Master && Static && !DoubleClick ||
-        !Master && Static) {
+    if (ad_type == "static" && Master && Static && !DoubleClick ||
+        ad_type == "static" && !Master && Static) {
       return getSubDirectories('scss', copyAndPipe, true);
     } else if (ad_type == "doubleclick") {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
@@ -138,8 +138,8 @@ gulp.task('html', function() {
   };
 
   var runHtml = function (ad_type) {
-    if (Master && Static && !DoubleClick ||
-        !Master && Static) {
+    if (ad_type == "static" && Master && Static && !DoubleClick ||
+        ad_type == "static" && !Master && Static) {
       return getSubDirectories('html', copyAndPipe, true);
       } else if (ad_type == "doubleclick") {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);

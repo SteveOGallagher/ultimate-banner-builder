@@ -1,17 +1,27 @@
 {
-  "dimensions":
+  "dimensions": 
   [
     {
       "width": 160,
       "height": 600,
       "prefix": ""
+    },
+    {
+      "width": 300,
+      "height": 600,
+      "prefix": ""
+    },
+    {
+      "width": 728,
+      "height": 90,
+      "prefix": ""
     }
   ],
   "DoubleClick" : true,
-  "Dynamic" : false,
+  "Dynamic" : true,
   "Static" : true,
-  "Master" : true,
-  "versions":
+  "Master" : false,
+  "versions": 
   [
     "cat",
     "dog"
