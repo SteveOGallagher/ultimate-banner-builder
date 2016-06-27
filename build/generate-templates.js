@@ -118,6 +118,8 @@ class GenerateTemplates {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
+					    copyImages(version); // Copy global images for this version before incrementing
+
 					    version++;
 
 					    if (version == versions.length) {
@@ -127,6 +129,21 @@ class GenerateTemplates {
 					    };
 						});
 					};
+
+					// Copy global images into image directory
+					// TODO: allow all images from inside this folder to be copied, regardless of name
+					function copyImages (version) {
+						var images = ['blue.jpg', 'green.jpg', 'orange.jpg', 'red.jpg'];
+
+						for (var image in images) {
+							var templateImages = fs.createReadStream(`${appRoot}` + '/base-template/global-images/' + images[image]);
+							var srcImages = fs.createWriteStream(`${dir}/${Static}/${versions[version]}/${img}/` + images[image]);
+							templateImages.pipe(srcImages);
+						};
+					};
+
+					
+
 	      } else {
 					that.populateTemplate(dir, data); // If Static not true, build as normal
 	      }

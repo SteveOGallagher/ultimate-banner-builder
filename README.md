@@ -46,4 +46,5 @@ A banner build template for creating DoubleClick banners which also works to gen
 ## To Do
 - Make final improvements on base level banner build template
 - Include example image files for static setup.
+- Allow for either DoubleClick or Static master ad build
 - Refactor and add further clarity to code
