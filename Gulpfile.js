@@ -193,10 +193,11 @@ gulp.task('master', function() {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
-    'src/**/dynamic.js',
     'src/global.scss',
     'src/normalize.scss'
   ];
+  Dynamic === true ?  sources.push('src/**/dynamic.js') : sources.push('src/**/image-paths.js')
+
   function copyScripts (source) {
     return gulp.src(source)
       .pipe(rename(function (path) {path.dirname = "/";}))
