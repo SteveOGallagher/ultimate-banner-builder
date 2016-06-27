@@ -41,8 +41,9 @@ A banner build template for creating DoubleClick banners which also works to gen
 - Ensure that GDN folders are only created if 'GDN' is set to 'true'.
 - Auto zip GDN folders by banner size and by containing GDN folder.
 - For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
+- Rename DoubleClick to dynamic. Rename GDN to static
 
 ## To Do
 - Make final improvements on base level banner build template
+- Include example image files for static setup.
 - Refactor and add further clarity to code
-- Rename DoubleClick to DynamicDC. Rename GDN to assets
