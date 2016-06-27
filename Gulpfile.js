@@ -68,9 +68,14 @@ function getSubDirectories(fileType, copyFunc, static) {
     } else {
       ad = 'doubleclick';
       var dest = 'prod/' + ad + '/' + sizeFolder;
-      var source = [ 
-        path.join(src, sizeFolder, '/**/' + ad + '.js'),
-        path.join(src, sizeFolder, '/**/main.js')
+      var source = 
+      fileType === 'js' ? [ 
+          path.join(src, sizeFolder, '/**/' + ad + '.js'),
+          path.join(src, sizeFolder, '/**/main.js')
+        ] : 
+        [ 
+        path.join(src, sizeFolder, ad, '/**/*.jpg'),
+        path.join(src, sizeFolder, ad, '/**/*.png')
       ];
       return copyFunc(source, dest);
     }
@@ -177,6 +182,9 @@ gulp.task('img', function() {
 
   if (Static === true) {
     return getSubDirectories('img', copyAndPipe, true);
+  }
+  if (DoubleClick === true && Dynamic === false) {
+    return getSubDirectories('img', copyAndPipe, false);
   }
 });
 
