@@ -39,6 +39,7 @@ function getFolders(dir) {
 
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
+var sizeFolder;
 function getSubDirectories(fileType, copyFunc, gdn) {
   return folders.map(function(sizeFolder) {
     var ad;
@@ -59,6 +60,7 @@ function getSubDirectories(fileType, copyFunc, gdn) {
           root + '/' + ad + '/' + versionFolder + '/*.' + fileType 
         ] : 
         false;
+        console.log(source);
       return copyFunc(source, dest);
     });
 
