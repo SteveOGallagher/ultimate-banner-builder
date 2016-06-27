@@ -27,7 +27,8 @@ var gulp     = require('gulp'),
 const appRoot = process.cwd();
 const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 var sizes = JSON.parse(sizesFile);
-var GDN = sizes.GDN;
+var Static = sizes.Static;
+var Dynamic = sizes.Dynamic;
 
 // Get folder names inside a given directory (dir)
 function getFolders(dir) {
@@ -40,13 +41,13 @@ function getFolders(dir) {
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
-function getSubDirectories(fileType, copyFunc, gdn) {
+function getSubDirectories(fileType, copyFunc, static) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (gdn) {
-    ad = 'GDN';
+    if (static) {
+    ad = 'static';
     var type = 'src/' + sizeFolder + '/' + ad;
-    var typeFolder = getFolders(type); //GDN or DoubleClick
+    var typeFolder = getFolders(type); // Static or Dynamic
     var root = 'src/' + sizeFolder;
     return typeFolder.map(function(versionFolder) {
       var dest = 'prod/' + ad + '/' +  sizeFolder + '-' + versionFolder;
@@ -65,7 +66,7 @@ function getSubDirectories(fileType, copyFunc, gdn) {
     });
 
     } else {
-      ad = 'DoubleClick';
+      ad = 'dynamic';
       var dest = 'prod/' + ad + '/' + sizeFolder;
       var source = [ 
         path.join(src, sizeFolder, '/**/' + ad + '.js'),
@@ -93,15 +94,15 @@ gulp.task('sass', function () {
   };
 
   var runSass = function (ad_type) {
-    if (ad_type === 'GDN') {
+    if (ad_type === 'static') {
       return getSubDirectories('scss', copyAndPipe, true);
     } else {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
-  runSass('DoubleClick');
-  if (GDN === "true") {
-    runSass('GDN');
+  runSass('dynamic');
+  if (Static === true) {
+    runSass('static');
   }
 });
   
@@ -110,10 +111,10 @@ gulp.task('sass', function () {
 // Also remove enabler script tag for GDN versions.
 gulp.task('html', function() {
 
- var copyAndPipe = function (gulpSrc, gulpDest, gdn) {
-    return gdn ?
+ var copyAndPipe = function (gulpSrc, gulpDest, static) {
+    return static ?
       gulp.src(gulpSrc)
-        .pipe(removeCode({ gdn: true }))
+        .pipe(removeCode({ static: true }))
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(gulpDest)) :
       gulp.src(gulpSrc)
@@ -122,16 +123,16 @@ gulp.task('html', function() {
   };
 
   var runHtml = function (ad_type) {
-    if (ad_type === 'GDN') {
+    if (ad_type === 'static') {
       return getSubDirectories('html', copyAndPipe, true); 
       } else {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
   };
 
-  runHtml('DoubleClick');
-  if (GDN === "true") {
-    runHtml('GDN');
+  runHtml('dynamic');
+  if (Static === true) {
+    runHtml('static');
   }
 });
 
@@ -151,17 +152,17 @@ gulp.task('scripts', function() {
   };
 
   var runTasks = function (ad_type) {
-    if (ad_type === 'GDN') {
+    if (ad_type === 'static') {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
       return getSubDirectories('js', copyAndPipe, false);
     }
   };
 
-  if (GDN === "true") {
-    runTasks('GDN');
+  if (Static === true) {
+    runTasks('static');
   }
-  runTasks('DoubleClick');
+  runTasks('dynamic');
 });
 
 // Optimise and copy images across into production GDN folders
@@ -174,7 +175,7 @@ gulp.task('img', function() {
      //.pipe(connect.reload());
   };
 
-  if (GDN === "true") {
+  if (Static === true) {
     return getSubDirectories('img', copyAndPipe, true);
   }
 });
@@ -192,7 +193,7 @@ gulp.task('master', function() {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
-    'src/**/DoubleClick.js',
+    'src/**/dynamic.js',
     'src/global.scss',
     'src/normalize.scss'
   ];
@@ -218,18 +219,18 @@ gulp.task('clear', function() {
   cache.clearAll();
 });
 
-// Zip the GDN folder and zip all individual GDN banner 
+// Zip the static folder and zip all individual static banners 
 gulp.task('zip', function() {
-  var folders = getFolders('prod/GDN');
+  var folders = getFolders('prod/static');
   function applyZip(source, name) {
   	return gulp.src(source)
   		.pipe(zip(name + '.zip'))
-  		.pipe(gulp.dest('zipped-GDN'));
+  		.pipe(gulp.dest('zipped-banners'));
   }
-  applyZip('prod/GDN/**', 'GDN');
+  applyZip('prod/static/**', 'static');
   for (var folder in folders) {
     console.log(folders[folder]);
-    applyZip('prod/GDN/' + folders[folder] + '/**',folders[folder].toString());
+    applyZip('prod/static/' + folders[folder] + '/**',folders[folder].toString());
   }
 });
 
