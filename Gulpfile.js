@@ -14,7 +14,7 @@ var gulp     = require('gulp'),
     connect  = require('gulp-connect-multi')(),
     removeCode = require('gulp-remove-code'),
     sourcemaps = require('gulp-sourcemaps'),
-    jshint   = require('gulp-jshint'),   
+    jshint   = require('gulp-jshint'),
     uncss    = require('gulp-uncss'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
@@ -47,20 +47,20 @@ function getSubDirectories(fileType, copyFunc, static) {
     var ad;
     if (static) {
     ad = 'static';
-    var type = 'src/' + sizeFolder + '/' + ad;
+    var type = `src/${sizeFolder}/${ad}`;
     var typeFolder = getFolders(type); // Static or Dynamic
-    var root = 'src/' + sizeFolder;
+    var root = `src/${sizeFolder}`;
     return typeFolder.map(function(versionFolder) {
-      var dest = 'prod/' + ad + '/' +  sizeFolder + '-' + versionFolder;
-      var source = fileType === 'scss' ? [root + '/*.' +  fileType, '!src/*.scss'] :
-        fileType === 'html' ? root + '/*.' +  fileType :
-        fileType === 'img' ? [root + '/' + ad + '/' + versionFolder + '/**/*',
-          '!'+ root + '/' + ad + '/' + versionFolder + '/*.js'] :
+      var dest = `prod/${ad}/${sizeFolder}-${versionFolder}`;
+      var source = fileType === 'scss' ? [`${root}/*.${fileType}`, `!src/*.scss`] :
+        fileType === 'html' ? `${root}/*.${fileType}` :
+        fileType === 'img' ? [`${root}/${ad}/${versionFolder}/**/*`,
+          `!${root}/${ad}/${versionFolder}/*.js`] :
         fileType === 'js' ? [
-          root + '/*.' +  fileType,
-          root + '/' + ad + '/*.' + fileType,
-          root + '/' + ad + '/' + versionFolder + '/*.' + fileType 
-        ] : 
+          `${root}/*.${fileType}`,
+          `${root}/${ad}/*.${fileType}`,
+          `${root}/${ad}/${versionFolder}/*.${fileType}`
+        ] :
         false;
         console.log(source);
       return copyFunc(source, dest);
@@ -68,13 +68,13 @@ function getSubDirectories(fileType, copyFunc, static) {
 
     } else {
       ad = 'doubleclick';
-      var dest = 'prod/' + ad + '/' + sizeFolder;
-      var source = 
-      fileType === 'js' ? [ 
+      var dest = `prod/${ad}/${sizeFolder}`;
+      var source =
+      fileType === 'js' ? [
           path.join(src, sizeFolder, '/**/' + ad + '.js'),
           path.join(src, sizeFolder, '/**/main.js')
-        ] : 
-        [ 
+        ] :
+        [
         path.join(src, sizeFolder, ad, '/**/*.jpg'),
         path.join(src, sizeFolder, ad, '/**/*.png')
       ];
@@ -114,9 +114,9 @@ gulp.task('sass', function () {
     runSass('static');
   }
 });
-  
 
-// Minimise html files and copy into appropriate folders. 
+
+// Minimise html files and copy into appropriate folders.
 // Also remove enabler script tag for GDN versions.
 gulp.task('html', function() {
 
@@ -133,7 +133,7 @@ gulp.task('html', function() {
 
   var runHtml = function (ad_type) {
     if (ad_type === 'static') {
-      return getSubDirectories('html', copyAndPipe, true); 
+      return getSubDirectories('html', copyAndPipe, true);
       } else {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
@@ -149,7 +149,7 @@ gulp.task('html', function() {
 
 // Combine various javascript files and minimise them before copying into relevant production folders.
 gulp.task('scripts', function() {
-  
+
   var copyAndPipe = function(gulpSrc, gulpDest) {
     return gulp.src(gulpSrc)
       .pipe(jshint())
@@ -216,7 +216,7 @@ gulp.task('clear', function() {
   cache.clearAll();
 });
 
-// Zip the static folder and zip all individual static banners 
+// Zip the static folder and zip all individual static banners
 gulp.task('zip', function() {
   var folders = getFolders('prod/static');
   function applyZip(source, name) {
@@ -268,5 +268,3 @@ gulp.task('watch', function () {
 });
 
 gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
-
-
