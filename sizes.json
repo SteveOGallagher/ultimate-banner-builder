@@ -8,6 +8,7 @@
     }
   ],
   "DoubleClick" : true,
+  "needsImg": true,
   "Static" : true,
   "Master" : true,
   "versions": 
