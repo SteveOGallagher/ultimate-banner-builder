@@ -88,7 +88,10 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-        //fs.mkdir(`${dir}/${folder}`);
+        if (this.Dynamic === true) {
+
+          fs.mkdir(`${dir}/${Dynamic}`);
+        }
 
 				if (this.Static === true) {
 
