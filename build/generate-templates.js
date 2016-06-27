@@ -5,8 +5,8 @@ import path from 'path';
 import chalk from 'chalk';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
-const DoubleClick = "DoubleClick";
-const GDN = "GDN";
+const Dynamic = "dynamic";
+const Static = "static";
 const img = "img";
 var versions;
 
@@ -15,14 +15,15 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['DoubleClick.js', 'main.js', 'GDN.js', 'image-paths.js', 'overwrite.scss'];
+		this.formatFiles = ['dynamic.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss'];
 	}
 
 	loadSizes() {
 		const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
-		this.GDN = sizes.GDN;
+		this.Dynamic = sizes.Dynamic;
+		this.Static = sizes.Static;
 		versions = sizes.versions;
 	}
 
@@ -77,7 +78,7 @@ class GenerateTemplates {
 		});
 	}
 
-	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
+	// Build folders to house each ad by size name and their Dynamic and Static subfolders
 	generateTemplate(dir, data) {
 		let that = this;
 
@@ -87,23 +88,23 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-				fs.mkdir(`${dir}/${DoubleClick}`);
+				fs.mkdir(`${dir}/${Dynamic}`);
 
-				if (this.GDN === "true") {
+				if (this.Static === true) {
 
 					var version = 0;
 
-					// Make GDN folder
-					fs.mkdir(`${dir}/${GDN}`, function (err) {
+					// Make Static assets folder
+					fs.mkdir(`${dir}/${Static}`, function (err) {
 				    if (err) {
 				        return console.log('failed to write directory', err);
 				    }
 				    makeVersionDirectory(version);
 					});
 
-					// Make a folder inside GDN for a particular version
+					// Make a folder inside Static assets folder for a particular version
 					function makeVersionDirectory (version) {
-						fs.mkdir(`${dir}/${GDN}/${versions[version]}`, function (err) {
+						fs.mkdir(`${dir}/${Static}/${versions[version]}`, function (err) {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
@@ -111,9 +112,9 @@ class GenerateTemplates {
 						});
 					};
 
-					// Make an image folder inside GDN for a particular version
+					// Make an image folder inside the Static assets folder for a particular version
 					function makeImgDirectory (version) {
-						fs.mkdir(`${dir}/${GDN}/${versions[version]}/${img}`, function (err) {
+						fs.mkdir(`${dir}/${Static}/${versions[version]}/${img}`, function (err) {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
@@ -127,7 +128,7 @@ class GenerateTemplates {
 						});
 					};
 	      } else {
-					that.populateTemplate(dir, data); // If GDN not true, build as normal
+					that.populateTemplate(dir, data); // If Static not true, build as normal
 	      }
 			}
 		});
@@ -154,20 +155,20 @@ class GenerateTemplates {
 
 		// Create individual folders for specific js files.
 		switch(file) {
-	    case 'GDN.js':
-	    		if (this.GDN === "true") {
-		        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
+	    case 'static.js':
+	    		if (this.Static === true) {
+		        fs.writeFileSync(`${dir}/${Static}/${file}`, processedData, 'utf8');
 	    		}
 	        break;
 	    case 'image-paths.js':
-	    		if (this.GDN === "true") {
+	    		if (this.Static === true) {
 		    		for (var version in versions) {
-			        fs.writeFileSync(`${dir}/${GDN}/${versions[version]}/${file}`, processedData, 'utf8');
+			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
 		        };
 	    		}
 	        break;
-	    case 'DoubleClick.js':
-	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+	    case 'dynamic.js':
+	        fs.writeFileSync(`${dir}/${Dynamic}/${file}`, processedData, 'utf8');
 	        break;
 	    default:
 	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');

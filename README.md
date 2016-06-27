@@ -45,3 +45,4 @@ A banner build template for creating DoubleClick banners which also works to gen
 ## To Do
 - Make final improvements on base level banner build template
 - Refactor and add further clarity to code
+- Rename DoubleClick to DynamicDC. Rename GDN to assets

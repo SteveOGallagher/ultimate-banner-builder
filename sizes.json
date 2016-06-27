@@ -5,14 +5,11 @@
         "width": 160,
         "height": 600,
         "prefix": ""
-    },
-    {
-        "width": 300,
-        "height": 600,
-        "prefix": ""
     }
   ],
-  "GDN" : "true",
+  "Dynamic" : true,
+  "Static" : false,
+  "Master" : true,
   "versions": 
   [
     "cat",

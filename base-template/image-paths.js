@@ -20,3 +20,5 @@ function getDynamicContent() {
   }];
   return devDynamicContent.GDN[0];
 }
+
+// TODO: Refactor the above to retain structure but add simplicity.
