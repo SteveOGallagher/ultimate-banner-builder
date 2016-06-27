@@ -2,9 +2,9 @@
   "dimensions": 
   [
     {
-        "width": 160,
-        "height": 600,
-        "prefix": ""
+      "width": 160,
+      "height": 600,
+      "prefix": ""
     }
   ],
   "DoubleClick" : true,

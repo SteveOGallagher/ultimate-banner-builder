@@ -88,7 +88,9 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-				fs.mkdir(`${dir}/${DoubleClick}`);
+        if (this.DoubleClick === true) {
+          fs.mkdir(`${dir}/${DoubleClick}`);
+        }
 
 				if (this.Static === true) {
 
@@ -108,9 +110,9 @@ class GenerateTemplates {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
-					    makeImgDirectory(version)
+					    makeImgDirectory(version);
 						});
-					};
+					}
 
 					// Make an image folder inside the Static assets folder for a particular version
 					function makeImgDirectory (version) {
@@ -126,7 +128,7 @@ class GenerateTemplates {
 					    	that.populateTemplate(dir, data); // Build files into folders when complete
 					    } else {
 					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
-					    };
+					    }
 						});
 					};
 
@@ -142,11 +144,10 @@ class GenerateTemplates {
 						};
 					};
 
-					
-
 	      } else {
-					that.populateTemplate(dir, data); // If Static not true, build as normal
+					that.populateTemplate(dir, data); // If static is false, build as normal
 	      }
+
 			}
 		});
 	}
@@ -171,7 +172,7 @@ class GenerateTemplates {
 		let processedData = this.format(fileData, data);
 
 		// Create individual folders for specific js files.
-		switch(file) {
+        		switch(file) {
 	    case 'static.js':
 	    		if (this.Static === true) {
 		        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
@@ -181,11 +182,13 @@ class GenerateTemplates {
 	    		if (this.Static === true) {
 		    		for (var version in versions) {
 			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
-		        };
+		        }
 	    		}
 	        break;
 	    case 'doubleclick.js':
-	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+          if (this.DoubleClick === true) {
+            fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+          }
 	        break;
 	    default:
 	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
