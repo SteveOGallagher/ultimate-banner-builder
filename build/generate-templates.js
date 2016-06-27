@@ -3,9 +3,11 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import fse from 'fs-extra';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
 const DoubleClick = "doubleclick";
+const Dynamic = null;
 const Static = "static";
 const img = "img";
 var versions;
@@ -25,6 +27,7 @@ class GenerateTemplates {
 		this.DoubleClick = sizes.DoubleClick;
 		this.Master = sizes.Master;
 		this.Static = sizes.Static;
+    this.Dynamic = sizes.Dynamic;
 		versions = sizes.versions;
 		
 		versions = this.Master === true ? [versions[0]] : size.versions;
@@ -173,8 +176,15 @@ class GenerateTemplates {
 
 	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
+
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
+    if (!this.Dynamic) {
+      fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
+       if (err) return console.error("error:", err);
+       console.info(chalk.green("images folder copied successfully."));
+      });
+    }
 
 		// Create individual folders for specific js files.
     switch(file) {
@@ -196,9 +206,14 @@ class GenerateTemplates {
           if (this.DoubleClick) {
             fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
           }
-	        break;
+        	break;
+	    case 'doubleclick.js':
+        if (this.DoubleClick) {
+          fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+        }
+        break;
 	    default:
-	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 		}
 	}
 }
