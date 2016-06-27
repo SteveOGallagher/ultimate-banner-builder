@@ -7,8 +7,8 @@
       "prefix": ""
     }
   ],
-  "Dynamic" : false,
-  "Static" : true,
+  "Dynamic" : true,
+  "Static" : false,
   "Master" : true,
   "versions": 
   [
