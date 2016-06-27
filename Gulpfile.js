@@ -178,7 +178,11 @@ gulp.task('scripts', function() {
   }
 });
 
-
+// function checkSettingsAndRun (setting, function, path) {
+//   if (setting === true) {
+//     runJS('doubleclick');
+//   };
+// }
 
 // Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
