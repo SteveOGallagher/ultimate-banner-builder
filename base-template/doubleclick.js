@@ -21,7 +21,7 @@ function checkPageLoaded() {
 
 // Attach exit url to bg-exit element
 function exitHandler() {
-  var dynamicContent = getDynamicContent();
+  var dynamicContent = getContent();
   document.getElementById('bg-exit').addEventListener('click', function() {
     Enabler.exit("clickTag", dynamicContent.exit.Url);
   });
@@ -40,13 +40,16 @@ function politeInit() {
   }
 }
 
+
 ///
-///* ONLY THE BELOW CODE SHOULD NEED EDITING *///
+/*  Only edit code below this line */
 ///
 
-function getDynamicContent() {
-  /* Paste the Google DoubleClick Generated Code for dynamic content below */
-  Enabler.setProfileId(1079746);
+function getContent() {
+
+  /* If using Dynamic Content from DoubleClick Studio, replace this code with Generated Dynamic Code.
+     Otherwise, edit the devDynamicContent object's properties with the relative paths to images. */
+
   var devDynamicContent = {};
   devDynamicContent.DoubleClick= [{}];
   devDynamicContent.DoubleClick[0]._id = 0;
@@ -65,8 +68,9 @@ function getDynamicContent() {
   devDynamicContent.DoubleClick[0].exit = {};
   devDynamicContent.DoubleClick[0].exit.Url = "http://www.google.com/";
   Enabler.setDevDynamicContent(devDynamicContent);
-  /* END OF GOOGLE DYNAMIC CODE SNIPPET */
 
-  // Replace the below object variable with the one pasted above!!
+  /* End of code to be replaced */
+
+  // If using Dynamic Content from DoubleClick Studio, ensure that the below  variable matches the one in the code directly above.
   return devDynamicContent.DoubleClick[0];
 }

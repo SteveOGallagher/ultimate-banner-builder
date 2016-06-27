@@ -5,7 +5,7 @@ import path from 'path';
 import chalk from 'chalk';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
-const Dynamic = "dynamic";
+const DoubleClick = "doubleclick";
 const Static = "static";
 const img = "img";
 var versions;
@@ -15,14 +15,14 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['dynamic.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss'];
+		this.formatFiles = ['doubleclick.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss'];
 	}
 
 	loadSizes() {
 		const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
-		this.Dynamic = sizes.Dynamic;
+		this.DoubleClick = sizes.DoubleClick;
 		this.Static = sizes.Static;
 		versions = sizes.versions;
 	}
@@ -78,7 +78,7 @@ class GenerateTemplates {
 		});
 	}
 
-	// Build folders to house each ad by size name and their Dynamic and Static subfolders
+	// Build folders to house each ad by size name and their DoubleClick and Static subfolders
 	generateTemplate(dir, data) {
 		let that = this;
 
@@ -88,9 +88,8 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-        if (this.Dynamic === true) {
-
-          fs.mkdir(`${dir}/${Dynamic}`);
+        if (this.DoubleClick === true) {
+          fs.mkdir(`${dir}/${DoubleClick}`);
         }
 
 				if (this.Static === true) {
@@ -161,7 +160,7 @@ class GenerateTemplates {
         		switch(file) {
 	    case 'static.js':
 	    		if (this.Static === true) {
-		        fs.writeFileSync(`${dir}/${Static}/${file}`, processedData, 'utf8');
+		        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 	    		}
 	        break;
 	    case 'image-paths.js':
@@ -171,9 +170,9 @@ class GenerateTemplates {
 		        }
 	    		}
 	        break;
-	    case 'dynamic.js':
-          if (this.Dynamic === true) {
-            fs.writeFileSync(`${dir}/${Dynamic}/${file}`, processedData, 'utf8');
+	    case 'doubleclick.js':
+          if (this.DoubleClick === true) {
+            fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
           }
 	        break;
 	    default:

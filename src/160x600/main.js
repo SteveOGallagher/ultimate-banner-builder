@@ -1,7 +1,7 @@
 window.onload = initialize();
 
 // Set the content needed to create the banner
-var adContent = getDynamicContent();
+var adContent = getContent();
 
 // These variables will later be checked to see if animation can begin.
 var isVisible = false;
