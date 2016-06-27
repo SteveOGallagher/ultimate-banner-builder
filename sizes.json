@@ -1,5 +1,5 @@
 {
-  "dimensions": 
+  "dimensions":
   [
     {
       "width": 160,
@@ -11,7 +11,7 @@
   "Dynamic" : false,
   "Static" : true,
   "Master" : true,
-  "versions": 
+  "versions":
   [
     "cat",
     "dog"
