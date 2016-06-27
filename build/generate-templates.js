@@ -163,12 +163,13 @@ class GenerateTemplates {
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
 
-    if (!this.Dynamic) {
+    if (!this.Dynamic && this.DoubleClick) {
       fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
        if (err) return console.error("error:", err);
        console.info(chalk.green("images folder copied successfully."));
       });
     }
+
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
 		});
