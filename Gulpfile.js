@@ -162,7 +162,7 @@ gulp.task('scripts', function() {
       .pipe(gulp.dest(gulpDest));
   };
 
-  var runTasks = function (ad_type) {
+  var runJS = function (ad_type) {
     if (ad_type === 'static') {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
@@ -171,12 +171,14 @@ gulp.task('scripts', function() {
   };
 
   if (DoubleClick === true) {
-    runTasks('doubleclick');
+    runJS('doubleclick');
   }
   if (Static === true) {
-    runTasks('static');
+    runJS('static');
   }
 });
+
+
 
 // Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
