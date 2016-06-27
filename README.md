@@ -43,9 +43,9 @@ A banner build template for creating DoubleClick banners which also works to gen
 - For dynamic ads requiring GDN versions, allow for multiple versions of the same ad size with different content.
 - Rename DoubleClick to dynamic. Rename GDN to static
 - Include example image files for static setup.
+- Allow for either DoubleClick or Static master ad build
+- Allow gulping of multiple image types
 
 ## To Do
 - Make final improvements on base level banner build template
-- Allow for either DoubleClick or Static master ad build
-- Allow gulping of multiple image types
 - Refactor and add further clarity to code
