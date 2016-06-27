@@ -28,6 +28,7 @@ const appRoot = process.cwd();
 const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 var sizes = JSON.parse(sizesFile);
 var Static = sizes.Static;
+var DoubleClick = sizes.DoubleClick;
 var Dynamic = sizes.Dynamic;
 
 // Get folder names inside a given directory (dir)
@@ -105,7 +106,10 @@ gulp.task('sass', function () {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
-  runSass('doubleclick');
+
+  if (DoubleClick === true) {
+    runSass('doubleclick');
+  }
   if (Static === true) {
     runSass('static');
   }
@@ -135,7 +139,9 @@ gulp.task('html', function() {
       }
   };
 
-  runHtml('doubleclick');
+  if (DoubleClick === true) {
+    runHtml('doubleclick');
+  }
   if (Static === true) {
     runHtml('static');
   }
@@ -164,10 +170,12 @@ gulp.task('scripts', function() {
     }
   };
 
+  if (DoubleClick === true) {
+    runTasks('doubleclick');
+  }
   if (Static === true) {
     runTasks('static');
   }
-  runTasks('doubleclick');
 });
 
 // Optimise and copy images across into production GDN folders
@@ -181,37 +189,11 @@ gulp.task('img', function() {
   };
 
   if (Static === true) {
-    return getSubDirectories('img', copyAndPipe, true);
+    getSubDirectories('img', copyAndPipe, true);
   }
   if (DoubleClick === true && Dynamic === false) {
-    return getSubDirectories('img', copyAndPipe, false);
+    getSubDirectories('img', copyAndPipe, false);
   }
-});
-
-// Delete src and prod folders during Gulp development.
-gulp.task('del', function () {
-  return del([
-    'src',
-    'prod'
-  ]);
-});
-
-// Overwrite base-template files with approved Master adjustments
-gulp.task('master', function() {
-  var sources = [
-    'src/**/index.html',
-    'src/**/main.js',
-    'src/global.scss',
-    'src/normalize.scss'
-  ];
-  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
-
-  function copyScripts (source) {
-    return gulp.src(source)
-      .pipe(rename(function (path) {path.dirname = "/";}))
-      .pipe(gulp.dest('./base-template'));
-  }
-  copyScripts(sources);
 });
 
 // Setup localhost server to view production files.
@@ -242,6 +224,34 @@ gulp.task('zip', function() {
     applyZip('prod/static/' + folders[folder] + '/**',folders[folder].toString());
   }
 });
+
+// Overwrite base-template files with approved Master adjustments
+gulp.task('master', function() {
+  var sources = [
+    'src/**/index.html',
+    'src/**/main.js',
+    'src/global.scss',
+    'src/normalize.scss'
+  ];
+  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
+
+  function copyScripts (source) {
+    return gulp.src(source)
+      .pipe(rename(function (path) {path.dirname = "/";}))
+      .pipe(gulp.dest('./base-template'));
+  }
+  copyScripts(sources);
+});
+
+
+// Delete src and prod folders during Gulp development.
+gulp.task('del', function () {
+  return del([
+    'src',
+    'prod'
+  ]);
+});
+
 
 // Setup watch tasks
 gulp.task('watch', function () {
