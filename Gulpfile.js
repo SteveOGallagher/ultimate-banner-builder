@@ -27,9 +27,10 @@ var gulp     = require('gulp'),
 const appRoot = process.cwd();
 const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 var sizes = JSON.parse(sizesFile);
-var Static = sizes.Static;
 var DoubleClick = sizes.DoubleClick;
 var Dynamic = sizes.Dynamic;
+var Master = sizes.Master;
+var Static = sizes.Static;
 
 // Get folder names inside a given directory (dir)
 function getFolders(dir) {
@@ -39,13 +40,19 @@ function getFolders(dir) {
   });
 }
 
+function checkSettingsAndRun (setting, execute, usingPath) {
+  if (setting === true) {
+    execute(usingPath);
+  };
+}
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
 function getSubDirectories(fileType, copyFunc, static) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (static) {
+    if (Master && Static && !DoubleClick ||
+        !Master && Static) {
     ad = 'static';
     var type = 'src/' + sizeFolder + '/' + ad;
     var typeFolder = getFolders(type); // Static or Dynamic
@@ -100,19 +107,16 @@ gulp.task('sass', function () {
   };
 
   var runSass = function (ad_type) {
-    if (ad_type === 'static') {
+    if (Master && Static && !DoubleClick ||
+        !Master && Static) {
       return getSubDirectories('scss', copyAndPipe, true);
-    } else {
+    } else if (ad_type == "doubleclick") {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
 
-  if (DoubleClick === true) {
-    runSass('doubleclick');
-  }
-  if (Static === true) {
-    runSass('static');
-  }
+  checkSettingsAndRun (Static, runSass, 'static');
+  checkSettingsAndRun (DoubleClick, runSass, 'doubleclick');
 });
   
 
@@ -132,19 +136,16 @@ gulp.task('html', function() {
   };
 
   var runHtml = function (ad_type) {
-    if (ad_type === 'static') {
+    if (Master && Static && !DoubleClick ||
+        !Master && Static) {
       return getSubDirectories('html', copyAndPipe, true); 
-      } else {
+      } else if (ad_type == "doubleclick") {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
   };
 
-  if (DoubleClick === true) {
-    runHtml('doubleclick');
-  }
-  if (Static === true) {
-    runHtml('static');
-  }
+  checkSettingsAndRun (Static, runHtml, 'static');
+  checkSettingsAndRun (DoubleClick, runHtml, 'doubleclick');
 });
 
 // Combine various javascript files and minimise them before copying into relevant production folders.
@@ -170,19 +171,9 @@ gulp.task('scripts', function() {
     }
   };
 
-  if (DoubleClick === true) {
-    runJS('doubleclick');
-  }
-  if (Static === true) {
-    runJS('static');
-  }
+  checkSettingsAndRun (Static, runJS, 'static');
+  checkSettingsAndRun (DoubleClick, runJS, 'doubleclick');
 });
-
-// function checkSettingsAndRun (setting, function, path) {
-//   if (setting === true) {
-//     runJS('doubleclick');
-//   };
-// }
 
 // Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
