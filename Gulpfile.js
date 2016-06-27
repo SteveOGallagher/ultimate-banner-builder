@@ -28,6 +28,7 @@ const appRoot = process.cwd();
 const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 var sizes = JSON.parse(sizesFile);
 var Static = sizes.Static;
+var DoubleClick = sizes.DoubleClick;
 var Dynamic = sizes.Dynamic;
 
 // Get folder names inside a given directory (dir)
@@ -68,9 +69,14 @@ function getSubDirectories(fileType, copyFunc, static) {
     } else {
       ad = 'doubleclick';
       var dest = 'prod/' + ad + '/' + sizeFolder;
-      var source = [ 
-        path.join(src, sizeFolder, '/**/' + ad + '.js'),
-        path.join(src, sizeFolder, '/**/main.js')
+      var source = 
+      fileType === 'js' ? [ 
+          path.join(src, sizeFolder, '/**/' + ad + '.js'),
+          path.join(src, sizeFolder, '/**/main.js')
+        ] : 
+        [ 
+        path.join(src, sizeFolder, ad, '/**/*.jpg'),
+        path.join(src, sizeFolder, ad, '/**/*.png')
       ];
       return copyFunc(source, dest);
     }
@@ -100,7 +106,10 @@ gulp.task('sass', function () {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
-  runSass('doubleclick');
+
+  if (DoubleClick === true) {
+    runSass('doubleclick');
+  }
   if (Static === true) {
     runSass('static');
   }
@@ -130,7 +139,9 @@ gulp.task('html', function() {
       }
   };
 
-  runHtml('doubleclick');
+  if (DoubleClick === true) {
+    runHtml('doubleclick');
+  }
   if (Static === true) {
     runHtml('static');
   }
@@ -151,7 +162,7 @@ gulp.task('scripts', function() {
       .pipe(gulp.dest(gulpDest));
   };
 
-  var runTasks = function (ad_type) {
+  var runJS = function (ad_type) {
     if (ad_type === 'static') {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
@@ -159,11 +170,19 @@ gulp.task('scripts', function() {
     }
   };
 
-  if (Static === true) {
-    runTasks('static');
+  if (DoubleClick === true) {
+    runJS('doubleclick');
   }
-  runTasks('doubleclick');
+  if (Static === true) {
+    runJS('static');
+  }
 });
+
+// function checkSettingsAndRun (setting, function, path) {
+//   if (setting === true) {
+//     runJS('doubleclick');
+//   };
+// }
 
 // Optimise and copy images across into production GDN folders
 gulp.task('img', function() {
@@ -176,34 +195,11 @@ gulp.task('img', function() {
   };
 
   if (Static === true) {
-    return getSubDirectories('img', copyAndPipe, true);
+    getSubDirectories('img', copyAndPipe, true);
   }
-});
-
-// Delete src and prod folders during Gulp development.
-gulp.task('del', function () {
-  return del([
-    'src',
-    'prod'
-  ]);
-});
-
-// Overwrite base-template files with approved Master adjustments
-gulp.task('master', function() {
-  var sources = [
-    'src/**/index.html',
-    'src/**/main.js',
-    'src/global.scss',
-    'src/normalize.scss'
-  ];
-  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
-
-  function copyScripts (source) {
-    return gulp.src(source)
-      .pipe(rename(function (path) {path.dirname = "/";}))
-      .pipe(gulp.dest('./base-template'));
+  if (DoubleClick === true && Dynamic === false) {
+    getSubDirectories('img', copyAndPipe, false);
   }
-  copyScripts(sources);
 });
 
 // Setup localhost server to view production files.
@@ -234,6 +230,34 @@ gulp.task('zip', function() {
     applyZip('prod/static/' + folders[folder] + '/**',folders[folder].toString());
   }
 });
+
+// Overwrite base-template files with approved Master adjustments
+gulp.task('master', function() {
+  var sources = [
+    'src/**/index.html',
+    'src/**/main.js',
+    'src/global.scss',
+    'src/normalize.scss'
+  ];
+  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
+
+  function copyScripts (source) {
+    return gulp.src(source)
+      .pipe(rename(function (path) {path.dirname = "/";}))
+      .pipe(gulp.dest('./base-template'));
+  }
+  copyScripts(sources);
+});
+
+
+// Delete src and prod folders during Gulp development.
+gulp.task('del', function () {
+  return del([
+    'src',
+    'prod'
+  ]);
+});
+
 
 // Setup watch tasks
 gulp.task('watch', function () {

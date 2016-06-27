@@ -7,7 +7,7 @@ import fse from 'fs-extra';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
 const DoubleClick = "doubleclick";
-const needsImg = null;
+const Dynamic = null;
 const Static = "static";
 const img = "img";
 var versions;
@@ -25,9 +25,12 @@ class GenerateTemplates {
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
 		this.DoubleClick = sizes.DoubleClick;
+		this.Master = sizes.Master;
 		this.Static = sizes.Static;
-    this.needsImg = sizes.needsImg;
+    this.Dynamic = sizes.Dynamic;
 		versions = sizes.versions;
+		
+		versions = this.Master === true ? [versions[0]] : size.versions;
 	}
 
 	processSizes() {
@@ -96,7 +99,7 @@ class GenerateTemplates {
         }
 
 				if (this.Static) {
-
+					var totalVersions = this.Master === true ? 1 : this.versions
 					var version = 0;
 
 					// Make Static assets folder
@@ -123,19 +126,34 @@ class GenerateTemplates {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
+					    copyImages(version); // Copy global images for this version before incrementing
+
 					    version++;
 
-					    if (version == versions.length) {
+					    if (version == totalVersions) {
 					    	that.populateTemplate(dir, data); // Build files into folders when complete
 					    } else {
 					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
 					    }
 						});
-					}
-          
-        } else {
-          that.populateTemplate(dir, data); // If static is false, build as normal
-        }
+					};
+
+					// Copy global images into image directory
+					// TODO: allow all images from inside this folder to be copied, regardless of name
+					function copyImages (version) {
+						var images = ['blue.jpg', 'green.jpg', 'orange.jpg', 'red.jpg'];
+
+						for (var image in images) {
+							var templateImages = fs.createReadStream(`${appRoot}` + '/base-template/global-images/' + images[image]);
+							var srcImages = fs.createWriteStream(`${dir}/${Static}/${versions[version]}/${img}/` + images[image]);
+							templateImages.pipe(srcImages);
+						};
+					};
+
+	      } else {
+					that.populateTemplate(dir, data); // If static is false, build as normal
+	      }
+
 			}
 		});
 	}
@@ -159,8 +177,8 @@ class GenerateTemplates {
 
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
-    if (this.needsImg) {
-      fse.copy(`${appRoot}/base-template/img`, `${dir}/${DoubleClick}/img`, (err) => {
+    if (!this.Dynamic) {
+      fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
        if (err) return console.error("error:", err);
        console.info(chalk.green("images folder copied successfully."));
       });
