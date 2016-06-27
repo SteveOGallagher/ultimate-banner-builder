@@ -223,7 +223,7 @@ gulp.task('zip', function() {
 });
 
 // Overwrite base-template files with approved Master adjustments
-gulp.task('overwrite', function(cb) {
+gulp.task('overwrite', function() {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
@@ -237,17 +237,16 @@ gulp.task('overwrite', function(cb) {
       .pipe(rename(function (path) {path.dirname = "/";}))
       .pipe(gulp.dest('./base-template'));
   }
+
+  function restart () {
+    return del([
+      'src',
+      'prod'
+    ]);
+  }
+
   copyScripts(sources);
-  cb(err);
-});
-
-
-// Delete src and prod folders during Gulp development.
-gulp.task('restart', ['overwrite'], function () {
-  return del([
-    'src',
-    'prod'
-  ]);
+  setTimeout( function() { restart(); }, 2000) // TODO: use callbacks instead
 });
 
 // Delete src and prod folders during Gulp development.
@@ -258,7 +257,7 @@ gulp.task('del', function () {
   ]);
 });
 
-gulp.task('master', ['overwrite', 'restart']);
+gulp.task('master', ['overwrite']);
 
 // Setup watch tasks
 gulp.task('watch', function () {
