@@ -88,9 +88,9 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-				fs.mkdir(`${dir}/${Dynamic}`);
+        //fs.mkdir(`${dir}/${folder}`);
 
-				if (this.Static === true ) {
+				if (this.Static === true) {
 
 					var version = 0;
 
@@ -129,7 +129,7 @@ class GenerateTemplates {
 					}
           
         } else {
-          that.populateTemplate(dir, data); // If only dynamic is true, build as normal
+          that.populateTemplate(dir, data); // If static is false, build as normal
         }
 			}
 		});
@@ -155,50 +155,27 @@ class GenerateTemplates {
 		let processedData = this.format(fileData, data);
 
 		// Create individual folders for specific js files.
-    if (this.Static === true && this.Dynamic === false) {
-      console.log("static not dynamic")
-      switch(file) {
-        case 'static.js':
-              fs.writeFileSync(`${dir}/${Static}/${file}`, processedData, 'utf8');
-            break;
-        case 'image-paths.js':
-              for (var version in versions) {
-                fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
-            }
-            break;
-        default:
-            fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-      }
-    } else if (this.Static === false && this.Dynamic === true) {
-      console.log("dynamic not static")
-      switch(file) {
-        case 'dynamic.js':
-              fs.writeFileSync(`${dir}/${Dynamic}/${file}`, processedData, 'utf8');
-            break;
-        default:
-            fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-      }
-
-    } else { //both true
-      console.log("both true")
-      switch(file) {
-        case 'static.js':
-          if (this.Static === true) {
-            fs.writeFileSync(`${dir}/${Static}/${file}`, processedData, 'utf8');
+        		switch(file) {
+	    case 'static.js':
+	    		if (this.Static === true) {
+		        fs.writeFileSync(`${dir}/${Static}/${file}`, processedData, 'utf8');
+	    		}
+	        break;
+	    case 'image-paths.js':
+	    		if (this.Static === true) {
+		    		for (var version in versions) {
+			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
+		        }
+	    		}
+	        break;
+	    case 'dynamic.js':
+          if (this.Dynamic === true) {
+            fs.writeFileSync(`${dir}/${Dynamic}/${file}`, processedData, 'utf8');
           }
-            break;
-        case 'image-paths.js':
-              for (var version in versions) {
-                fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
-            }
-            break;
-        case 'dynamic.js':
-              fs.writeFileSync(`${dir}/${Dynamic}/${file}`, processedData, 'utf8');
-            break;
-        default:
-            fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-      }
-    }
+	        break;
+	    default:
+	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+		}
 	}
 }
 
