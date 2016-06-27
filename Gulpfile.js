@@ -44,12 +44,12 @@ function getFolders(dir) {
 function checkSettingsAndRun (setting, execute, usingPath) {
   if (setting === true) {
     execute(usingPath);
-  };
+  }
 }
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
-function getSubDirectories(fileType, copyFunc, static) {
+function getSubDirectories(fileType, copyFunc, Static) {
   return folders.map(function(sizeFolder) {
     var ad;
     if (Master && Static && !DoubleClick ||
@@ -224,7 +224,7 @@ gulp.task('zip', function() {
 });
 
 // Overwrite base-template files with approved Master adjustments
-gulp.task('master', function() {
+gulp.task('overwrite', function() {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
@@ -238,9 +238,18 @@ gulp.task('master', function() {
       .pipe(rename(function (path) {path.dirname = "/";}))
       .pipe(gulp.dest('./base-template'));
   }
-  copyScripts(sources);
-});
 
+  function restart () {
+    return del([
+      'src',
+      'prod'
+    ]);
+  }
+
+  copyScripts(sources);
+  restart();
+  //setTimeout( function() { restart(); }, 2000); // TODO: use callbacks instead
+});
 
 // Delete src and prod folders during Gulp development.
 gulp.task('del', function () {
@@ -250,6 +259,7 @@ gulp.task('del', function () {
   ]);
 });
 
+gulp.task('master', ['overwrite']);
 
 // Setup watch tasks
 gulp.task('watch', function () {

@@ -30,7 +30,7 @@ class GenerateTemplates {
     this.Dynamic = sizes.Dynamic;
 		versions = sizes.versions;
 		
-		versions = this.Master === true ? [versions[0]] : size.versions;
+		versions = this.Master === true ? [versions[0]] : versions;
 	}
 
 	processSizes() {
@@ -101,7 +101,7 @@ class GenerateTemplates {
 
 				if (this.Master && this.Static && !this.DoubleClick ||
 						!this.Master && this.Static) {
-					var totalVersions = this.Master === true ? 1 : this.versions
+					var totalVersions = this.Master === true ? 1 : versions.length
 					var version = 0;
 
 					// Make Static assets folder
@@ -145,11 +145,10 @@ class GenerateTemplates {
 					function copyImages (version) {
 						var images = ['blue.jpg', 'green.jpg', 'orange.jpg', 'red.jpg'];
 
-						for (var image in images) {
-							var templateImages = fs.createReadStream(`${appRoot}` + '/base-template/global-images/' + images[image]);
-							var srcImages = fs.createWriteStream(`${dir}/${Static}/${versions[version]}/${img}/` + images[image]);
-							templateImages.pipe(srcImages);
-						};
+						fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${Static}/${versions[version]}/${img}`, (err) => {
+			      	if (err) return console.error("error:", err);
+			      	console.info(chalk.green("static images folder copied successfully."));
+			      });
 					};
 
 	      } else {
@@ -163,12 +162,13 @@ class GenerateTemplates {
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
 
-    if (!this.Dynamic) {
+    if (!this.Dynamic && this.DoubleClick) {
       fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
        if (err) return console.error("error:", err);
        console.info(chalk.green("images folder copied successfully."));
       });
     }
+
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
 		});
