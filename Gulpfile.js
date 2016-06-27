@@ -223,14 +223,14 @@ gulp.task('zip', function() {
 });
 
 // Overwrite base-template files with approved Master adjustments
-gulp.task('master', function() {
+gulp.task('overwrite', function(cb) {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
     'src/global.scss',
     'src/normalize.scss'
   ];
-  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
+  DoubleClick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
 
   function copyScripts (source) {
     return gulp.src(source)
@@ -238,8 +238,17 @@ gulp.task('master', function() {
       .pipe(gulp.dest('./base-template'));
   }
   copyScripts(sources);
+  cb(err);
 });
 
+
+// Delete src and prod folders during Gulp development.
+gulp.task('restart', ['overwrite'], function () {
+  return del([
+    'src',
+    'prod'
+  ]);
+});
 
 // Delete src and prod folders during Gulp development.
 gulp.task('del', function () {
@@ -249,6 +258,7 @@ gulp.task('del', function () {
   ]);
 });
 
+gulp.task('master', ['overwrite', 'restart']);
 
 // Setup watch tasks
 gulp.task('watch', function () {
