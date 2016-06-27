@@ -203,11 +203,6 @@ class GenerateTemplates {
 	    		}
 	        break;
 	    case 'doubleclick.js':
-          if (this.DoubleClick) {
-            fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
-          }
-        	break;
-	    case 'doubleclick.js':
         if (this.DoubleClick) {
           fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
         }

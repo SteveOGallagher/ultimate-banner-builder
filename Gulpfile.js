@@ -1,3 +1,4 @@
+"use strict";
 const gulp     = require('gulp'),
     watch    = require('gulp-watch'),
     sass     = require('gulp-sass'),
@@ -230,7 +231,7 @@ gulp.task('master', function() {
     'src/global.scss',
     'src/normalize.scss'
   ];
-  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
+  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js');
 
   function copyScripts (source) {
     return gulp.src(source)
