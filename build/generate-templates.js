@@ -23,8 +23,11 @@ class GenerateTemplates {
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
 		this.DoubleClick = sizes.DoubleClick;
+		this.Master = sizes.Master;
 		this.Static = sizes.Static;
 		versions = sizes.versions;
+		
+		versions = this.Master === true ? [versions[0]] : size.versions;
 	}
 
 	processSizes() {
@@ -93,7 +96,7 @@ class GenerateTemplates {
         }
 
 				if (this.Static) {
-
+					var totalVersions = this.Master === true ? 1 : this.versions
 					var version = 0;
 
 					// Make Static assets folder
@@ -124,7 +127,7 @@ class GenerateTemplates {
 
 					    version++;
 
-					    if (version == versions.length) {
+					    if (version == totalVersions) {
 					    	that.populateTemplate(dir, data); // Build files into folders when complete
 					    } else {
 					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
