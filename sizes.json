@@ -7,7 +7,7 @@
       "prefix": ""
     }
   ],
-  "DoubleClick" : false,
+  "DoubleClick" : true,
   "Static" : true,
   "Master" : true,
   "versions": 

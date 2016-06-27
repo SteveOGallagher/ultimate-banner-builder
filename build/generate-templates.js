@@ -88,11 +88,11 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-        if (this.DoubleClick === true) {
+        if (this.DoubleClick) {
           fs.mkdir(`${dir}/${DoubleClick}`);
         }
 
-				if (this.Static === true) {
+				if (this.Static) {
 
 					var version = 0;
 
@@ -157,21 +157,21 @@ class GenerateTemplates {
 		let processedData = this.format(fileData, data);
 
 		// Create individual folders for specific js files.
-        		switch(file) {
+    switch(file) {
 	    case 'static.js':
-	    		if (this.Static === true) {
+	    		if (this.Static) {
 		        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 	    		}
 	        break;
 	    case 'image-paths.js':
-	    		if (this.Static === true) {
+	    		if (this.Static) {
 		    		for (var version in versions) {
 			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
 		        }
 	    		}
 	        break;
 	    case 'doubleclick.js':
-          if (this.DoubleClick === true) {
+          if (this.DoubleClick) {
             fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
           }
 	        break;
