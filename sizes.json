@@ -2,13 +2,13 @@
   "dimensions": 
   [
     {
-        "width": 160,
-        "height": 600,
-        "prefix": ""
+      "width": 160,
+      "height": 600,
+      "prefix": ""
     }
   ],
-  "Dynamic" : true,
-  "Static" : false,
+  "Dynamic" : false,
+  "Static" : true,
   "Master" : true,
   "versions": 
   [
