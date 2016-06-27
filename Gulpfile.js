@@ -66,7 +66,7 @@ function getSubDirectories(fileType, copyFunc, static) {
     });
 
     } else {
-      ad = 'dynamic';
+      ad = 'doubleclick';
       var dest = 'prod/' + ad + '/' + sizeFolder;
       var source = [ 
         path.join(src, sizeFolder, '/**/' + ad + '.js'),
@@ -100,7 +100,7 @@ gulp.task('sass', function () {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
-  runSass('dynamic');
+  runSass('doubleclick');
   if (Static === true) {
     runSass('static');
   }
@@ -130,7 +130,7 @@ gulp.task('html', function() {
       }
   };
 
-  runHtml('dynamic');
+  runHtml('doubleclick');
   if (Static === true) {
     runHtml('static');
   }
@@ -162,7 +162,7 @@ gulp.task('scripts', function() {
   if (Static === true) {
     runTasks('static');
   }
-  runTasks('dynamic');
+  runTasks('doubleclick');
 });
 
 // Optimise and copy images across into production GDN folders
@@ -196,7 +196,7 @@ gulp.task('master', function() {
     'src/global.scss',
     'src/normalize.scss'
   ];
-  Dynamic === true ?  sources.push('src/**/dynamic.js') : sources.push('src/**/image-paths.js')
+  Doubleclick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
 
   function copyScripts (source) {
     return gulp.src(source)
