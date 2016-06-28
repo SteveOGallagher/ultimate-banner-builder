@@ -22,13 +22,13 @@
       "prefix": ""
     }
   ],
-  "DoubleClick" : true,
-  "Dynamic" : false,
-  "Static" : true,
-  "Master" : false,
   "versions": 
   [
     "version1",
     "version2"
-  ]
+  ],
+  "DoubleClick" : true,
+  "Dynamic" : false,
+  "Static" : true,
+  "Master" : false
 }
