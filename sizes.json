@@ -3,22 +3,7 @@
   [
     {
       "width": 300,
-      "height": 250,
-      "prefix": ""
-    },
-    {
-      "width": 300,
       "height": 600,
-      "prefix": ""
-    },
-    {
-      "width": 160,
-      "height": 600,
-      "prefix": ""
-    },
-    {
-      "width": 728,
-      "height": 90,
       "prefix": ""
     }
   ],
@@ -27,8 +12,8 @@
     "version1",
     "version2"
   ],
-  "DoubleClick" : true,
+  "DoubleClick" : false,
   "Dynamic" : false,
-  "Static" : true,
-  "Master" : false
+  "Static" : false,
+  "Master" : true
 }
