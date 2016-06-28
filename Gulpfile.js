@@ -1,32 +1,32 @@
 "use strict";
-const gulp     = require('gulp'),
-    watch    = require('gulp-watch'),
-    sass     = require('gulp-sass'),
-    cleanCSS = require('gulp-clean-css'),
-    htmlmin  = require('gulp-htmlmin'),
-    uglify   = require('gulp-uglify'),
-    concat   = require('gulp-concat'),
-    ff   = require('gulp-connect-multi')(),
-    safari   = require('gulp-connect-multi')(),
-    connect  = require('gulp-connect-multi')(),
-    image    = require('gulp-image'),
-    rename   = require('gulp-rename'),
-    merge    = require('merge-stream'),
-    fs       = require('fs'),
-    path     = require('path'),
-    del      = require('del'),
-    removeCode = require('gulp-remove-code'),
-    sourcemaps = require('gulp-sourcemaps'),
-    jshint   = require('gulp-jshint'),
-    //uncss    = require('gulp-uncss'),
-    sassLint = require('gulp-sass-lint'),
-    cache = require('gulp-cache'),
-    zip = require('gulp-zip'),
+const gulp      = require('gulp'),
+    watch       = require('gulp-watch'),
+    sass        = require('gulp-sass'),
+    cleanCSS    = require('gulp-clean-css'),
+    htmlmin     = require('gulp-htmlmin'),
+    uglify      = require('gulp-uglify'),
+    concat      = require('gulp-concat'),
+    ff          = require('gulp-connect-multi')(),
+    safari      = require('gulp-connect-multi')(),
+    connect     = require('gulp-connect-multi')(),
+    image       = require('gulp-image'),
+    rename      = require('gulp-rename'),
+    merge       = require('merge-stream'),
+    fs          = require('fs'),
+    path        = require('path'),
+    del         = require('del'),
+    removeCode  = require('gulp-remove-code'),
+    sourcemaps  = require('gulp-sourcemaps'),
+    jshint      = require('gulp-jshint'),
+    //uncss     = require('gulp-uncss'),
+    sassLint    = require('gulp-sass-lint'),
+    cache       = require('gulp-cache'),
+    zip         = require('gulp-zip'),
     runSequence = require('run-sequence'),
 
     data = require('./sizes.json'),
     src = 'src',
-    folders  = getFolders(src);
+    folders = getFolders(src);
 
 const appRoot = process.cwd();
 const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
@@ -44,7 +44,7 @@ function getFolders(dir) {
   });
 }
 
-function checkSettingsAndRun (setting, execute, usingPath) {
+function checkSettingsAndRun(setting, execute, usingPath) {
   if (setting) {
     execute(usingPath);
   }
@@ -52,7 +52,7 @@ function checkSettingsAndRun (setting, execute, usingPath) {
 
 function isStatic(ad) {
   if (ad === 'static' && Master && Static && !DoubleClick ||
-        ad === 'static' && !Master && Static) return true;
+      ad === 'static' && !Master && Static) return true;
 }
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
@@ -98,9 +98,9 @@ function getSubDirectories(fileType, copyFunc, Static) {
 }
 
 // Convert scss to css, minimise and copy into appropriate production folders
-gulp.task('sass', function () {
+gulp.task('sass', () => {
 
-  var copyAndPipe = function(gulpSrc, gulpDest) {
+  var copyAndPipe = (gulpSrc, gulpDest) => {
     return gulp.src(gulpSrc)
       .pipe(sassLint())
       .pipe(sassLint.format())
@@ -113,7 +113,7 @@ gulp.task('sass', function () {
       .pipe(gulp.dest(gulpDest));
   };
 
-  var runSass = function (ad_type) {
+  var runSass = (ad_type) => {
     if (isStatic(ad_type)) {
       return getSubDirectories('scss', copyAndPipe, true);
     } else if (ad_type === "doubleclick") {
@@ -128,20 +128,21 @@ gulp.task('sass', function () {
 
 // Minimise html files and copy into appropriate folders.
 // Also remove enabler script tag for GDN versions.
-gulp.task('html', function() {
+gulp.task('html', () => {
 
- var copyAndPipe = function (gulpSrc, gulpDest, Static) {
+ var copyAndPipe = (gulpSrc, gulpDest, Static) => {
     return Static ?
       gulp.src(gulpSrc)
         .pipe(removeCode({ Static: true }))
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(gulpDest)) :
+
       gulp.src(gulpSrc)
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(gulpDest));
   };
 
-  var runHtml = function (ad_type) {
+  var runHtml = (ad_type) => {
     if (isStatic(ad_type)) {
       return getSubDirectories('html', copyAndPipe, true);
       } else if (ad_type === "doubleclick") {
@@ -155,9 +156,9 @@ gulp.task('html', function() {
 
 
 // Combine various javascript files and minimise them before copying into relevant production folders.
-gulp.task('scripts', function() {
+gulp.task('scripts', () => {
 
-  var copyAndPipe = function(gulpSrc, gulpDest) {
+  var copyAndPipe = (gulpSrc, gulpDest) => {
     return gulp.src(gulpSrc)
       .pipe(jshint())
       .pipe(jshint.reporter('jshint-stylish'))
@@ -169,7 +170,7 @@ gulp.task('scripts', function() {
       .pipe(gulp.dest(gulpDest));
   };
 
-  var runJS = function (ad_type) {
+  var runJS = (ad_type) => {
     if (isStatic(ad_type)) {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
@@ -182,13 +183,12 @@ gulp.task('scripts', function() {
 });
 
 // Optimise and copy images across into production GDN folders
-gulp.task('img', function() {
+gulp.task('img', () => {
 
-  var copyAndPipe = function(gulpSrc, gulpDest) {
+  var copyAndPipe = (gulpSrc, gulpDest) => {
     return gulp.src(gulpSrc)
      .pipe(image())
      .pipe(gulp.dest(gulpDest));
-     //.pipe(connect.reload());
   };
 
   if (Master && Static && !DoubleClick ||
@@ -220,12 +220,12 @@ gulp.task('ff', ff.server(connectOptions('firefox', 1337, 35727)));
 gulp.task('safari', safari.server(connectOptions('safari', 8080, 35722)));
 
 
-gulp.task('clear', function() {
+gulp.task('clear', () => {
   cache.clearAll();
 });
 
 // Zip the static folder and zip all individual static banners
-gulp.task('zip', function() {
+gulp.task('zip', () => {
   var folders = getFolders('prod/static');
   function applyZip(source, name) {
   	return gulp.src(source)
@@ -240,7 +240,7 @@ gulp.task('zip', function() {
 });
 
 // Overwrite base-template files with approved Master adjustments
-gulp.task('overwrite', function() {
+gulp.task('overwrite', () => {
   var sources = [
     'src/**/index.html',
     'src/**/main.js',
@@ -260,10 +260,7 @@ gulp.task('overwrite', function() {
 
 
 gulp.task('del', () => {
-  return del([
-    'src',
-    'prod'
-  ]);
+  return del(['src', 'prod']);
 });
 
 gulp.task('master', (callback) => {
@@ -271,7 +268,7 @@ gulp.task('master', (callback) => {
 });
 
 // Setup watch tasks
-gulp.task('watch', function () {
+gulp.task('watch', () => {
   gulp.watch('src/**/*.html', ['html']);
   gulp.watch('src/**/*.scss', ['sass']);
   gulp.watch('src/**/*.js', ['scripts']);
@@ -280,3 +277,4 @@ gulp.task('watch', function () {
 
 gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
 gulp.task('test', ['connect', 'ff', 'safari']);
+
