@@ -1,14 +1,15 @@
 # ultimate-banner-builder
-A banner build template for creating DoubleClick banners which also works to generate static Google Display Network versions. This build template assumes that you will be building a dynamic DoubleClick banner as standard.
+This is a banner building application for creating any combination of DoubleClick banners, Dynamic DoubleClick banners, as well as single or multiple non-DoubleClick versions. 
 
-## Setup:
+## Setup your local environment:
 - clone the repo
-- run `npm i` to install all necessary packages locally
+- navigate to the project's root directory which contains the file Gulpfile.js
 - sudo `npm install gulp -g` to ensure you have Gulp installed.
+- run `npm i` to install all necessary packages locally
 
 # Workflow for building the banners
-### 1. Create the Master
-- In the 'sizes.json' file's `dimensions` array, enter the dimensions of the 'Master' ad size and save the file (leave GDN set to false). 
+## 1. Create the Master
+### In the 'sizes.json' file's `dimensions` array, enter the dimensions of the 'Master' ad size and save the file (leave GDN set to false). 
 - Run `npm run generate` (This creates the 'src' folder structure where you will build the Master version)
 - Run `gulp` (This creates the 'prod' output folder structure where the final ad files will be automatically served)
 - Edit the code in the src folder to create the final working version of the Master ad size.
@@ -26,6 +27,8 @@ A banner build template for creating DoubleClick banners which also works to gen
 - Run `npm run generate` again
 - Run `gulp` again
 - Make adjustments in the src code for each size as needed. (Typically only DoubleClick.js and overwrite.scss will need adjusting. If GDN versions are required then image-paths.js and the img folders will need editing.)
+
+- If new ad sizes are required later during the build process,
 
 
 # Banner template builder features
