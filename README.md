@@ -52,3 +52,4 @@ This is a banner building application for creating any combination of DoubleClic
 ## To Do
 - Make final improvements on base level banner build template
 - Refactor and add further clarity to code
+- Add error checking to gulp del to see if folders exist first.
