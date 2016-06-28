@@ -50,11 +50,10 @@ function checkSettingsAndRun (setting, execute, usingPath) {
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
-function getSubDirectories(fileType, copyFunc) {
+function getSubDirectories(fileType, copyFunc, static) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (static && Master && Static && !DoubleClick ||
-        static && !Master && Static) {
+    if (static) {
     ad = 'static';
     var type = `src/${sizeFolder}/${ad}`;
     var typeFolder = getFolders(type); // Static or Dynamic
@@ -72,9 +71,8 @@ function getSubDirectories(fileType, copyFunc) {
         ] :
         false;
         console.log(source);
-      return copyFunc(source, dest);
-    });
-
+        return copyFunc(source, dest);
+      });
     } else {
       ad = 'doubleclick';
       var dest = `prod/${ad}/${sizeFolder}`;
@@ -166,7 +164,8 @@ gulp.task('scripts', function() {
   };
 
   var runJS = function (ad_type) {
-    if (ad_type === 'static') {
+    if (ad_type === 'static' && Master && Static && !DoubleClick ||
+        ad_type === 'static' && !Master && Static) {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
       return getSubDirectories('js', copyAndPipe, false);
@@ -187,7 +186,8 @@ gulp.task('img', function() {
      //.pipe(connect.reload());
   };
 
-  if (Static === true) {
+  if (Master && Static && !DoubleClick ||
+      !Master && Static) {
     getSubDirectories('img', copyAndPipe, true);
   }
   if (DoubleClick === true && Dynamic === false) {
