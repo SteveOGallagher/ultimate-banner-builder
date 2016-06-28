@@ -60,3 +60,11 @@
 ### General error handling
 
 If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
+
+### Testing in the browser
+
+In order to run the ad in the browser, we use the 'conncet gulp task'.
+If you need to test it in other browsers, either run `gulp test` which will open up all 3 browsers, or run each browser task individually as follows:
+- Chrome: `gulp` or `gulp connect`
+- Firefox: `gulp ff` 
+- Safari: `gulp safari`
