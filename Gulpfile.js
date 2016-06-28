@@ -1,4 +1,5 @@
-var gulp     = require('gulp'),
+//"use strict";
+const gulp     = require('gulp'),
     watch    = require('gulp-watch'),
     sass     = require('gulp-sass'),
     cleanCSS = require('gulp-clean-css'),
@@ -19,6 +20,7 @@ var gulp     = require('gulp'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
     zip = require('gulp-zip'),
+    runSequence = require('run-sequence'),
 
     data = require('./sizes.json'),
     src = 'src',
@@ -43,12 +45,12 @@ function getFolders(dir) {
 function checkSettingsAndRun (setting, execute, usingPath) {
   if (setting === true) {
     execute(usingPath);
-  };
+  }
 }
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
-function getSubDirectories(fileType, copyFunc, static) {
+function getSubDirectories(fileType, copyFunc) {
   return folders.map(function(sizeFolder) {
     var ad;
     if (static && Master && Static && !DoubleClick ||
@@ -124,10 +126,10 @@ gulp.task('sass', function () {
 // Also remove enabler script tag for GDN versions.
 gulp.task('html', function() {
 
- var copyAndPipe = function (gulpSrc, gulpDest, static) {
-    return static ?
+ var copyAndPipe = function (gulpSrc, gulpDest, Static) {
+    return Static ?
       gulp.src(gulpSrc)
-        .pipe(removeCode({ static: true }))
+        .pipe(removeCode({ Static: true }))
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(gulpDest)) :
       gulp.src(gulpSrc)
@@ -230,7 +232,7 @@ gulp.task('overwrite', function() {
     'src/global.scss',
     'src/normalize.scss'
   ];
-  DoubleClick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js')
+  DoubleClick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js');
 
   function copyScripts (source) {
     return gulp.src(source)
@@ -238,26 +240,20 @@ gulp.task('overwrite', function() {
       .pipe(gulp.dest('./base-template'));
   }
 
-  function restart () {
-    return del([
-      'src',
-      'prod'
-    ]);
-  }
-
-  copyScripts(sources);
-  setTimeout( function() { restart(); }, 2000) // TODO: use callbacks instead
+  return copyScripts(sources);
 });
 
-// Delete src and prod folders during Gulp development.
-gulp.task('del', function () {
+
+gulp.task('del', () => {
   return del([
     'src',
     'prod'
   ]);
 });
 
-gulp.task('master', ['overwrite']);
+gulp.task('master', (callback) => {
+  runSequence('overwrite', 'del', callback);
+});
 
 // Setup watch tasks
 gulp.task('watch', function () {
