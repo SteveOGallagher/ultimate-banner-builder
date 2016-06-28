@@ -7,7 +7,7 @@
 - Automatically serve the production banners to a localhost in your browser
 - Create javascript files for use in DoubleClick with Enabler and/or static non-DoubleClick versions with pure javascript.
 - Use linting tools to check for code quality.
-- Auto zip non-DoubleClick banners according banner size.
+- Auto zip non-DoubleClick banners according to the banner size.
 
 
 # Workflow for building the banners
