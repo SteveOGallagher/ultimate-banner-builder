@@ -45,17 +45,22 @@ function getFolders(dir) {
 }
 
 function checkSettingsAndRun (setting, execute, usingPath) {
-  if (setting === true) {
+  if (setting) {
     execute(usingPath);
   }
 }
 
+function isStatic(ad) {
+  if (ad === 'static' && Master && Static && !DoubleClick ||
+        ad === 'static' && !Master && Static) return true;
+}
+
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
-function getSubDirectories(fileType, copyFunc, isStatic) {
+function getSubDirectories(fileType, copyFunc, Static) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (isStatic) {
+    if (Static) {
     ad = 'static';
     var type = `src/${sizeFolder}/${ad}`;
     var typeFolder = getFolders(type); // Static or Dynamic
@@ -109,10 +114,9 @@ gulp.task('sass', function () {
   };
 
   var runSass = function (ad_type) {
-    if (ad_type == "static" && Master && Static && !DoubleClick ||
-        ad_type == "static" && !Master && Static) {
+    if (isStatic(ad_type)) {
       return getSubDirectories('scss', copyAndPipe, true);
-    } else if (ad_type == "doubleclick") {
+    } else if (ad_type === "doubleclick") {
       return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
     }
   };
@@ -138,10 +142,9 @@ gulp.task('html', function() {
   };
 
   var runHtml = function (ad_type) {
-    if (ad_type == "static" && Master && Static && !DoubleClick ||
-        ad_type == "static" && !Master && Static) {
+    if (isStatic(ad_type)) {
       return getSubDirectories('html', copyAndPipe, true);
-      } else if (ad_type == "doubleclick") {
+      } else if (ad_type === "doubleclick") {
         return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
       }
   };
@@ -149,6 +152,7 @@ gulp.task('html', function() {
   checkSettingsAndRun (Static, runHtml, 'static');
   checkSettingsAndRun (DoubleClick, runHtml, 'doubleclick');
 });
+
 
 // Combine various javascript files and minimise them before copying into relevant production folders.
 gulp.task('scripts', function() {
@@ -166,8 +170,7 @@ gulp.task('scripts', function() {
   };
 
   var runJS = function (ad_type) {
-    if (ad_type === 'static' && Master && Static && !DoubleClick ||
-        ad_type === 'static' && !Master && Static) {
+    if (isStatic(ad_type)) {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
       return getSubDirectories('js', copyAndPipe, false);
@@ -197,7 +200,7 @@ gulp.task('img', function() {
   }
 });
 
-
+// open in browsers
 function connectOptions(browser, port, live) {
   return {
     root: ['./prod/'],
