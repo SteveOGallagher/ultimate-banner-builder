@@ -55,8 +55,7 @@ var sizeFolder;
 function getSubDirectories(fileType, copyFunc, isStatic) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (isStatic && Master && isStatic && !DoubleClick ||
-        isStatic && !Master && isStatic) {
+    if (isStatic) {
     ad = 'static';
     var type = `src/${sizeFolder}/${ad}`;
     var typeFolder = getFolders(type); // Static or Dynamic
@@ -167,7 +166,8 @@ gulp.task('scripts', function() {
   };
 
   var runJS = function (ad_type) {
-    if (ad_type === 'static') {
+    if (ad_type === 'static' && Master && Static && !DoubleClick ||
+        ad_type === 'static' && !Master && Static) {
       return getSubDirectories('js', copyAndPipe, true);
     } else {
       return getSubDirectories('js', copyAndPipe, false);
@@ -188,7 +188,8 @@ gulp.task('img', function() {
      //.pipe(connect.reload());
   };
 
-  if (Static === true) {
+  if (Master && Static && !DoubleClick ||
+      !Master && Static) {
     getSubDirectories('img', copyAndPipe, true);
   }
   if (DoubleClick === true && Dynamic === false) {

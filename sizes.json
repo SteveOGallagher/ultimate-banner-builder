@@ -2,12 +2,17 @@
   "dimensions": 
   [
     {
-      "width": 160,
-      "height": 600,
+      "width": 300,
+      "height": 250,
       "prefix": ""
     },
     {
       "width": 300,
+      "height": 600,
+      "prefix": ""
+    },
+    {
+      "width": 160,
       "height": 600,
       "prefix": ""
     },
@@ -17,13 +22,13 @@
       "prefix": ""
     }
   ],
-  "DoubleClick" : true,
-  "Dynamic" : true,
-  "Static" : true,
-  "Master" : false,
   "versions": 
   [
-    "cat",
-    "dog"
-  ]
+    "version1",
+    "version2"
+  ],
+  "DoubleClick" : true,
+  "Dynamic" : false,
+  "Static" : true,
+  "Master" : false
 }
