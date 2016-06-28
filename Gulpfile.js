@@ -1,4 +1,4 @@
-//"use strict";
+"use strict";
 const gulp     = require('gulp'),
     watch    = require('gulp-watch'),
     sass     = require('gulp-sass'),
@@ -6,17 +6,19 @@ const gulp     = require('gulp'),
     htmlmin  = require('gulp-htmlmin'),
     uglify   = require('gulp-uglify'),
     concat   = require('gulp-concat'),
+    ff   = require('gulp-connect-multi')(),
+    safari   = require('gulp-connect-multi')(),
+    connect  = require('gulp-connect-multi')(),
     image    = require('gulp-image'),
     rename   = require('gulp-rename'),
     merge    = require('merge-stream'),
     fs       = require('fs'),
     path     = require('path'),
     del      = require('del'),
-    connect  = require('gulp-connect-multi')(),
     removeCode = require('gulp-remove-code'),
     sourcemaps = require('gulp-sourcemaps'),
     jshint   = require('gulp-jshint'),
-    uncss    = require('gulp-uncss'),
+    //uncss    = require('gulp-uncss'),
     sassLint = require('gulp-sass-lint'),
     cache = require('gulp-cache'),
     zip = require('gulp-zip'),
@@ -50,11 +52,11 @@ function checkSettingsAndRun (setting, execute, usingPath) {
 
 //loop through the folders to get to the right sub-directories and apply their custom copy tasks to them
 var sizeFolder;
-function getSubDirectories(fileType, copyFunc) {
+function getSubDirectories(fileType, copyFunc, isStatic) {
   return folders.map(function(sizeFolder) {
     var ad;
-    if (static && Master && Static && !DoubleClick ||
-        static && !Master && Static) {
+    if (isStatic && Master && isStatic && !DoubleClick ||
+        isStatic && !Master && isStatic) {
     ad = 'static';
     var type = `src/${sizeFolder}/${ad}`;
     var typeFolder = getFolders(type); // Static or Dynamic
@@ -195,15 +197,25 @@ gulp.task('img', function() {
   }
 });
 
+
+function connectOptions(browser, port, live) {
+  return {
+    root: ['./prod/'],
+    port: port,
+    livereload:  {
+      port: live
+    },
+    open: {
+      browser: browser
+    }
+  };
+}
+
 // Setup localhost server to view production files.
-gulp.task('connect', connect.server({
-  root: ['./prod/'],
-  port: 8000,
-  livereload: true,
-  open: {
-    browser: 'Google Chrome'
-  }
-}));
+gulp.task('connect', connect.server(connectOptions('Google Chrome', 8000, 35729))); //default
+gulp.task('ff', ff.server(connectOptions('firefox', 1337, 35727)));
+gulp.task('safari', safari.server(connectOptions('safari', 8080, 35722)));
+
 
 gulp.task('clear', function() {
   cache.clearAll();
@@ -264,3 +276,4 @@ gulp.task('watch', function () {
 });
 
 gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
+gulp.task('test', ['connect', 'ff', 'safari']);
