@@ -24,8 +24,8 @@
   ],
   "DoubleClick" : true,
   "Dynamic" : false,
-  "Static" : false,
-  "Master" : true,
+  "Static" : true,
+  "Master" : false,
   "versions": 
   [
     "version1",
