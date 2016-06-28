@@ -73,7 +73,6 @@ function getSubDirectories(fileType, copyFunc, isStatic) {
           `${root}/${ad}/${versionFolder}/*.${fileType}`
         ] :
         false;
-        console.log(source);
       return copyFunc(source, dest);
     });
 
