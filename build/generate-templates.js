@@ -31,6 +31,7 @@ class GenerateTemplates {
 		versions = sizes.versions;
 		
 		versions = this.Master === true ? [versions[0]] : versions;
+		this.sizes = this.Master === true ? [this.sizes[0]] : this.sizes;
 	}
 
 	processSizes() {
