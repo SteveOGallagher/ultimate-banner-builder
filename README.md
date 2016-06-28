@@ -59,6 +59,4 @@
 
 ### General error handling
 
-If you get the following error: `no such file or directory, scandir 'src'` or `no such file or directory, scandir 'prod'` it means that you are missing the src or prod directories. 
-- if you are missing `src`, run `npm run generate`
-- if you are missing `prod`, run `gulp`
+If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
