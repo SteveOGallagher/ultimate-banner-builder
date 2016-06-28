@@ -56,8 +56,3 @@
   - *normalise.scss*
   - *doubleclick.js* (if DoubleClick is true)
   - *image-paths.js* (if Static is true)
-
-
-## To Do
-- Make final improvements on base level banner build template
-- Refactor and add further clarity to code
