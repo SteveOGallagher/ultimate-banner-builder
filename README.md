@@ -7,7 +7,7 @@
 - Automatically serve the production banners to a localhost in your browser
 - Create javascript files for use in DoubleClick with Enabler and/or static non-DoubleClick versions with pure javascript.
 - Use linting tools to check for code quality.
-- Auto zip non-DoubleClick banners according banner size.
+- Auto zip non-DoubleClick banners according to the banner size.
 
 
 # Workflow for building the banners
@@ -56,3 +56,7 @@
   - *normalise.scss*
   - *doubleclick.js* (if DoubleClick is true)
   - *image-paths.js* (if Static is true)
+
+### General error handling
+
+If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
