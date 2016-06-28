@@ -2,15 +2,33 @@
   "dimensions": 
   [
     {
-        "width": 300,
-        "height": 250,
-        "prefix": ""
+      "width": 300,
+      "height": 250,
+      "prefix": ""
+    },
+    {
+      "width": 300,
+      "height": 600,
+      "prefix": ""
+    },
+    {
+      "width": 160,
+      "height": 600,
+      "prefix": ""
+    },
+    {
+      "width": 728,
+      "height": 90,
+      "prefix": ""
     }
   ],
-  "GDN" : "false",
   "versions": 
   [
-    "brand1",
-    "brand2"
-  ]
+    "version1",
+    "version2"
+  ],
+  "DoubleClick" : true,
+  "Dynamic" : false,
+  "Static" : true,
+  "Master" : false
 }

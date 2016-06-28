@@ -3,10 +3,12 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import fse from 'fs-extra';
 const appRoot = process.cwd();
 const sourceDirectory = `${appRoot}/src/`;
-const DoubleClick = "DoubleClick";
-const GDN = "GDN";
+const DoubleClick = "doubleclick";
+const Dynamic = null;
+const Static = "static";
 const img = "img";
 var versions;
 
@@ -15,15 +17,21 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['DoubleClick.js', 'main.js', 'GDN.js', 'image-paths.js', 'overwrite.scss'];
+		this.formatFiles = ['doubleclick.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss'];
 	}
 
 	loadSizes() {
 		const sizesFile = fs.readFileSync(`${appRoot}/sizes.json`, `utf8`);
 		let sizes = JSON.parse(sizesFile);
 		this.sizes = sizes.dimensions;
-		this.GDN = sizes.GDN;
+		this.DoubleClick = sizes.DoubleClick;
+		this.Master = sizes.Master;
+		this.Static = sizes.Static;
+    this.Dynamic = sizes.Dynamic;
 		versions = sizes.versions;
+		
+		versions = this.Master === true ? [versions[0]] : versions;
+		this.sizes = this.Master === true ? [this.sizes[0]] : this.sizes;
 	}
 
 	processSizes() {
@@ -77,7 +85,7 @@ class GenerateTemplates {
 		});
 	}
 
-	// Build folders to house each ad by size name and their DoubleClick and GDN subfolders
+	// Build folders to house each ad by size name and their DoubleClick and Static subfolders
 	generateTemplate(dir, data) {
 		let that = this;
 
@@ -87,54 +95,80 @@ class GenerateTemplates {
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
-				fs.mkdir(`${dir}/${DoubleClick}`);
 
-				if (this.GDN === "true") {
+        if (this.DoubleClick) {
+          fs.mkdir(`${dir}/${DoubleClick}`);
+        }
 
+				if (this.Master && this.Static && !this.DoubleClick ||
+						!this.Master && this.Static) {
+					var totalVersions = this.Master === true ? 1 : versions.length
 					var version = 0;
 
-					// Make GDN folder
-					fs.mkdir(`${dir}/${GDN}`, function (err) {
+					// Make Static assets folder
+					fs.mkdir(`${dir}/${Static}`, function (err) {
 				    if (err) {
 				        return console.log('failed to write directory', err);
 				    }
 				    makeVersionDirectory(version);
 					});
 
-					// Make a folder inside GDN for a particular version
+					// Make a folder inside Static assets folder for a particular version
 					function makeVersionDirectory (version) {
-						fs.mkdir(`${dir}/${GDN}/${versions[version]}`, function (err) {
+						fs.mkdir(`${dir}/${Static}/${versions[version]}`, function (err) {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
-					    makeImgDirectory(version)
+					    makeImgDirectory(version);
 						});
-					};
+					}
 
-					// Make an image folder inside GDN for a particular version
+					// Make an image folder inside the Static assets folder for a particular version
 					function makeImgDirectory (version) {
-						fs.mkdir(`${dir}/${GDN}/${versions[version]}/${img}`, function (err) {
+						fs.mkdir(`${dir}/${Static}/${versions[version]}/${img}`, function (err) {
 					    if (err) {
 					        return console.log('failed to write directory', err);
 					    }
+					    copyImages(version); // Copy global images for this version before incrementing
+
 					    version++;
 
-					    if (version == versions.length) {
+					    if (version == totalVersions) {
 					    	that.populateTemplate(dir, data); // Build files into folders when complete
 					    } else {
 					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
-					    };
+					    }
 						});
 					};
+
+					// Copy global images into image directory
+					// TODO: allow all images from inside this folder to be copied, regardless of name
+					function copyImages (version) {
+						var images = ['blue.jpg', 'green.jpg', 'orange.jpg', 'red.jpg'];
+
+						fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${Static}/${versions[version]}/${img}`, (err) => {
+			      	if (err) return console.error("error:", err);
+			      	console.info(chalk.green("static images folder copied successfully."));
+			      });
+					};
+
 	      } else {
-					that.populateTemplate(dir, data); // If GDN not true, build as normal
+					that.populateTemplate(dir, data); // If static is false, build as normal
 	      }
+
 			}
 		});
 	}
 
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
+
+    if (!this.Dynamic && this.DoubleClick) {
+      fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
+       if (err) return console.error("error:", err);
+       console.info(chalk.green("images folder copied successfully."));
+      });
+    }
 
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
@@ -149,28 +183,33 @@ class GenerateTemplates {
 
 	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
+
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
 
 		// Create individual folders for specific js files.
-		switch(file) {
-	    case 'GDN.js':
-	    		if (this.GDN === "true") {
-		        fs.writeFileSync(`${dir}/${GDN}/${file}`, processedData, 'utf8');
+    switch(file) {
+	    case 'static.js':
+	    		if (this.Master && this.Static && !this.DoubleClick ||
+						!this.Master && this.Static) {
+		        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 	    		}
 	        break;
 	    case 'image-paths.js':
-	    		if (this.GDN === "true") {
+	    		if (this.Master && this.Static && !this.DoubleClick ||
+						!this.Master && this.Static) {
 		    		for (var version in versions) {
-			        fs.writeFileSync(`${dir}/${GDN}/${versions[version]}/${file}`, processedData, 'utf8');
-		        };
+			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
+		        }
 	    		}
 	        break;
-	    case 'DoubleClick.js':
-	        fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
-	        break;
+	    case 'doubleclick.js':
+        if (this.DoubleClick) {
+          fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+        }
+        break;
 	    default:
-	        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 		}
 	}
 }
