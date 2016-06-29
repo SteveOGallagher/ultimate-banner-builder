@@ -31,10 +31,25 @@
 ### Build the Master template
 - Run `npm run generate` (This creates the *src* folder structure where you will build the Master version)
 - Run `gulp` (This creates the *prod* output folder structure where the final ad files will be automatically served)
-- Edit the banner in the *src* folder to create the final working version of the Master banner size in *prod*.
+- Edit the banner in the *src* folder to create the final working version of the Master banner size in *prod*. 
+
+##### For DoubleClickbanners the only files which require editing are:
+  - *doubleclick.js*
+  - *index.html*
+  - *main.js*
+  - *global.scss* 
+  - *overwrite.scss*
+
+##### For Static banners the only files which require editing are:
+  - *image-paths.js*
+  - *index.html*
+  - *main.js*
+  - *global.scss* 
+  - *overwrite.scss*
 
 ## 3. Create all required banner sizes, versions, and types 
-- Once the client is satisfied that the Master banner matches the brief, ensure that `gulp` is no longer running.
+- Once the client is satisfied that the Master banner matches the brief, ensure that `gulp` is no longer running. 
+- Make a copy of your overwrite.scss file in *src* if you have added styling specific to your Master banner so as not to lose it. 
 - Run `gulp master` (This overwrites the global base-template files with the Master files in *src* and then deletes *src* & *prod* folders)
 - Set the `"Master"` property in sizes.json to `false` and save the file.
 - Run `npm run generate` (This creates the *src* folder structure for all required ad types and sizes)
