@@ -191,8 +191,8 @@ class GenerateTemplates {
 		});
 
     if (!this.Master) {
-  //npm run generate, check for numberxnumber-overwite.scss, match the number and overwite the scss 
-  //in that folder, then rename to overwite.scss and delete the existing one - then delete from base template
+  // check for numberxnumber-overwite.scss, match the number and overwite the scss 
+  //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
       var masterScssRegx = /([0-9]+x[0-9]+)-overwrite\.scss/; 
       var masterScss;
       var test = fs.readdirSync('base-template').filter((file) => {
@@ -213,6 +213,7 @@ class GenerateTemplates {
             });
           }
         });
+        fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
       }
     }
 
