@@ -1,19 +1,29 @@
 {
-  "dimensions": 
+  "dimensions":
   [
     {
+      "width": 300,
+      "height": 250,
+      "prefix": ""
+    },
+     {
+      "width": 160,
+      "height": 600,
+      "prefix": ""
+    },
+     {
       "width": 300,
       "height": 600,
       "prefix": ""
     }
   ],
-  "versions": 
+  "versions":
   [
-    "version1",
-    "version2"
+    "black",
+    "purple"
   ],
-  "DoubleClick" : false,
-  "Dynamic" : false,
-  "Static" : false,
-  "Master" : true
+  "DoubleClick" : true,
+  "Dynamic" : true,
+  "Static" : true,
+  "Master" : false
 }

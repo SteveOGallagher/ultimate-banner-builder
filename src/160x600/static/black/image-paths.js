@@ -12,7 +12,7 @@ function getContent() {
       Url : "img/green.jpg"
     },
     image_url_3 : {
-      Url : "img/"
+      Url : "img/160x600-black.png"
     },
     exit : {
       Url : "http://www.cohaesus.co.uk"
