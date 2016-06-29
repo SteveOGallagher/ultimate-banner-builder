@@ -208,13 +208,12 @@ class GenerateTemplates {
           if (sizeFolder === masterScssSize) {
             return fs.readdirSync(`src/${sizeFolder}`).map((size) => {
               if (size === 'overwrite.scss') {
-                fs.createReadStream('base-template/' + masterScss).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
+                fs.createReadStream(`base-template/${masterScss}`).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
               }
             });
           }
         });
       }
-
     }
 
 	}
