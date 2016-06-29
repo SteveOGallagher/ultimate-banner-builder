@@ -191,8 +191,8 @@ class GenerateTemplates {
 		});
 
     if (!this.Master) {
-  // check for numberxnumber-overwite.scss, match the number and overwite the scss 
-  //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
+    // check for numberxnumber-overwite.scss, match the number and overwite the scss 
+    //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
       var masterScssRegx = /([0-9]+x[0-9]+)-overwrite\.scss/; 
       var masterScss;
       var test = fs.readdirSync('base-template').filter((file) => {

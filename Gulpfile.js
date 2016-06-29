@@ -24,7 +24,8 @@ const gulp      = require('gulp'),
     zip         = require('gulp-zip'),
     merge2      = require('merge2'),
     runSequence = require('run-sequence'),
-    chalk = require('chalk'),
+    chalk       = require('chalk'),
+    shell       = require('gulp-shell'),
 
     data = require('./sizes.json'),
     src = 'src',
@@ -252,6 +253,7 @@ gulp.task('overwrite', () => {
   DoubleClick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js');
 
   function copyScripts(source) {
+    //css might be specific to the size of the master banner size, so keep a copy of it when overwriting base-template files in gulp master
     var name = `${sizes.dimensions[0].width}x${sizes.dimensions[0].height}-overwrite.scss`;
     return merge2(
       gulp.src(source),
@@ -279,13 +281,19 @@ gulp.task('master', (callback) => {
   }
 });
 
-gulp.task('all', () => {
 
-  //master should have been turned to false
-  //npm run generate, check for numberxnumber-overwite.scss, match the number and overwite the scss 
-  //in that folder, then rename to overwite.scss and delete the existing one - then delete from base template
-  //gulp
-});
+//gulp.task('generate', () => {
+  //return shell.task(
+    //'npm run generate'
+  //);
+//});
+
+//gulp.task('all-sizes', (callback) => {
+  //if (!Master) {
+    //runSequence('generate', callback);
+  //}
+//});
+
 
 // Setup watch tasks
 gulp.task('watch', () => {
