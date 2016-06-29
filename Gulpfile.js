@@ -22,7 +22,9 @@ const gulp      = require('gulp'),
     sassLint    = require('gulp-sass-lint'),
     cache       = require('gulp-cache'),
     zip         = require('gulp-zip'),
+    merge2      = require('merge2'),
     runSequence = require('run-sequence'),
+    chalk = require('chalk'),
 
     data = require('./sizes.json'),
     src = 'src',
@@ -249,8 +251,13 @@ gulp.task('overwrite', () => {
   ];
   DoubleClick === true ?  sources.push('src/**/doubleclick.js') : sources.push('src/**/image-paths.js');
 
-  function copyScripts (source) {
-    return gulp.src(source)
+  function copyScripts(source) {
+    var name = `${sizes.dimensions[0].width}x${sizes.dimensions[0].height}-overwrite.scss`;
+    return merge2(
+      gulp.src(source),
+      gulp.src('src/**/overwrite.scss')
+        .pipe(rename(name))
+    )
       .pipe(rename(function (path) {path.dirname = "/";}))
       .pipe(gulp.dest('./base-template'));
   }
@@ -264,7 +271,12 @@ gulp.task('del', () => {
 });
 
 gulp.task('master', (callback) => {
-  runSequence('overwrite', 'del', callback);
+  if (Master) {
+    runSequence('overwrite', 'del', callback);
+    console.info(chalk.green("'src' and 'prod' are successfully deleted. Now change 'Master' to false and run 'npm run generate' and 'gulp'"));
+  } else {
+    console.info(chalk.yellow("Unable to run this command as 'Master' is false"));
+  }
 });
 
 // Setup watch tasks
@@ -276,5 +288,6 @@ gulp.task('watch', () => {
 });
 
 gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
+gulp.task('dev', ['html', 'sass', 'img', 'scripts']);
 gulp.task('test', ['connect', 'ff', 'safari']);
 

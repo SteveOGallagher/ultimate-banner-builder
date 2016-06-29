@@ -5,15 +5,21 @@
       "width": 300,
       "height": 600,
       "prefix": ""
+    },
+    {
+      "width": 200,
+      "height": 500,
+      "prefix": ""
     }
+
   ],
   "versions": 
   [
     "version1",
     "version2"
   ],
-  "DoubleClick" : false,
+  "DoubleClick" : true,
   "Dynamic" : false,
-  "Static" : false,
+  "Static" : true,
   "Master" : true
 }
