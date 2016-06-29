@@ -279,6 +279,14 @@ gulp.task('master', (callback) => {
   }
 });
 
+gulp.task('all', () => {
+
+  //master should have been turned to false
+  //npm run generate, check for numberxnumber-overwite.scss, match the number and overwite the scss 
+  //in that folder, then rename to overwite.scss and delete the existing one - then delete from base template
+  //gulp
+});
+
 // Setup watch tasks
 gulp.task('watch', () => {
   gulp.watch('src/**/*.html', ['html']);

@@ -59,7 +59,8 @@
 
 ### General error handling
 
-If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
+- If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
+- If you generate the zip files and clicking on the zip file, generates a file with the `.cpgz` extension, then download this app [Unarchiver](https://itunes.apple.com/us/app/the-unarchiver/id425424353?mt=12) and it should fix it. This seems to be a mac bug.
 
 ### Testing in the browser
 
