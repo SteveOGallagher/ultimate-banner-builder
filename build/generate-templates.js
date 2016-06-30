@@ -11,6 +11,7 @@ const Dynamic = null;
 const Static = "static";
 const img = "img";
 var versions;
+let masterScss;
 
 
 // Get folder names inside a given directory (dir)
@@ -141,7 +142,7 @@ class GenerateTemplates {
 					function makeImgDirectory (version) {
 						fs.mkdir(`${dir}/${Static}/${versions[version]}/${img}`, function (err) {
 					    if (err) {
-					        return console.log('failed to write directory', err);
+                return console.log('failed to write directory', err);
 					    }
 					    copyImages(version); // Copy global images for this version before incrementing
 
@@ -153,7 +154,7 @@ class GenerateTemplates {
 					    	makeVersionDirectory(version); // Otherwise perform these tasks for each version
 					    }
 						});
-					};
+					}
 
 					// Copy global images into image directory
 					// TODO: allow all images from inside this folder to be copied, regardless of name
@@ -164,8 +165,7 @@ class GenerateTemplates {
 			      	if (err) return console.error("error:", err);
 			      	console.info(chalk.green("static images folder copied successfully."));
 			      });
-					};
-
+					}
 
 	      } else {
 					that.populateTemplate(dir, data); // If static is false, build as normal
@@ -179,13 +179,13 @@ class GenerateTemplates {
   //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
   findEditedMasterScss() {
     var masterScssRegx = /([0-9]+x[0-9]+)-overwrite\.scss/; 
-    var masterScss;
     var test = fs.readdirSync('base-template').filter((file) => {
       if (masterScssRegx.test(file)) {
         masterScss = file;
       }
       return masterScssRegx.test(file);
     });
+
     if (test.length) {
       var dash = test[0].indexOf('-');
       //find out which size folder the edited overwrite.scss file belonged to
@@ -194,12 +194,22 @@ class GenerateTemplates {
         if (sizeFolder === masterScssSize) {
           return fs.readdirSync(`src/${sizeFolder}`).map((size) => {
             if (size === 'overwrite.scss') {
+              //fse.copySync(`base-template/${masterScss}`, `src/${sizeFolder}/${size}`, (err) => {
+                //if (err) return console.log(err);
+                  //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
+              //});
               fs.createReadStream(`base-template/${masterScss}`).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
             }
           });
         }
       });
     }
+    //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
+  }
+
+
+  findAndDelMasterScss(){
+    this.findEditedMasterScss();
     //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
   }
 
@@ -220,7 +230,7 @@ class GenerateTemplates {
 
 
     if (!this.Master) {
-      this.findEditedMasterScss();
+      this.findAndDelMasterScss();
     }
 
 	}
