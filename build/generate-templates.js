@@ -175,6 +175,35 @@ class GenerateTemplates {
 		});
 	}
 
+  // check for numberxnumber-overwite.scss, match the number and overwite the scss 
+  //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
+  findEditedMasterScss() {
+    var masterScssRegx = /([0-9]+x[0-9]+)-overwrite\.scss/; 
+    var masterScss;
+    var test = fs.readdirSync('base-template').filter((file) => {
+      if (masterScssRegx.test(file)) {
+        masterScss = file;
+      }
+      return masterScssRegx.test(file);
+    });
+    if (test.length) {
+      var dash = test[0].indexOf('-');
+      //find out which size folder the edited overwrite.scss file belonged to
+      var masterScssSize = test[0].slice(0, dash);
+      getFolders('src').map((sizeFolder) => {
+        if (sizeFolder === masterScssSize) {
+          return fs.readdirSync(`src/${sizeFolder}`).map((size) => {
+            if (size === 'overwrite.scss') {
+              fs.createReadStream(`base-template/${masterScss}`).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
+            }
+          });
+        }
+      });
+    }
+    //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
+  }
+
+
 	populateTemplate(dir, data) {
 		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
 
@@ -189,31 +218,9 @@ class GenerateTemplates {
 			this.formatPopulate(file, data, dir);
 		});
 
+
     if (!this.Master) {
-    // check for numberxnumber-overwite.scss, match the number and overwite the scss 
-    //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
-      var masterScssRegx = /([0-9]+x[0-9]+)-overwrite\.scss/; 
-      var masterScss;
-      var test = fs.readdirSync('base-template').filter((file) => {
-        if (masterScssRegx.test(file)) {
-          masterScss = file;
-        }
-        return masterScssRegx.test(file);
-      });
-      if (test.length) {
-        var dash = test[0].indexOf('-');
-        var masterScssSize = test[0].slice(0, dash);
-        getFolders('src').map((sizeFolder) => {
-          if (sizeFolder === masterScssSize) {
-            return fs.readdirSync(`src/${sizeFolder}`).map((size) => {
-              if (size === 'overwrite.scss') {
-                fs.createReadStream(`base-template/${masterScss}`).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
-              }
-            });
-          }
-        });
-        //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
-      }
+      this.findEditedMasterScss();
     }
 
 	}

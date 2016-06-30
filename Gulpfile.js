@@ -172,7 +172,7 @@ gulp.task('scripts', () => {
       .pipe(jshint.reporter('jshint-stylish'))
       .pipe(sourcemaps.init())
       .pipe(concat(sizeFolder + '.js'))
-      .pipe(uglify())
+      //.pipe(uglify())
       .pipe(rename('ad.js'))
       .pipe(sourcemaps.write())
       .pipe(gulp.dest(gulpDest));
