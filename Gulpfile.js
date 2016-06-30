@@ -95,9 +95,11 @@ function getSubDirectories(fileType, copyFunc, Static) {
           path.join(src, sizeFolder, '/**/' + ad + '.js'),
           path.join(src, sizeFolder, '/**/main.js')
         ] :
+      fileType === 'img' ?
         [
-          path.join(src, sizeFolder, ad, '/**/*') //for images
-        ];
+          path.join(src, sizeFolder, ad, '/**/img/*'),
+          path.join(src, sizeFolder, ad, '/**/img/*')
+        ] : false;
       return copyFunc(source, dest);
     }
   });
@@ -300,32 +302,53 @@ gulp.task('master', (callback) => {
 
 
 
-gulp.task('watch-deleted-images', function() {
-  var notDeletedFilter = filter(
-    function(file) {
-        return file.event !== 'unlink' && file.event !== 'unlinkDir';
-    },
-    { restore: true }
-  );
+//gulp.task('watch-deleted-images', ['img'], function() {
+  //var notDeletedFilter = filter(
+    //function(file) {
+        //return file.event !== 'unlink' && file.event !== 'unlinkDir';
+    //},
+    //{ restore: true }
+  //);
 
-  //to get the destination:
-  function getDest(src, dest) {
-    console.log("dest:", dest);
-    return dest;
-  }
+  ////to get the destination:
+  //function getDest(src, dest) {
+    //return dest;
+  //}
 
-  console.log(getSubDirectories('img', getDest, false));
+  //function watchDeletedImgs(dest) {
+    //notDeletedFilter.restore
+        //.pipe(gulp.dest(dest))
+        //.pipe(vinylPaths(del));
 
-  notDeletedFilter.restore
-      .pipe(gulp.dest('prod/static'))
-      .pipe(vinylPaths(del));
+    //return watch('src/**/img/*', {events: ['add', 'change', 'unlink', 'unlinkDir']})
+      //.pipe(notDeletedFilter)
+      //.pipe(gulp.dest(dest));
+  //}
+  //console.log("dest:", getSubDirectories('img', getDest, true));
+  //var doubleclickDest =  getDestForDelImgs(getSubDirectories('img', getDest, true));
+  //var staticDest =  getDestForDelImgs(getSubDirectories('img', getDest, false));
 
-  watch('src/**/img/*', {events: ['add', 'change', 'unlink', 'unlinkDir']})
-    .pipe(notDeletedFilter)
-    .pipe(gulp.dest('prod/static'));
-});
+  //watchDeletedImgs(doubleclickDest);
+  //watchDeletedImgs(staticDest);
+
+//});
 
 
+//// the way we are getting the destination results in a 2d array, so this function is to turn it into a 1d 
+//function getDestForDelImgs(dest2D) {
+	
+//var arr = [];
+
+//dest2D.forEach(function(a){
+//console.log("a:",a)
+	//return a.forEach(function(b){
+		//arr.push(b);
+	//});
+//});
+
+//return arr;
+
+//}
 
 
 
@@ -337,7 +360,8 @@ gulp.task('watch', () => {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch', 'watch-deleted-images']);
+//gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch', 'watch-deleted-images']);
+gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
 gulp.task('dev', ['html', 'sass', 'img', 'scripts']);
 gulp.task('test', ['connect', 'ff', 'safari']);
 
