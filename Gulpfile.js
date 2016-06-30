@@ -27,6 +27,9 @@ const gulp      = require('gulp'),
     runSequence = require('run-sequence'),
     chalk       = require('chalk'),
     shell       = require('gulp-shell'),
+    filter      = require('gulp-filter'),
+    vinylPaths  = require('vinyl-paths'),
+
 
     data = require('./sizes.json'),
     src = 'src',
@@ -93,9 +96,8 @@ function getSubDirectories(fileType, copyFunc, Static) {
           path.join(src, sizeFolder, '/**/main.js')
         ] :
         [
-        path.join(src, sizeFolder, ad, '/**/*.jpg'),
-        path.join(src, sizeFolder, ad, '/**/*.png')
-      ];
+          path.join(src, sizeFolder, ad, '/**/*') //for images
+        ];
       return copyFunc(source, dest);
     }
   });
@@ -258,7 +260,7 @@ gulp.task('overwrite', () => {
     var name = `${sizes.dimensions[0].width}x${sizes.dimensions[0].height}-overwrite.scss`;
     return merge2(
       gulp.src(source),
-      gulp.src('src/**/overwrite.scss')
+      gulp.src(`src/${sizes.dimensions[0].width}x${sizes.dimensions[0].height}/overwrite.scss`)
         .pipe(rename(name))
     )
       .pipe(rename(function (path) {path.dirname = "/";}))
@@ -297,27 +299,34 @@ gulp.task('master', (callback) => {
 
 
 
-//var filter = require('gulp-filter');
-//var vinylPaths = require('vinyl-paths');
 
-    //var notDeletedFilter = filter(
-        //function(file) {
-            //return file.event !== 'unlink' && file.event !== 'unlinkDir';
-        //},
-        //{restore: true}
-    //);
+gulp.task('watch-deleted-images', function() {
+  var notDeletedFilter = filter(
+    function(file) {
+        return file.event !== 'unlink' && file.event !== 'unlinkDir';
+    },
+    { restore: true }
+  );
 
-    //notDeletedFilter.restore
-        //.pipe(gulp.dest('dist'))
-        //.pipe(vinylPaths(del));
+  //to get the destination:
+  function getDest(src, dest) {
+    console.log("dest:", dest);
+    return dest;
+  }
 
-    //use gulp-watch instead of gulp native watch function
-    //gulp.task('watch-it', () => {
+  console.log(getSubDirectories('img', getDest, false));
 
-    //watch(['sr/**/img/*'], {events: ['add', 'change', 'unlink', 'unlinkDir']})
-        //.pipe(notDeletedFilter)
-        //.pipe(gulp.dest('prod/static/img/'));
-        //});
+  notDeletedFilter.restore
+      .pipe(gulp.dest('prod/static'))
+      .pipe(vinylPaths(del));
+
+  watch('src/**/img/*', {events: ['add', 'change', 'unlink', 'unlinkDir']})
+    .pipe(notDeletedFilter)
+    .pipe(gulp.dest('prod/static'));
+});
+
+
+
 
 
 // Setup watch tasks
@@ -328,7 +337,7 @@ gulp.task('watch', () => {
   gulp.watch(['src/**/img', 'src/**/img/*'], ['img']);
 });
 
-gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
+gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch', 'watch-deleted-images']);
 gulp.task('dev', ['html', 'sass', 'img', 'scripts']);
 gulp.task('test', ['connect', 'ff', 'safari']);
 
