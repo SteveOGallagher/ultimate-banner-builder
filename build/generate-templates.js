@@ -39,7 +39,6 @@ class GenerateTemplates {
 		this.Master = sizes.Master;
 		this.Static = sizes.Static;
     this.Dynamic = sizes.Dynamic;
-    this.AllSizes = sizes.AllSizes;
 		versions = sizes.versions;
 		
 		versions = this.Master === true ? [versions[0]] : versions;
@@ -213,7 +212,7 @@ class GenerateTemplates {
             });
           }
         });
-        fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
+        //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
       }
     }
 

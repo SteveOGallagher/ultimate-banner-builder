@@ -1,6 +1,7 @@
 "use strict";
 const gulp      = require('gulp'),
     watch       = require('gulp-watch'),
+    //watch = require('gulp-debounced-watch'),
     sass        = require('gulp-sass'),
     cleanCSS    = require('gulp-clean-css'),
     htmlmin     = require('gulp-htmlmin'),
@@ -293,6 +294,30 @@ gulp.task('master', (callback) => {
     //runSequence('generate', callback);
   //}
 //});
+
+
+
+//var filter = require('gulp-filter');
+//var vinylPaths = require('vinyl-paths');
+
+    //var notDeletedFilter = filter(
+        //function(file) {
+            //return file.event !== 'unlink' && file.event !== 'unlinkDir';
+        //},
+        //{restore: true}
+    //);
+
+    //notDeletedFilter.restore
+        //.pipe(gulp.dest('dist'))
+        //.pipe(vinylPaths(del));
+
+    //use gulp-watch instead of gulp native watch function
+    //gulp.task('watch-it', () => {
+
+    //watch(['sr/**/img/*'], {events: ['add', 'change', 'unlink', 'unlinkDir']})
+        //.pipe(notDeletedFilter)
+        //.pipe(gulp.dest('prod/static/img/'));
+        //});
 
 
 // Setup watch tasks

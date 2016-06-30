@@ -31,6 +31,8 @@
     "gulp-clean-css": "^2.0.10",
     "gulp-concat": "^2.6.0",
     "gulp-connect-multi": "^1.0.8",
+    "gulp-debounced-watch": "^1.0.4",
+    "gulp-filter": "^4.0.0",
     "gulp-htmlmin": "^2.0.0",
     "gulp-image": "^2.0.1",
     "gulp-jshint": "^2.0.1",
@@ -48,6 +50,7 @@
     "jshint-stylish": "^2.2.0",
     "merge2": "^1.0.2",
     "run-sequence": "^1.2.1",
+    "vinyl-paths": "^2.1.0",
     "walk": "^2.3.9"
   }
 }
