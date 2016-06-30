@@ -315,18 +315,19 @@ gulp.task('master', (callback) => {
     //return dest;
   //}
 
-  //function watchDeletedImgs(dest) {
+  //function watchDeletedImgs(destination) {
     //notDeletedFilter.restore
-        //.pipe(gulp.dest(dest))
-        //.pipe(vinylPaths(del));
+      //.pipe(gulp.dest(destination[0][0]))
+      //.pipe(vinylPaths(del));
 
     //return watch('src/**/img/*', {events: ['add', 'change', 'unlink', 'unlinkDir']})
       //.pipe(notDeletedFilter)
-      //.pipe(gulp.dest(dest));
+      //.pipe(gulp.dest(destination[0][0]));
   //}
-  //console.log("dest:", getSubDirectories('img', getDest, true));
-  //var doubleclickDest =  getDestForDelImgs(getSubDirectories('img', getDest, true));
-  //var staticDest =  getDestForDelImgs(getSubDirectories('img', getDest, false));
+
+  //var doubleclickDest = (getSubDirectories('img', getDest, false));
+  //var staticDest =(getSubDirectories('img', getDest, true));
+  //console.log(getSubDirectories('img', getDest, true)[0][0])
 
   //watchDeletedImgs(doubleclickDest);
   //watchDeletedImgs(staticDest);
@@ -336,20 +337,17 @@ gulp.task('master', (callback) => {
 
 //// the way we are getting the destination results in a 2d array, so this function is to turn it into a 1d 
 //function getDestForDelImgs(dest2D) {
-	
-//var arr = [];
+  //var arr = [];
 
-//dest2D.forEach(function(a){
-//console.log("a:",a)
-	//return a.forEach(function(b){
-		//arr.push(b);
-	//});
-//});
+  ////dest2D.forEach(function(a){
+  ////console.log("a:",a)
+    ////return a.forEach(function(b){
+      ////arr.push(b);
+    ////});
+  ////});
 
-//return arr;
-
+  ////return arr;
 //}
-
 
 
 // Setup watch tasks
