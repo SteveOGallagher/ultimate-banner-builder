@@ -30,7 +30,6 @@ const gulp      = require('gulp'),
     filter      = require('gulp-filter'),
     vinylPaths  = require('vinyl-paths'),
 
-
     data = require('./sizes.json'),
     src = 'src',
     folders = getFolders(src);
@@ -69,37 +68,45 @@ function getSubDirectories(fileType, copyFunc, Static) {
     var ad;
     if (Static) {
     ad = 'static';
-    var type = `src/${sizeFolder}/${ad}`;
-    var typeFolder = getFolders(type); // Static or Dynamic
-    var root = `src/${sizeFolder}`;
+    var srcSizeAd = `${src}/${sizeFolder}/${ad}`;
+    var typeFolder = getFolders(srcSizeAd); // Static or Dynamic
     return typeFolder.map(function(versionFolder) {
+      var srcSizeAdVersion = `${src}/${sizeFolder}/${ad}/${versionFolder}`;
       var dest = `prod/${ad}/${sizeFolder}-${versionFolder}`;
-      var source = fileType === 'scss' ? [`${root}/*.${fileType}`, `!src/*.scss`] :
-        fileType === 'html' ? `${root}/*.${fileType}` :
-        fileType === 'img' ? [`${root}/${ad}/${versionFolder}/**/*`,
-          `!${root}/${ad}/${versionFolder}/*.js`] :
+      var source = fileType === 'scss' ? [`${srcSizeAdVersion}/*.${fileType}`, `!src/*.scss`] :
+        fileType === 'html' ? `${srcSizeAdVersion}/*.${fileType}` :
+        fileType === 'img' ? [
+          `${srcSizeAdVersion}/**/*`,
+          `!${srcSizeAdVersion}/*.js`,
+          `!${srcSizeAdVersion}/*.html`,
+          `!${srcSizeAdVersion}/*.scss`] :
         fileType === 'js' ? [
-          `${root}/*.${fileType}`,
-          `${root}/${ad}/*.${fileType}`,
-          `${root}/${ad}/${versionFolder}/*.${fileType}`
+          `${src}/${sizeFolder}/*.${fileType}`,
+          `${srcSizeAd}/*.${fileType}`,
+          `${srcSizeAdVersion}/*.${fileType}`
         ] :
         false;
-      return copyFunc(source, dest);
+      return copyFunc(source, dest, path);
     });
 
     } else {
       ad = 'doubleclick';
       var dest = `prod/${ad}/${sizeFolder}`;
       var source =
-      fileType === 'js' ? [
-          path.join(src, sizeFolder, '/**/' + ad + '.js'),
+      fileType === 'js' ?
+        [ path.join(src, sizeFolder, '/**/' + ad + '.js'),
           path.join(src, sizeFolder, '/**/main.js')
         ] :
       fileType === 'img' ?
-        [
-          path.join(src, sizeFolder, ad, '/**/img/*'),
+        [ path.join(src, sizeFolder, ad, '/**/img/*'),
           path.join(src, sizeFolder, ad, '/**/img/*')
-        ] : false;
+        ] :
+      fileType === 'scss' ?
+        [`${src}/${sizeFolder}/${ad}/*.scss`, `!${src}/*.scss`]
+        :
+      fileType === 'html' ?
+        `${src}/${sizeFolder}/${ad}/*.html`
+        : false;
       return copyFunc(source, dest);
     }
   });
@@ -115,7 +122,7 @@ gulp.task('sass', () => {
       .pipe(sassLint.failOnError())
       //.pipe(uncss({ html: 'index.html' }))
       .pipe(sourcemaps.init())
-      .pipe(sass().on('error', sass.logError))
+      .pipe(sass({includePaths: ['src']}).on('error', sass.logError))
       .pipe(cleanCSS())
       .pipe(sourcemaps.write())
       .pipe(gulp.dest(gulpDest));
@@ -125,7 +132,7 @@ gulp.task('sass', () => {
     if (isStatic(ad_type)) {
       return getSubDirectories('scss', copyAndPipe, true);
     } else if (ad_type === "doubleclick") {
-      return copyAndPipe(['src/**/*.scss', '!src/*.scss'], 'prod/' + ad_type);
+      return getSubDirectories('scss', copyAndPipe, false);
     }
   };
 
@@ -154,7 +161,7 @@ gulp.task('html', () => {
     if (isStatic(ad_type)) {
       return getSubDirectories('html', copyAndPipe, true);
       } else if (ad_type === "doubleclick") {
-        return copyAndPipe('src/**/*.html', 'prod/' + ad_type, false);
+        return getSubDirectories('html', copyAndPipe, false);
       }
   };
 
@@ -172,7 +179,7 @@ gulp.task('scripts', () => {
       .pipe(jshint.reporter('jshint-stylish'))
       .pipe(sourcemaps.init())
       .pipe(concat(sizeFolder + '.js'))
-      //.pipe(uglify())
+      .pipe(uglify())
       .pipe(rename('ad.js'))
       .pipe(sourcemaps.write())
       .pipe(gulp.dest(gulpDest));
@@ -181,7 +188,7 @@ gulp.task('scripts', () => {
   var runJS = (ad_type) => {
     if (isStatic(ad_type)) {
       return getSubDirectories('js', copyAndPipe, true);
-    } else {
+    } else if (ad_type === "doubleclick") {
       return getSubDirectories('js', copyAndPipe, false);
     }
   };
@@ -335,7 +342,7 @@ gulp.task('master', (callback) => {
 //});
 
 
-//// the way we are getting the destination results in a 2d array, so this function is to turn it into a 1d 
+//// the way we are getting the destination results in a 2d array, so this function is to turn it into a 1d
 //function getDestForDelImgs(dest2D) {
   //var arr = [];
 
@@ -362,4 +369,3 @@ gulp.task('watch', () => {
 gulp.task('default', ['connect', 'html', 'sass', 'img', 'scripts', 'watch']);
 gulp.task('dev', ['html', 'sass', 'img', 'scripts']);
 gulp.task('test', ['connect', 'ff', 'safari']);
-

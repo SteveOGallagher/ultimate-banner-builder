@@ -29,7 +29,7 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
-		this.formatFiles = ['doubleclick.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss'];
+		this.formatFiles = ['doubleclick.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss', 'index.html'];
 	}
 
 	loadSizes() {
@@ -121,7 +121,7 @@ class GenerateTemplates {
         }
 
 				if (this.isStatic()) {
-					var totalVersions = this.Master === true ? 1 : versions.length
+					var totalVersions = this.Master === true ? 1 : versions.length;
 					var version = 0;
 
 					// Make Static assets folder
@@ -219,7 +219,7 @@ class GenerateTemplates {
 
 
 	populateTemplate(dir, data) {
-		fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
+    //fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
 
     if (!this.Dynamic && this.DoubleClick) {
       fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
@@ -250,49 +250,40 @@ class GenerateTemplates {
 
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
+    var excludedFiles = ('index.html' && 'image-paths.js' && 'overwrite.scss' && 'static.js' && 'doubleclick.js');
 
-    //TODO: replace this with a ternary operator?
 		// Create individual folders for specific js files.
-    switch(file) {
-	    case 'static.js':
-	    		if (this.isStatic()) {
-		        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-	    		}
-	        break;
-	    case 'image-paths.js':
-	    		if (this.isStatic()) {
-		    		for (var version in versions) {
-			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
-		        }
-	    		}
-	        break;
-	    case 'doubleclick.js':
-        if (this.DoubleClick) {
-          fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
-        }
-        break;
-	    case 'index.html':
-        if (this.isStatic()) {
+    if (this.isStatic()) {
+      switch(file) {
+        case 'static.js':
+            fs.writeFileSync(`${dir}/${Static}/${file}`, processedData, 'utf8');
+          break;
+        case 'index.html':
+        case 'overwrite.scss':
+        case 'image-paths.js': 
           for (var version in versions) {
             fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
           }
-        }
-        break;
-      case 'overwrite.scss':
-        if (this.isStatic()) {
-          for (var version in versions) {
-            fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
+          break;
+        default:
+          if (file !== excludedFiles) {
+            fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
           }
-        }
-        break;
-	    case 'overwrite.scss':
-        if (this.DoubleClick) {
-          fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
-        }
-        break;
-	    default:
-        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-		}
+      }
+    }
+    if (this.DoubleClick) {
+      switch(file) {
+        case 'index.html':
+        case 'overwrite.scss':
+        case 'doubleclick.js':
+            fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+          break;
+        default:
+          if (file !== excludedFiles) {
+            fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
+          }
+      }
+    }
 	}
 }
 
