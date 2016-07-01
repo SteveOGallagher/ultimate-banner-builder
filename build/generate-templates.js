@@ -46,6 +46,11 @@ class GenerateTemplates {
 		this.sizes = this.Master === true ? [this.sizes[0]] : this.sizes;
 	}
 
+  isStatic() {
+    if (this.Master && this.Static && !this.DoubleClick ||
+      !this.Master && this.Static) return true;
+  }
+
 	processSizes() {
 		this.sizes.map((size) => {
 			this.checkTemplate(`${sourceDirectory}${size.prefix}${size.width}x${size.height}`, size);
@@ -115,8 +120,7 @@ class GenerateTemplates {
           fs.mkdir(`${dir}/${DoubleClick}`);
         }
 
-				if (this.Master && this.Static && !this.DoubleClick ||
-						!this.Master && this.Static) {
+				if (this.isStatic()) {
 					var totalVersions = this.Master === true ? 1 : versions.length
 					var version = 0;
 
@@ -247,23 +251,41 @@ class GenerateTemplates {
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
 
+    //TODO: replace this with a ternary operator?
 		// Create individual folders for specific js files.
     switch(file) {
 	    case 'static.js':
-	    		if (this.Master && this.Static && !this.DoubleClick ||
-						!this.Master && this.Static) {
+	    		if (this.isStatic()) {
 		        fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
 	    		}
 	        break;
 	    case 'image-paths.js':
-	    		if (this.Master && this.Static && !this.DoubleClick ||
-						!this.Master && this.Static) {
+	    		if (this.isStatic()) {
 		    		for (var version in versions) {
 			        fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
 		        }
 	    		}
 	        break;
 	    case 'doubleclick.js':
+        if (this.DoubleClick) {
+          fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
+        }
+        break;
+	    case 'index.html':
+        if (this.isStatic()) {
+          for (var version in versions) {
+            fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
+          }
+        }
+        break;
+      case 'overwrite.scss':
+        if (this.isStatic()) {
+          for (var version in versions) {
+            fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
+          }
+        }
+        break;
+	    case 'overwrite.scss':
         if (this.DoubleClick) {
           fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
         }
