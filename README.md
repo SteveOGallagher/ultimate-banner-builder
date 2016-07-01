@@ -74,7 +74,8 @@
 
 ### General error handling
 
-If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
+- If you get the following error: `no such file or directory, scandir 'src'` it means that you are missing the src directory, run `npm run generate` to create the src folder.
+- If you generate the zip files and clicking on the zip file, generates a file with the `.cpgz` extension, then download this app [Unarchiver](https://itunes.apple.com/us/app/the-unarchiver/id425424353?mt=12) and it should fix it. This seems to be a mac bug.
 
 ### Testing in the browser
 
@@ -83,3 +84,13 @@ If you need to test it in other browsers, either run `gulp test` which will open
 - Chrome: `gulp` or `gulp connect`
 - Firefox: `gulp ff` 
 - Safari: `gulp safari`
+
+### Script and gulp task development
+
+If you need to tweak the scripts in the future, see the following files:
+_build/generate-template.js_: edit this file, if you need to make changes to the way the src folder is generated
+_Gulpfile.js: edit this file if you need to tweak the way the prod folder is generated
+However, the two scripts are somewhat dependent on eachother, so if you change the paths in one file, you will probably need to change in the other file.
+
+TODO: Watch only updates file additions not deletions, so this would be a good feature to implement.
+TODO: When the gulp master task is run, the overwrite.scss file is copied from the src and temporarily pasted into the base_template folder, this then gets copied over to the right folder in the src folder generate after sizes.json/Master is turned to false. But the file should then be deleted from the base_template folder. 
