@@ -19,7 +19,7 @@
     "version2"
   ],
   "DoubleClick" : true,
-  "Dynamic" : false,
+  "Dynamic" : true,
   "Static" : true,
   "Master" : false
 }

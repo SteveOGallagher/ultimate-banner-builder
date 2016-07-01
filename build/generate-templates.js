@@ -265,10 +265,11 @@ class GenerateTemplates {
             fs.writeFileSync(`${dir}/${Static}/${versions[version]}/${file}`, processedData, 'utf8');
           }
           break;
-        default:
-          if (file !== excludedFiles) {
+        case 'main.js':
             fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-          }
+          break;
+        default:
+          //console.log("Unknown file");
       }
     }
     if (this.DoubleClick) {
@@ -278,10 +279,11 @@ class GenerateTemplates {
         case 'doubleclick.js':
             fs.writeFileSync(`${dir}/${DoubleClick}/${file}`, processedData, 'utf8');
           break;
-        default:
-          if (file !== excludedFiles) {
+        case 'main.js':
             fs.writeFileSync(`${dir}/${file}`, processedData, 'utf8');
-          }
+          break;
+        default:
+          //console.log("Unknown file");
       }
     }
 	}
