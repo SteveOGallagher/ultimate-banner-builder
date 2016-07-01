@@ -269,7 +269,7 @@ gulp.task('overwrite', () => {
     var name = `${sizes.dimensions[0].width}x${sizes.dimensions[0].height}-overwrite.scss`;
     return merge2(
       gulp.src(source),
-      gulp.src(`src/${sizes.dimensions[0].width}x${sizes.dimensions[0].height}/overwrite.scss`)
+      gulp.src(`src/${sizes.dimensions[0].width}x${sizes.dimensions[0].height}/doubleclick/overwrite.scss`)
         .pipe(rename(name))
     )
       .pipe(rename(function (path) {path.dirname = "/";}))

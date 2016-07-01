@@ -29,6 +29,7 @@ class GenerateTemplates {
 		this.loadSizes();
 		this.setupSource();
 
+    //TODO: look inside folder rather than array
 		this.formatFiles = ['doubleclick.js', 'main.js', 'static.js', 'image-paths.js', 'overwrite.scss', 'index.html'];
 	}
 
@@ -40,6 +41,7 @@ class GenerateTemplates {
 		this.Master = sizes.Master;
 		this.Static = sizes.Static;
     this.Dynamic = sizes.Dynamic;
+    this.masterScssCopied = false;
 		versions = sizes.versions;
 		
 		versions = this.Master === true ? [versions[0]] : versions;
@@ -120,6 +122,7 @@ class GenerateTemplates {
           fs.mkdir(`${dir}/${DoubleClick}`);
         }
 
+
 				if (this.isStatic()) {
 					var totalVersions = this.Master === true ? 1 : versions.length;
 					var version = 0;
@@ -191,35 +194,39 @@ class GenerateTemplates {
     });
 
     if (test.length) {
+
       var dash = test[0].indexOf('-');
       //find out which size folder the edited overwrite.scss file belonged to
       var masterScssSize = test[0].slice(0, dash);
       getFolders('src').map((sizeFolder) => {
         if (sizeFolder === masterScssSize) {
-          return fs.readdirSync(`src/${sizeFolder}`).map((size) => {
-            if (size === 'overwrite.scss') {
-              //fse.copySync(`base-template/${masterScss}`, `src/${sizeFolder}/${size}`, (err) => {
-                //if (err) return console.log(err);
-                  //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
+          return fs.readdirSync(`src/${sizeFolder}/doubleclick`).map((file) => {
+            if (file === 'overwrite.scss') {
+              var stream = fs.createReadStream(`base-template/${masterScss}`);
+              stream.pipe(fs.createWriteStream(`src/${sizeFolder}/doubleclick/${file}`));
+              //var had_error = false;
+              //writeStream.on('error', function(err){
+                //had_error = true;
               //});
-              fs.createReadStream(`base-template/${masterScss}`).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
+              //writeStream.on('close', function(){
+                //if (!had_error) fs.unlink(`base-template/${masterScss}`);
+              //});
             }
           });
         }
       });
     }
+    //TODO: comment back in once work out how to do the copy and deletion synchronoudly. at the mo, it deltes before it's finished copying sometimes
     //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
   }
 
 
   findAndDelMasterScss(){
     this.findEditedMasterScss();
-    //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
   }
 
 
 	populateTemplate(dir, data) {
-    //fs.createReadStream(`${appRoot}/base-template/index.html`).pipe(fs.createWriteStream(`${dir}/index.html`));
 
     if (!this.Dynamic && this.DoubleClick) {
       fse.copy(`${appRoot}/base-template/global-images`, `${dir}/${DoubleClick}/img`, (err) => {
@@ -234,7 +241,7 @@ class GenerateTemplates {
 
 
     if (!this.Master) {
-      this.findAndDelMasterScss();
+      this.findAndDelMasterScss(data);
     }
 
 	}
@@ -245,12 +252,13 @@ class GenerateTemplates {
 		});
 	}
 
+
 	// Copy files and their contents into their correct subfolders
 	formatPopulate(file, data, dir) {
 
 		let fileData = fs.readFileSync(`${appRoot}/base-template/${file}`, 'utf8');
 		let processedData = this.format(fileData, data);
-    var excludedFiles = ('index.html' && 'image-paths.js' && 'overwrite.scss' && 'static.js' && 'doubleclick.js');
+
 
 		// Create individual folders for specific js files.
     if (this.isStatic()) {
