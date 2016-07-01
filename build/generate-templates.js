@@ -12,6 +12,17 @@ const Static = "static";
 const img = "img";
 var versions;
 
+
+// Get folder names inside a given directory (dir)
+function getFolders(dir) {
+  return fs.readdirSync(dir)
+    .filter(function(file) {
+      return fs.statSync(path.join(dir, file)).isDirectory();
+  });
+}
+
+
+
 class GenerateTemplates {
 	constructor() {
 		this.loadSizes();
@@ -73,6 +84,7 @@ class GenerateTemplates {
 		this.processSizes();
 	}
 
+
 	checkTemplate(dir, data) {
 		let that = this;
 		fs.access(dir, fs.F_OK, function(err) {
@@ -89,12 +101,14 @@ class GenerateTemplates {
 	generateTemplate(dir, data) {
 		let that = this;
 
+
 		fs.mkdir(dir, (err, folder) => {
 			if (err) {
 				console.log(err);
 				console.error(chalk.red(`${dir} Could not be created`));
 			} else {
 				console.info(chalk.blue(`${dir} has been created`));
+
 
         if (this.DoubleClick) {
           fs.mkdir(`${dir}/${DoubleClick}`);
@@ -152,6 +166,7 @@ class GenerateTemplates {
 			      });
 					};
 
+
 	      } else {
 					that.populateTemplate(dir, data); // If static is false, build as normal
 	      }
@@ -173,6 +188,34 @@ class GenerateTemplates {
 		this.formatFiles.map((file) => {
 			this.formatPopulate(file, data, dir);
 		});
+
+    if (!this.Master) {
+    // check for numberxnumber-overwite.scss, match the number and overwite the scss 
+    //in that folder, then replace it with the default overwrite.scss in that folder - then delete from base template
+      var masterScssRegx = /([0-9]+x[0-9]+)-overwrite\.scss/; 
+      var masterScss;
+      var test = fs.readdirSync('base-template').filter((file) => {
+        if (masterScssRegx.test(file)) {
+          masterScss = file;
+        }
+        return masterScssRegx.test(file);
+      });
+      if (test.length) {
+        var dash = test[0].indexOf('-');
+        var masterScssSize = test[0].slice(0, dash);
+        getFolders('src').map((sizeFolder) => {
+          if (sizeFolder === masterScssSize) {
+            return fs.readdirSync(`src/${sizeFolder}`).map((size) => {
+              if (size === 'overwrite.scss') {
+                fs.createReadStream(`base-template/${masterScss}`).pipe(fs.createWriteStream(`src/${sizeFolder}/${size}`));
+              }
+            });
+          }
+        });
+        //fs.unlinkSync(`base-template/${masterScss}`); //delete the edited overwrite.scss file afterwards
+      }
+    }
+
 	}
 
 	format(str, obj) {
