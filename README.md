@@ -92,5 +92,5 @@ If you need to tweak the scripts in the future, see the following files:
 - __Gulpfile.js__: edit this file if you need to tweak the way the prod folder is generated
 - However, the two scripts are somewhat dependent on eachother, so if you change the paths in one file, you will probably need to change in the other file.
 
-__TODO:__ Watch only updates file additions not deletions, so this would be a good feature to implement.
-__TODO:__ When the gulp master task is run, the overwrite.scss file is copied from the src and temporarily pasted into the base_template folder, this then gets copied over to the right folder in the src folder generate after sizes.json/Master is turned to false. But the file should then be deleted from the base_template folder. 
+- __TODO:__ Watch only updates file additions not deletions, so this would be a good feature to implement.
+- __TODO:__ When the gulp master task is run, the overwrite.scss file is copied from the src and temporarily pasted into the base_template folder, this then gets copied over to the right folder in the src folder generate after sizes.json/Master is turned to false. But the file should then be deleted from the base_template folder. 
