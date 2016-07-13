@@ -60,6 +60,7 @@ table {
   height: 100%;
   background-color: #FFF;
   transition: opacity 1.2s ease;
+  z-index: 10000;
 }
 
 /* helper classes */
@@ -85,4 +86,5 @@ table {
   position: absolute;
   top: 0px;
   width: 100%;
+  z-index: 30000;
 }

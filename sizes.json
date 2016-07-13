@@ -20,5 +20,5 @@
   "DoubleClick" : true,
   "Dynamic" : false,
   "Static" : false,
-  "Master" : true
+  "Master" : false
 }

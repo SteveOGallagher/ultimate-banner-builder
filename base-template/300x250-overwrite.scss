@@ -1,0 +1,61 @@
+@import './global.scss';
+@import './normalize.scss';
+
+.banner {
+  background-size: 100% 100% !important;
+  height: 250 + px;
+  width: 300 + px;
+}
+
+.banner-border {
+  position: absolute;
+  height: 250 - 2 + px;
+  width: 300 - 2 + px;
+  border: 1px solid #000;
+  z-index: 20000;
+}
+
+.full-dimension {
+  height: 250 + px;
+  width: 300 + px;
+}
+
+.slide-container {
+  height: 250 + px;
+  width: 300 + px;
+}
+
+.slide-item-logo,
+.slide-item-arrow,
+.slide-item-message {
+  height: 10%;
+  width: 10%;
+  z-index: 100;
+}
+
+.slide-item-message {
+  background-repeat: no-repeat !important;
+  height: 100%;
+  left: 0;
+  padding: 0;
+  position: absolute;
+  top: 68px;
+  width: 100%;
+}
+
+.slide-item-logo {
+  width: 24%;
+  height: 21%;
+  z-index: 100;
+  top: -7px;
+  left: 13px;
+}
+
+.slide-item-arrow {
+  background-repeat: no-repeat !important;
+  height: 6%;
+  left: 248px;
+  position: absolute;
+  top: 148px;
+  width: 5%;
+}
