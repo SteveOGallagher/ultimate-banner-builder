@@ -7,19 +7,18 @@
       "prefix": ""
     },
     {
-      "width": 200,
-      "height": 500,
+      "width": 320,
+      "height": 480,
       "prefix": ""
     }
 
   ],
   "versions": 
   [
-    "version1",
-    "version2"
+    "version1"
   ],
   "DoubleClick" : true,
   "Dynamic" : false,
-  "Static" : true,
+  "Static" : false,
   "Master" : true
 }
